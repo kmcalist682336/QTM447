@@ -1,0 +1,137 @@
+---
+title: "Lecture 22: Bayesian Machine Learning"
+format: html
+---
+
+## Bayesian Framework
+
+### Fundamentals
+
+- Treats model parameters $\boldsymbol{\theta}$ as random variables with probability distributions
+
+- Posterior distribution defined via Bayes' theorem:
+  $f(\boldsymbol{\theta} | \mathcal{D}) = \frac{f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta})}{\int f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta}) d\boldsymbol{\theta}}$
+
+- Key components:
+
+  - Likelihood: $f(\mathcal{D} | \boldsymbol{\theta})$ - probability of data given parameters
+
+  - Prior: $f(\boldsymbol{\theta})$ - initial beliefs about parameters
+
+  - Marginal likelihood: $\int f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta}) d\boldsymbol{\theta}$ - model evidence
+
+  - Posterior: $f(\boldsymbol{\theta} | \mathcal{D})$ - updated parameter beliefs after observing data
+
+### Normal Distribution with Known Variance
+
+- Likelihood: $f(\mathbf{y} | \mu, \sigma^2) = \prod_{i=1}^N \mathcal{N}(y_i | \mu, \sigma^2)$
+
+- Prior: $f(\mu) \sim \mathcal{N}(\mu | \mu_0, \sigma^2_0)$
+
+- Posterior: $f(\mu | \mathbf{y}) \sim \mathcal{N}(\mu | \hat{\mu}, \hat{\sigma}^2)$
+
+  - $\hat{\sigma}^2 = \left(\frac{N}{\sigma^2} + \frac{1}{\sigma^2_0}\right)^{-1}$
+
+  - $\hat{\mu} = \hat{\sigma}^2\left(\frac{1}{\sigma^2}\sum y_i + \frac{1}{\sigma^2_0}\mu_0\right)$
+
+- Properties:
+
+  - With diffuse prior ($\sigma^2_0 \to \infty$), posterior mean converges to sample mean
+
+  - As $N \to \infty$, prior influence diminishes and posterior approaches MLE
+
+## Bayesian Linear Regression
+
+### Model Formulation
+
+- Likelihood: $f(\mathbf{y} | \mathbf{X}, \boldsymbol{\beta}, \sigma^2) \sim \mathcal{N}_N(\mathbf{y} | \mathbf{X}\boldsymbol{\beta}, \sigma^2\mathcal{I}_N)$
+
+- Prior: $f(\boldsymbol{\beta}) \sim \mathcal{N}_P(\boldsymbol{\beta} | \boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)$
+
+- Posterior: $f(\boldsymbol{\beta} | \mathbf{X}, \mathbf{y}, \sigma^2) \sim \mathcal{N}_P(\boldsymbol{\beta} | \hat{\boldsymbol{\mu}}, \hat{\boldsymbol{\Sigma}})$
+
+  - $\hat{\boldsymbol{\Sigma}} = \left(\frac{1}{\sigma^2}\mathbf{X}^T\mathbf{X} + \boldsymbol{\Sigma}_0^{-1}\right)^{-1}$
+
+  - $\hat{\boldsymbol{\mu}} = \hat{\boldsymbol{\Sigma}}\left(\frac{1}{\sigma^2}\mathbf{X}^T\mathbf{y} + \boldsymbol{\Sigma}^{-1}_0\boldsymbol{\mu}_0\right)$
+
+### Connections to Regularization
+
+- With $\boldsymbol{\mu}_0 = \mathbf{0}$ and $\boldsymbol{\Sigma}_0 = \tau^2\mathcal{I}_P$:
+  $\hat{\boldsymbol{\mu}} = (\mathbf{X}^T\mathbf{X} + \lambda\mathcal{I}_P)^{-1}\mathbf{X}^T\mathbf{y}$
+
+- This is equivalent to ridge regression with regularization parameter $\lambda = \frac{\sigma^2}{\tau^2}$
+
+- L2 regularization (weight decay) is a Bayesian solution to the generalization problem
+
+- Bayesian models are inherently regularized
+
+- Prior variance controls model complexity similar to regularization strength
+
+### Posterior Summarization
+
+- Maximum a posteriori (MAP) estimate:
+  $\hat{\boldsymbol{\theta}} = \underset{\boldsymbol{\theta}}{\text{argmax}} f(\boldsymbol{\theta} | \mathcal{D})$
+
+- For normal posteriors, the MAP estimate is the posterior mean
+
+- Bayesian 95% credible intervals for normal posterior:
+  $\hat{\boldsymbol{\mu}}_j \pm 1.96 \hat{\boldsymbol{\Sigma}}_{j,j}$
+
+## MAP Approximations
+
+### Laplace Approximation
+
+- Approximates posterior with a multivariate normal distribution
+
+- Parameters of approximation:
+
+  - Mean: $\hat{\boldsymbol{\mu}} = \underset{\boldsymbol{\Theta}}{\text{argmax}}\log f(\boldsymbol{\Theta} | \mathbf{X})$
+
+  - Covariance: $\hat{\boldsymbol{\Sigma}} = -\left[\frac{\partial^2 \log f(\hat{\boldsymbol{\mu}} | \mathbf{X})}{\partial \boldsymbol{\Theta} \partial \boldsymbol{\Theta}}\right]^{-1}$
+
+- Bernstein-von Mises theorem: posterior converges to this normal approximation as $N \to \infty$
+
+- Minimizes Kullback-Leibler divergence between true posterior and normal approximation
+
+### Non-Conjugate Priors
+
+- Laplace prior example: $f(\boldsymbol{\beta}) = \prod_{j=1}^P \frac{1}{2b_0}\exp\left[-\frac{|\beta_j|}{b_0}\right]$
+
+- MAP estimation with Laplace prior leads to LASSO regression:
+  $\log f(\boldsymbol{\beta}, \alpha | \mathbf{X}, \mathbf{y}, \sigma^2) \propto -\left[\sum_{i=1}^N (y_i - \mathbf{x}_i^T\boldsymbol{\beta} - \alpha)^2 + \frac{2\sigma^2}{b_0}\sum_{j=1}^P |\beta_j|\right]$
+
+- No closed-form solution for LASSO, requires numerical optimization
+
+## Marginal Likelihood
+
+### Model Evidence
+
+- The denominator in Bayes' theorem: $f(\mathcal{D}) = \int f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta}) d\boldsymbol{\theta}$
+
+- Measures how well model explains data, integrating over all possible parameter values
+
+- Serves as a Bayesian measure of generalization error
+
+- Approximately equivalent to leave-one-out cross-validation
+
+### Computation and Applications
+
+- For linear regression with normal prior:
+  $\int \mathcal{N}_N(\mathbf{y} | \mathbf{X}\boldsymbol{\beta}, \sigma^2\mathcal{I}_N)\mathcal{N}_P(\boldsymbol{\beta} | \boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)d\boldsymbol{\beta} = \mathcal{N}_N(\mathbf{y} | \mathbf{X}\boldsymbol{\mu}_0, \sigma^2\mathcal{I}_N + \mathbf{X}\boldsymbol{\Sigma}_0\mathbf{X}^T)$
+
+- With Laplace approximation:
+  $\int f(\mathbf{X} | \boldsymbol{\theta})f(\boldsymbol{\theta})d\boldsymbol{\theta} \approx f(\mathbf{y} | \mathbf{X}, \hat{\boldsymbol{\mu}})f(\hat{\boldsymbol{\mu}})(2\pi)^{P/2}\text{det}[\hat{\boldsymbol{\Sigma}}]N^{-P/2}$
+
+- Used for hyperparameter selection, e.g., finding optimal $\lambda$ in ridge regression
+
+## Posterior Predictive Distribution
+
+### Definition and Properties
+
+- Distribution of predictions at new points, accounting for parameter uncertainty:
+  $f(y_0 | \mathbf{x}_0, \mathbf{X}, \mathbf{y}, \hat{\boldsymbol{\theta}}) = \int f(\mathbf{y}_0 | \mathbf{x}_0, \mathbf{y}, \mathbf{X}, \hat{\boldsymbol{\theta}})f(\hat{\boldsymbol{\theta}} | \mathcal{D})d\hat{\boldsymbol{\theta}}$
+
+- For linear regression with normal prior:
+  $f(y_0 | \mathbf{x}_0, \sigma^2, \mathbf{X}, \mathbf{y}) = \mathcal{N}(y_0 | \hat{\boldsymbol{\mu}}^T\mathbf{x}_0, \sigma^2 + \mathbf{x}_0^T\hat{\boldsymbol{\Sigma}}\mathbf{x}_0)$
+
+- Prediction variance includes both inherent noise ($\sigma^2$) and parameter uncertainty ($\mathbf{x}_0^T\hat{\boldsymbol{\Sigma}}\mathbf{x}_0$)

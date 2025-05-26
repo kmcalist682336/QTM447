@@ -1,0 +1,189 @@
+---
+title: "Lecture 8 Summary: Introduction to Neural Networks"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary introduces neural networks as powerful universal approximators, explaining their structure, functioning, and ability to model complex nonlinear relationships through learnable feature transformations.
+
+## 1. The Limitations of Linear Models
+
+Linear models fail to capture complex decision boundaries in classification problems, as exemplified by the XOR problem:
+
+$$\mathbf{X} = 
+\begin{bmatrix}
+0 & 0 \\
+0 & 1 \\
+1 & 0 \\
+1 & 1
+\end{bmatrix},
+\mathbf{y} = 
+\begin{bmatrix}
+0 \\
+1 \\
+1 \\
+0
+\end{bmatrix}$$
+
+While polynomial expansions can solve this problem (e.g., a 5th-degree polynomial), they quickly become unwieldy as dimensionality increases, requiring $\binom{P+d}{d} \approx \frac{P^d}{d!}$ parameters. For high-dimensional data, this approach suffers from:
+
+- Exponential parameter growth
+
+- Poor generalization
+
+- High computational complexity
+
+- Limited flexibility
+
+## 2. Neural Network Architecture
+
+Neural networks overcome these limitations through a hierarchical architecture that transforms the input features through multiple processing layers.
+
+**2.1. The Single Hidden Layer Network**
+
+The simplest neural network consists of:
+
+- An input layer representing the features
+
+- A hidden layer that performs feature transformations
+
+- An output layer that produces the final prediction
+
+Mathematically, this is represented as:
+
+$$\theta_i = \boldsymbol{\beta}^T \phi(\mathbf{x}_i; \mathbf{W}, \mathbf{c}) + b$$
+
+Where:
+
+- $\mathbf{W}$ is a weight matrix with dimensions $P \times K$ (features × hidden units)
+
+- $\mathbf{c}$ is a vector of bias terms for the hidden layer
+
+- $\phi()$ is a nonlinear activation function
+
+- $\boldsymbol{\beta}$ is a vector of weights connecting the hidden layer to the output
+
+- $b$ is a bias term for the output layer
+
+**2.2. The Critical Role of Activation Functions**
+
+The key innovation in neural networks is the introduction of nonlinearity through activation functions. Without nonlinear activation, multi-layer networks would reduce to simple linear models:
+
+$$\theta_i = \boldsymbol{\beta}^T(\mathbf{W}^T \mathbf{x}_i + \mathbf{c}) + b = \boldsymbol{\beta}^T\mathbf{W}^T \mathbf{x}_i + (\boldsymbol{\beta}^T\mathbf{c} + b)$$
+
+Activation functions transform linear combinations of inputs into nonlinear representations. The Rectified Linear Unit (ReLU) is a common activation function:
+
+$$\varphi(x) = \max(0, x)$$
+
+Applied element-wise, ReLU introduces "kinks" in the function space, allowing neural networks to approximate complex, nonlinear decision boundaries.
+
+## 3. Learning Representations
+
+Neural networks learn useful feature transformations from data, engineering new feature spaces where classification or regression becomes more tractable.
+
+**3.1. Hidden Representations**
+
+For each input $\mathbf{x}_i$, the network computes a hidden representation:
+
+$$\mathbf{h}_i = \varphi(\mathbf{W}^T \mathbf{x}_i + \mathbf{c})$$
+
+This transformation maps the original features to a new space where:
+
+- Points that were not linearly separable might become separable
+
+- Complex relationships might be simplified
+
+- Relevant patterns are emphasized while noise is suppressed
+
+**3.2. Geometric Interpretation**
+
+Each hidden unit in a ReLU network creates a partition in the feature space:
+
+- On one side of the partition, the unit outputs zero
+
+- On the other side, it outputs a linear function of the input
+
+- The combination of multiple hidden units creates complex, piecewise linear decision boundaries
+
+With sufficient hidden units, a single-layer neural network can approximate any continuous function on a bounded domain.
+
+## 4. Deep Neural Networks
+
+While single-layer networks are universal approximators, they may require an impractically large number of hidden units for complex functions. Deep neural networks (with multiple hidden layers) offer a more efficient alternative.
+
+**4.1. Architecture of Deep Networks**
+
+A two-layer network is represented as:
+
+$$\theta_i = g(\boldsymbol{\beta}^T \varphi(\mathbf{W}_2^T \varphi(\mathbf{W}_1^T \mathbf{x}_i + \mathbf{c}_1) + \mathbf{c}_2) + b)$$
+
+Where:
+
+- $\mathbf{W}_1$ is the weight matrix for the first hidden layer
+
+- $\mathbf{c}_1$ is the bias vector for the first hidden layer
+
+- $\mathbf{W}_2$ is the weight matrix for the second hidden layer
+
+- $\mathbf{c}_2$ is the bias vector for the second hidden layer
+
+**4.2. Benefits of Depth Over Width**
+
+Deep networks offer several advantages over equivalently-sized wide networks:
+
+- **Hierarchical Feature Learning**: Each layer builds upon representations from previous layers
+
+- **Parameter Efficiency**: Deep networks can represent complex functions with fewer parameters
+
+- **Compositional Structure**: The nested structure allows for representing compositional relationships
+
+- **Inductive Bias**: The hierarchical structure aligns well with many real-world data types
+
+## 5. Training Neural Networks
+
+Neural networks are trained through empirical risk minimization, typically using variants of gradient descent.
+
+**5.1. Loss Functions**
+
+Common loss functions include:
+
+- Mean Squared Error for regression tasks
+
+- Cross-Entropy Loss for classification tasks:
+  $$\mathcal{L}(\boldsymbol{\theta} | \mathbf{X}, \mathbf{y}) = -\frac{1}{N} \sum_{i=1}^N [y_i \log(\theta_i) + (1-y_i)\log(1-\theta_i)]$$
+
+**5.2. Optimization Challenges**
+
+Neural networks pose unique optimization challenges:
+
+- Non-convex loss landscapes with multiple local minima
+
+- Gradient vanishing or explosion in deep networks
+
+- High sensitivity to initialization and hyperparameters
+
+- Large numbers of parameters requiring efficient optimization techniques
+
+Modern neural network training relies on:
+
+- Stochastic gradient descent and adaptive optimization methods
+
+- Proper initialization techniques
+
+- Regularization strategies
+
+- Batch normalization and other stabilization techniques
+
+## 6. Universal Approximation Properties
+
+Neural networks with just a single hidden layer of sufficient width can approximate any continuous function on a bounded domain with arbitrary precision. This theoretical result, known as the Universal Approximation Theorem, explains why neural networks can model highly complex relationships.
+
+The ability to learn representations directly from data, combined with their universal approximation properties, makes neural networks particularly powerful for complex tasks where feature engineering is difficult, such as image recognition, speech processing, and natural language understanding.

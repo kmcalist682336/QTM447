@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>QTM 447 - Statistical Machine Learning II - Lecture 27: Interpretable Machine Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../additional-styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">QTM 447 - Statistical Machine Learning II</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../syllabus.html" rel="" target="">
+ <span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../lectures/index.html" rel="" target="">
+ <span class="menu-text">Lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../lectures/glossary.html" rel="" target="">
+ <span class="menu-text">Glossary</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../lectures/resources.html" rel="" target="">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../lectures/search.html" rel="" target=""><i class="bi bi-search" role="img">
+</i> 
+ <span class="menu-text">Search Course Materials</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#motivation-for-interpretability" id="toc-motivation-for-interpretability" class="nav-link active" data-scroll-target="#motivation-for-interpretability">Motivation for Interpretability</a>
+  <ul class="collapse">
+  <li><a href="#the-importance-of-interpretability" id="toc-the-importance-of-interpretability" class="nav-link" data-scroll-target="#the-importance-of-interpretability">The Importance of Interpretability</a></li>
+  <li><a href="#the-interpretability-challenge" id="toc-the-interpretability-challenge" class="nav-link" data-scroll-target="#the-interpretability-challenge">The Interpretability Challenge</a></li>
+  </ul></li>
+  <li><a href="#glass-box-models" id="toc-glass-box-models" class="nav-link" data-scroll-target="#glass-box-models">Glass-Box Models</a>
+  <ul class="collapse">
+  <li><a href="#inherently-interpretable-models" id="toc-inherently-interpretable-models" class="nav-link" data-scroll-target="#inherently-interpretable-models">Inherently Interpretable Models</a></li>
+  <li><a href="#transparency-performance-trade-off" id="toc-transparency-performance-trade-off" class="nav-link" data-scroll-target="#transparency-performance-trade-off">Transparency-Performance Trade-off</a></li>
+  </ul></li>
+  <li><a href="#post-hoc-interpretability-methods" id="toc-post-hoc-interpretability-methods" class="nav-link" data-scroll-target="#post-hoc-interpretability-methods">Post-Hoc Interpretability Methods</a>
+  <ul class="collapse">
+  <li><a href="#lime-local-interpretable-model-agnostic-explanations" id="toc-lime-local-interpretable-model-agnostic-explanations" class="nav-link" data-scroll-target="#lime-local-interpretable-model-agnostic-explanations">LIME (Local Interpretable Model-agnostic Explanations)</a></li>
+  <li><a href="#permutation-importance" id="toc-permutation-importance" class="nav-link" data-scroll-target="#permutation-importance">Permutation Importance</a></li>
+  </ul></li>
+  <li><a href="#image-and-text-interpretability" id="toc-image-and-text-interpretability" class="nav-link" data-scroll-target="#image-and-text-interpretability">Image and Text Interpretability</a>
+  <ul class="collapse">
+  <li><a href="#saliency-maps-for-images" id="toc-saliency-maps-for-images" class="nav-link" data-scroll-target="#saliency-maps-for-images">Saliency Maps for Images</a></li>
+  <li><a href="#attention-visualization-for-text" id="toc-attention-visualization-for-text" class="nav-link" data-scroll-target="#attention-visualization-for-text">Attention Visualization for Text</a></li>
+  </ul></li>
+  <li><a href="#intrinsic-interpretability" id="toc-intrinsic-interpretability" class="nav-link" data-scroll-target="#intrinsic-interpretability">Intrinsic Interpretability</a>
+  <ul class="collapse">
+  <li><a href="#limitations-of-post-hoc-methods" id="toc-limitations-of-post-hoc-methods" class="nav-link" data-scroll-target="#limitations-of-post-hoc-methods">Limitations of Post-Hoc Methods</a></li>
+  <li><a href="#mixture-of-experts-moe" id="toc-mixture-of-experts-moe" class="nav-link" data-scroll-target="#mixture-of-experts-moe">Mixture of Experts (MoE)</a></li>
+  <li><a href="#other-glass-box-approaches" id="toc-other-glass-box-approaches" class="nav-link" data-scroll-target="#other-glass-box-approaches">Other Glass-Box Approaches</a></li>
+  </ul></li>
+  <li><a href="#future-directions" id="toc-future-directions" class="nav-link" data-scroll-target="#future-directions">Future Directions</a>
+  <ul class="collapse">
+  <li><a href="#research-priorities" id="toc-research-priorities" class="nav-link" data-scroll-target="#research-priorities">Research Priorities</a></li>
+  <li><a href="#industry-impact" id="toc-industry-impact" class="nav-link" data-scroll-target="#industry-impact">Industry Impact</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Lecture 27: Interpretable Machine Learning</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i></button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="motivation-for-interpretability" class="level2">
+<h2 class="anchored" data-anchor-id="motivation-for-interpretability">Motivation for Interpretability</h2>
+<section id="the-importance-of-interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="the-importance-of-interpretability">The Importance of Interpretability</h3>
+<ul>
+<li><p><strong>Model performance</strong> <span class="math inline">\(\neq\)</span> <strong>success</strong>: Classifiers can perform well for incorrect reasons</p></li>
+<li><p><strong>Safety</strong>: Detect and prevent critical failures (e.g., autonomous driving misclassifications)</p></li>
+<li><p><strong>Fairness</strong>: Reveal and mitigate biases across different groups</p></li>
+<li><p><strong>Privacy/Security</strong>: Ensure protection of sensitive information</p></li>
+<li><p><strong>Legal requirements</strong>: Compliance with regulations like GDPR’s “right to explanation”</p></li>
+</ul>
+</section>
+<section id="the-interpretability-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="the-interpretability-challenge">The Interpretability Challenge</h3>
+<ul>
+<li><p>Neural networks are complicated “black-box” algorithms: <span class="math inline">\(\hat{y} \propto \mathbf{W} \varphi(\mathbf{W} \varphi (...))\)</span></p></li>
+<li><p>Definition (Biran and Cotton, 2017): “Interpretability is the degree to which a human can understand the cause of a decision”</p></li>
+<li><p>Alternative definition (Kim et al., 2016): “… a user can correctly and efficiently predict the method’s results”</p></li>
+</ul>
+</section>
+</section>
+<section id="glass-box-models" class="level2">
+<h2 class="anchored" data-anchor-id="glass-box-models">Glass-Box Models</h2>
+<section id="inherently-interpretable-models" class="level3">
+<h3 class="anchored" data-anchor-id="inherently-interpretable-models">Inherently Interpretable Models</h3>
+<ul>
+<li><p><strong>Linear models</strong>: <span class="math inline">\(\hat{y} = g(\mathbf{X} \hat{\boldsymbol{\beta}})\)</span> - Changes in inputs directly relate to changes in predictions</p></li>
+<li><p><strong>Simple decision trees</strong>: Transparent decision paths</p></li>
+<li><p><strong>Ridge/LASSO</strong>: Regularized linear models with variable selection</p></li>
+<li><p><strong>Generalized Additive Models</strong>: Flexible but transparent functional forms</p></li>
+</ul>
+</section>
+<section id="transparency-performance-trade-off" class="level3">
+<h3 class="anchored" data-anchor-id="transparency-performance-trade-off">Transparency-Performance Trade-off</h3>
+<ul>
+<li><p>As transparency increases, bias typically increases</p></li>
+<li><p>Interpretable models require functional specification, which means making assumptions</p></li>
+<li><p>Modern machine learning needs universal approximators to model complex dependencies</p></li>
+<li><p>Universal approximators (RFs, NNs, SVMs) tend to be local in nature and difficult to interpret globally</p></li>
+</ul>
+</section>
+</section>
+<section id="post-hoc-interpretability-methods" class="level2">
+<h2 class="anchored" data-anchor-id="post-hoc-interpretability-methods">Post-Hoc Interpretability Methods</h2>
+<section id="lime-local-interpretable-model-agnostic-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="lime-local-interpretable-model-agnostic-explanations">LIME (Local Interpretable Model-agnostic Explanations)</h3>
+<ul>
+<li><p>Goal: Understand how changes in feature values affect predictions for individual instances</p></li>
+<li><p>Process:</p>
+<ol type="1">
+<li><p>Create perturbed samples around target instance <span class="math inline">\(\mathbf{x}\)</span></p></li>
+<li><p>Get predictions for perturbed samples from black box</p></li>
+<li><p>Compute proximity weights using kernel function</p></li>
+<li><p>Fit weighted LASSO to create local linear approximation: <span class="math inline">\(\hat{\boldsymbol{\beta}} = \underset{\{\beta_0, \boldsymbol{\beta}\}}{\text{argmin}} \sum_{i=1}^N w_i(\hat{y}_i - \beta_0 - \mathbf{x}_i' \boldsymbol{\beta})^2 + \lambda \sum_{j=1}^P |\beta_j|\)</span></p></li>
+</ol></li>
+<li><p>Strengths: Short, understandable explanations; easy implementation</p></li>
+<li><p>Weaknesses: Sensitive to neighborhood choice; unrealistic data points; limited to single-point analysis</p></li>
+</ul>
+</section>
+<section id="permutation-importance" class="level3">
+<h3 class="anchored" data-anchor-id="permutation-importance">Permutation Importance</h3>
+<ul>
+<li><p>Measures <strong>feature importance</strong> as impact on model performance</p></li>
+<li><p>Procedure:</p>
+<ol type="1">
+<li><p>Fit model and compute baseline performance on validation set</p></li>
+<li><p>For each feature, randomly permute its values and measure performance drop</p></li>
+<li><p>Rank features by performance decrease</p></li>
+</ol></li>
+<li><p>Advantage: Global measure of feature importance without refitting model</p></li>
+<li><p>Application: Standard method for random forests, gradient boosting, tabular neural nets</p></li>
+</ul>
+</section>
+</section>
+<section id="image-and-text-interpretability" class="level2">
+<h2 class="anchored" data-anchor-id="image-and-text-interpretability">Image and Text Interpretability</h2>
+<section id="saliency-maps-for-images" class="level3">
+<h3 class="anchored" data-anchor-id="saliency-maps-for-images">Saliency Maps for Images</h3>
+<ul>
+<li><p><strong>Vanilla Gradient Method</strong>:</p>
+<ol type="1">
+<li><p>Perform forward pass to get class score</p></li>
+<li><p>Compute gradient of score with respect to input pixels: <span class="math inline">\(\frac{\partial s_c}{\partial \mathbf{x}}\)</span></p></li>
+<li><p>Visualize gradient as heatmap</p></li>
+</ol>
+<ul>
+<li>Local linear approximation: <span class="math inline">\(s_c(\mathbf{x}) \approx \mathbf{w}^T \mathbf{x} + b\)</span> where <span class="math inline">\(\mathbf{w} = \frac{\partial s_c}{\partial \mathbf{x}}|_{\mathbf{x}_0}\)</span></li>
+</ul></li>
+<li><p><strong>SmoothGrad</strong>: Average gradients over multiple noise-added versions of image to reduce sensitivity</p></li>
+<li><p><strong>Gradient-weighted Class Activation Mapping (Grad-CAM)</strong>:</p>
+<ol type="1">
+<li><p>Compute gradient of score w.r.t. final convolutional layer activations</p></li>
+<li><p>Compute weights <span class="math inline">\(\alpha_d\)</span> by global average pooling gradients for each filter</p></li>
+<li><p>Create coarse heatmap: <span class="math inline">\(\mathbf{x}_{ij} = \text{ReLU}\left(\sum_{d=1}^D \alpha_d x_{i,j,d}\right)\)</span></p></li>
+<li><p>Upscale to original image size</p></li>
+</ol></li>
+<li><p><strong>Guided Grad-CAM</strong>: Combine vanilla gradients with Grad-CAM for finer detail</p></li>
+</ul>
+</section>
+<section id="attention-visualization-for-text" class="level3">
+<h3 class="anchored" data-anchor-id="attention-visualization-for-text">Attention Visualization for Text</h3>
+<ul>
+<li><p>Goal: Understand how words relate to each other and contribute to classification</p></li>
+<li><p>Challenge: Multiple attention heads and layers in transformer models</p></li>
+<li><p><strong>Attention matrices</strong>: Visualization of attention weights between tokens</p></li>
+<li><p><strong>Aggregation methods</strong>:</p>
+<ul>
+<li><p>Layer-wise averaging across attention heads</p></li>
+<li><p>Model-wide averaging across layers</p></li>
+<li><p><strong>Roll-out</strong>: Account for residual connections by adding identity matrix to attention matrices</p>
+<ul>
+<li><p>Augmented layer-wise attention: <span class="math inline">\(\tilde{\mathbf{A}}^\ell = \mathbf{A}^{\ell} + \mathcal{I}\)</span></p></li>
+<li><p>Rolled-out attention: <span class="math inline">\(\mathbf{R} = \hat{\mathbf{A}}^{(1)} \times \hat{\mathbf{A}}^{(2)} \times ... \times \hat{\mathbf{A}}^{(L)}\)</span></p></li>
+</ul></li>
+</ul></li>
+<li><p>Limitation: Aggregation loses specificity and causal importance</p></li>
+</ul>
+</section>
+</section>
+<section id="intrinsic-interpretability" class="level2">
+<h2 class="anchored" data-anchor-id="intrinsic-interpretability">Intrinsic Interpretability</h2>
+<section id="limitations-of-post-hoc-methods" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-of-post-hoc-methods">Limitations of Post-Hoc Methods</h3>
+<ul>
+<li><p>Cannot expect models to learn interpretable structures without designing for interpretability</p></li>
+<li><p>Post-hoc explanation may not reflect actual decision process</p></li>
+<li><p>Analogy: Training a puppy is more effective with immediate reinforcement than delayed feedback</p></li>
+</ul>
+</section>
+<section id="mixture-of-experts-moe" class="level3">
+<h3 class="anchored" data-anchor-id="mixture-of-experts-moe">Mixture of Experts (MoE)</h3>
+<ul>
+<li><p>Approach: Divide hidden units into expert blocks, each specializing in specific input patterns</p></li>
+<li><p>Implementation:</p>
+<ol type="1">
+<li><p>Break feedforward layer into K equally sized expert blocks</p></li>
+<li><p>Pass input through routing function that selects k &lt; K experts</p></li>
+<li><p>Process input only through selected experts</p></li>
+</ol></li>
+<li><p>Benefits:</p>
+<ul>
+<li><p>Each expert specializes in meaningful aspects of inputs</p></li>
+<li><p>Ensemble learning advantage: reduced model variance</p></li>
+<li><p>Efficiency: Significant decrease in training time for large models</p></li>
+<li><p>Applications: Found in Switch Transformers, LLaMA, DeepSeek models</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="other-glass-box-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="other-glass-box-approaches">Other Glass-Box Approaches</h3>
+<ul>
+<li><p><strong>Concept Bottleneck Models</strong>: Predict human-interpretable concepts as intermediary step</p></li>
+<li><p><strong>KNN Retrieval Models</strong>: Retrieve similar training examples to justify predictions</p></li>
+</ul>
+</section>
+</section>
+<section id="future-directions" class="level2">
+<h2 class="anchored" data-anchor-id="future-directions">Future Directions</h2>
+<section id="research-priorities" class="level3">
+<h3 class="anchored" data-anchor-id="research-priorities">Research Priorities</h3>
+<ul>
+<li><p>Designing models with built-in interpretability without sacrificing performance</p></li>
+<li><p>Integration of interpretability considerations into model training</p></li>
+<li><p>Improving efficiency and scalability of interpretable architectures</p></li>
+</ul>
+</section>
+<section id="industry-impact" class="level3">
+<h3 class="anchored" data-anchor-id="industry-impact">Industry Impact</h3>
+<ul>
+<li><p>Growing demand for interpretable AI in high-stakes applications</p></li>
+<li><p>Companies developing specialized architectures with transparency built in</p></li>
+<li><p>Compliance with emerging regulatory requirements driving innovation</p></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Lecture 27: Interpretable Machine Learning"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Motivation for Interpretability</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### The Importance of Interpretability</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model performance** $\neq$ **success**: Classifiers can perform well for incorrect reasons</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Safety**: Detect and prevent critical failures (e.g., autonomous driving misclassifications)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Fairness**: Reveal and mitigate biases across different groups</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Privacy/Security**: Ensure protection of sensitive information </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Legal requirements**: Compliance with regulations like GDPR's "right to explanation"</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">### The Interpretability Challenge</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Neural networks are complicated "black-box" algorithms: $\hat{y} \propto \mathbf{W} \varphi(\mathbf{W} \varphi (...))$</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Definition (Biran and Cotton, 2017): "Interpretability is the degree to which a human can understand the cause of a decision"</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Alternative definition (Kim et al., 2016): "... a user can correctly and efficiently predict the method's results"</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Glass-Box Models</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Inherently Interpretable Models</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Linear models**: $\hat{y} = g(\mathbf{X} \hat{\boldsymbol{\beta}})$ - Changes in inputs directly relate to changes in predictions</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Simple decision trees**: Transparent decision paths</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ridge/LASSO**: Regularized linear models with variable selection</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Generalized Additive Models**: Flexible but transparent functional forms</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Transparency-Performance Trade-off</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>As transparency increases, bias typically increases</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Interpretable models require functional specification, which means making assumptions</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Modern machine learning needs universal approximators to model complex dependencies</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Universal approximators (RFs, NNs, SVMs) tend to be local in nature and difficult to interpret globally</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Post-Hoc Interpretability Methods</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### LIME (Local Interpretable Model-agnostic Explanations)</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Goal: Understand how changes in feature values affect predictions for individual instances</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Process:</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>Create perturbed samples around target instance $\mathbf{x}$</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>Get predictions for perturbed samples from black box</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">  3. </span>Compute proximity weights using kernel function</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="ss">  4. </span>Fit weighted LASSO to create local linear approximation:</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>     $\hat{\boldsymbol{\beta}} = \underset{<span class="sc">\{</span>\beta_0, \boldsymbol{\beta}\}}{\text{argmin}} \sum_{i=1}^N w_i(\hat{y}_i - \beta_0 - \mathbf{x}_i' \boldsymbol{\beta})^2 + \lambda \sum_{j=1}^P |\beta_j|$</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Strengths: Short, understandable explanations; easy implementation</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Weaknesses: Sensitive to neighborhood choice; unrealistic data points; limited to single-point analysis</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">### Permutation Importance</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Measures **feature importance** as impact on model performance</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Procedure:</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>Fit model and compute baseline performance on validation set</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>For each feature, randomly permute its values and measure performance drop</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="ss">  3. </span>Rank features by performance decrease</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Advantage: Global measure of feature importance without refitting model</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Application: Standard method for random forests, gradient boosting, tabular neural nets</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## Image and Text Interpretability</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="fu">### Saliency Maps for Images</span></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Vanilla Gradient Method**:</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>Perform forward pass to get class score</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>Compute gradient of score with respect to input pixels: $\frac{\partial s_c}{\partial \mathbf{x}}$</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a><span class="ss">  3. </span>Visualize gradient as heatmap</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Local linear approximation: $s_c(\mathbf{x}) \approx \mathbf{w}^T \mathbf{x} + b$ where $\mathbf{w} = \frac{\partial s_c}{\partial \mathbf{x}}|_{\mathbf{x}_0}$</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**SmoothGrad**: Average gradients over multiple noise-added versions of image to reduce sensitivity</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Gradient-weighted Class Activation Mapping (Grad-CAM)**:</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>Compute gradient of score w.r.t. final convolutional layer activations</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>Compute weights $\alpha_d$ by global average pooling gradients for each filter</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="ss">  3. </span>Create coarse heatmap: $\mathbf{x}_{ij} = \text{ReLU}\left(\sum_{d=1}^D \alpha_d x_{i,j,d}\right)$</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="ss">  4. </span>Upscale to original image size</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Guided Grad-CAM**: Combine vanilla gradients with Grad-CAM for finer detail</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a><span class="fu">### Attention Visualization for Text</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Goal: Understand how words relate to each other and contribute to classification</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Challenge: Multiple attention heads and layers in transformer models</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Attention matrices**: Visualization of attention weights between tokens</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Aggregation methods**:</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Layer-wise averaging across attention heads</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Model-wide averaging across layers</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>**Roll-out**: Account for residual connections by adding identity matrix to attention matrices</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Augmented layer-wise attention: $\tilde{\mathbf{A}}^\ell = \mathbf{A}^{\ell} + \mathcal{I}$</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Rolled-out attention: $\mathbf{R} = \hat{\mathbf{A}}^{(1)} \times \hat{\mathbf{A}}^{(2)} \times ... \times \hat{\mathbf{A}}^{(L)}$</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Limitation: Aggregation loses specificity and causal importance</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a><span class="fu">## Intrinsic Interpretability</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limitations of Post-Hoc Methods</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cannot expect models to learn interpretable structures without designing for interpretability</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Post-hoc explanation may not reflect actual decision process</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Analogy: Training a puppy is more effective with immediate reinforcement than delayed feedback</span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mixture of Experts (MoE)</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Approach: Divide hidden units into expert blocks, each specializing in specific input patterns</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Implementation:</span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a><span class="ss">  1. </span>Break feedforward layer into K equally sized expert blocks</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="ss">  2. </span>Pass input through routing function that selects k &lt; K experts</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="ss">  3. </span>Process input only through selected experts</span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Benefits:</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Each expert specializes in meaningful aspects of inputs</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Ensemble learning advantage: reduced model variance</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Efficiency: Significant decrease in training time for large models</span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Applications: Found in Switch Transformers, LLaMA, DeepSeek models</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### Other Glass-Box Approaches</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Concept Bottleneck Models**: Predict human-interpretable concepts as intermediary step</span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**KNN Retrieval Models**: Retrieve similar training examples to justify predictions</span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Future Directions</span></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### Research Priorities</span></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Designing models with built-in interpretability without sacrificing performance</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Integration of interpretability considerations into model training</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Improving efficiency and scalability of interpretable architectures</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a><span class="fu">### Industry Impact</span></span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Growing demand for interpretable AI in high-stakes applications</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Companies developing specialized architectures with transparency built in</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Compliance with emerging regulatory requirements driving innovation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

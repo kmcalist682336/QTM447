@@ -1,0 +1,77 @@
+---
+title: "Search Course Materials"
+format:
+  html:
+    css: ../styles.css
+---
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Search functionality
+  document.getElementById('search-button').addEventListener('click', performSearch);
+  document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
+  
+  function performSearch() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    if (searchTerm.length < 2) {
+      alert('Please enter at least 2 characters to search');
+      return;
+    }
+    
+    const resultsContainer = document.getElementById('search-results');
+    resultsContainer.innerHTML = '<p>Searching...</p>';
+    
+    fetch('../search.json')
+      .then(response => response.json())
+      .then(data => {
+        const results = data.filter(item => 
+          (item.title && item.title.toLowerCase().includes(searchTerm)) || 
+          (item.section && item.section.toLowerCase().includes(searchTerm)) || 
+          (item.text && item.text.toLowerCase().includes(searchTerm))
+        );
+        
+        displayResults(results);
+      })
+      .catch(error => {
+        resultsContainer.innerHTML = '<p>Error searching. Please try again.</p>';
+        console.error('Search error:', error);
+      });
+  }
+  
+  function displayResults(results) {
+    const resultsContainer = document.getElementById('search-results');
+    
+    if (results.length === 0) {
+      resultsContainer.innerHTML = '<p>No results found.</p>';
+      return;
+    }
+    
+    let html = '<h3>Search Results</h3><ul>';
+    results.forEach(item => {
+      html += `<li><a href="${item.href}">${item.title}</a> - ${item.section || 'Main Content'}</li>`;
+    });
+    html += '</ul>';
+    
+    resultsContainer.innerHTML = html;
+  }
+});
+</script>
+
+<div class="search-container">
+  <input type="text" id="search-input" placeholder="Search lectures, topics, concepts...">
+  <button id="search-button">Search</button>
+</div>
+
+<div id="search-results">
+  <!-- Results will appear here -->
+</div>
+
+## Search Tips
+
+- Use specific terms from lectures when searching
+- Try both general concepts (e.g., "neural networks") and specific techniques (e.g., "backpropagation")
+- Course materials are fully searchable, including lecture summaries and slide content

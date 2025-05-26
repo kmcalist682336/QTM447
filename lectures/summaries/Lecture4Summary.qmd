@@ -1,0 +1,118 @@
+---
+title: "Lecture 4 Summary: Linear Models and Likelihood"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary bridges machine learning fundamentals with practical implementation of linear models, connecting empirical risk minimization with likelihood-based approaches within a unified statistical framework.
+
+## 1. From Predictive Models to Hypothesis Spaces
+
+In supervised learning, we seek to approximate an unknown function $f(\mathbf{x})$ that relates features to outcomes:
+
+$$y = f(\mathbf{x}) + \epsilon$$
+
+While the ideal goal is to minimize the true expected risk, this is generally impossible without knowing the true data-generating distribution. Instead, we work within a constrained **hypothesis space** $\mathcal{H}$ - the set of candidate functions we consider.
+
+**1.1. Linear Models as a Hypothesis Space**
+
+The most common hypothesis space is the set of linear models, characterized as:
+
+$$\hat{y}_0 = g(\phi(\mathbf{x}_0)^T \hat{\boldsymbol{\beta}})$$
+
+Where:
+
+- $\phi(\mathbf{x})$ is a feature extractor that can transform input features
+
+- $g(\cdot)$ is a function mapping inputs to outputs
+
+- $\hat{\boldsymbol{\beta}}$ are the model parameters to be learned
+
+An important insight: linear models don't necessarily produce linear decision boundaries. Through clever feature extraction, they can represent highly complex functions. Examples include polynomial expansions and kernel functions (polynomial and RBF kernels) that can capture non-linear patterns in data.
+
+## 2. Empirical Risk Minimization Framework
+
+Given that we can't minimize the true risk directly, we resort to **empirical risk minimization (ERM)** using our observed training data:
+
+$$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta}^*}{\text{argmin}} \frac{1}{N} \sum_{i=1}^{N} L(y_i, g(\phi(\mathbf{x}_i)^T \boldsymbol{\beta}^*))$$
+
+Since empirical risk typically underestimates generalization error, regularization serves as a correction:
+
+$$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta}^*}{\text{argmin}} \frac{1}{N} \sum_{i=1}^{N} L(y_i, g(\phi(\mathbf{x}_i)^T \boldsymbol{\beta}^*)) + \lambda C(\boldsymbol{\beta}^*)$$
+
+Where $C(\cdot)$ measures model complexity and $\lambda$ is a tuning parameter that controls the strength of the penalty.
+
+## 3. Common Linear Models and Their Losses
+
+Linear models can be categorized based on outcome types and their corresponding loss functions:
+
+- **Linear Regression (Continuous Outcomes)**:  
+  Uses mean squared error loss: $$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta}^*}{\text{argmin}} \frac{1}{N} \sum_{i=1}^{N} (y_i - \phi(\mathbf{x}_i)^T \boldsymbol{\beta}^*)^2$$
+
+- **Binary Logistic Regression (Binary Outcomes)**:  
+  Uses probability loss with the logistic function: $$\sigma(z) = \frac{\exp[z]}{1 + \exp[z]}$$
+
+- **Multinomial Logistic Regression (Categorical Outcomes)**:  
+  Uses probability loss with the softmax function: $$\sigma_k(\mathbf{z}) = \frac{\exp[z_k]}{\sum_{h=1}^{K} \exp[z_h]}$$
+
+## 4. Maximum Likelihood Estimation
+
+These common linear models can all be viewed through the lens of maximum likelihood estimation (MLE) from probability distributions in the exponential family.
+
+**4.1. The Normal Distribution and Linear Regression**
+
+For linear regression, assuming normally distributed errors:
+
+$$Pr(y_i | \mathbf{x}_i, \boldsymbol{\beta}, \sigma^2) = \mathcal{N}(y_i | \mathbf{x}_i^T \boldsymbol{\beta}, \sigma^2)$$
+
+The negative log-likelihood simplifies to mean squared error plus a constant, showing that maximizing the likelihood for Gaussian regression is equivalent to minimizing MSE:
+
+$$-\ell\ell(\boldsymbol{\beta}^* | \mathbf{X}, \mathbf{y}, \sigma^2) = C + \frac{1}{N} \sum_{i=1}^{N} (y_i - \mathbf{x}_i^T \boldsymbol{\beta})^2$$
+
+**4.2. The Bernoulli Distribution and Logistic Regression**
+
+For binary logistic regression, assuming Bernoulli-distributed outcomes:
+
+$$Pr(y_i | \mathbf{x}_i, \boldsymbol{\beta}) = \theta_i^{y_i} (1 - \theta_i)^{1-y_i}$$
+
+Where $\theta_i = \sigma(\mathbf{x}_i^T \boldsymbol{\beta})$ is the probability that $y_i = 1$.
+
+Unlike linear regression, logistic regression has no analytical solution, necessitating gradient-based optimization methods.
+
+## 5. Regularization for Linear Models
+
+Regularization improves model generalization by helping to bridge the gap between training error and generalization error.
+
+**5.1. Common Regularization Approaches**
+
+Two primary norm-based penalties:
+
+- **L2 Regularization (Ridge Regression)**:  
+  $$\text{NLL} + \lambda \|\boldsymbol{\beta}\|_2^2$$
+
+- **L1 Regularization (LASSO)**:  
+  $$\text{NLL} + \lambda \|\boldsymbol{\beta}\|_1$$
+
+**5.2. Effects of Regularization**
+
+Empirical examples demonstrate:
+
+- As $\lambda$ increases, coefficients shrink toward zero
+
+- L1 regularization promotes sparsity (some coefficients become exactly zero)
+
+- L2 regularization tends to distribute the penalty across all coefficients
+
+- There often exists an optimal $\lambda$ that minimizes generalization error
+
+**Conclusion:**
+
+This framework unifies linear models through empirical risk minimization and maximum likelihood estimation. Regularization techniques integrate into this framework to improve model generalization. This sets the foundation for optimization methods needed when analytical solutions don't exist, particularly for logistic regression and other non-linear models.

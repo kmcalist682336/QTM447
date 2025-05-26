@@ -1,0 +1,145 @@
+---
+title: "Lecture 5 Summary: Loss Minimization and Optimization"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary explores optimization techniques for finding parameters that minimize loss functions in machine learning models, bridging theoretical foundations with practical implementation challenges.
+
+## 1. The Empirical Risk Minimization Framework
+
+Machine learning problems with parameters can generally be expressed as minimizing empirical risk:
+
+$$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta}}{\text{argmin}} \frac{1}{N} \sum_{i=1}^{N} L(y_i, f(\boldsymbol{\beta}, \mathbf{x}_i)) + \lambda C(\boldsymbol{\beta})$$
+
+This framework encompasses numerous methods including:
+
+- Linear regression with MSE loss
+
+- Logistic regression with cross-entropy loss
+
+- Support vector machines with hinge loss
+
+Each requires finding coefficients that minimize their respective loss functions.
+
+## 2. Mathematical Foundations of Optimization
+
+Finding a minimum in the parameter space involves understanding:
+
+**2.1. Gradients and Critical Points**
+
+The gradient vector represents the direction of steepest ascent at any point:
+
+$$\mathbf{g}(\boldsymbol{\theta}) = \nabla \mathcal{L}(\boldsymbol{\theta}) = \begin{bmatrix}
+\frac{\partial \mathcal{L}(\boldsymbol{\theta})}{\partial \theta_1} \\
+\frac{\partial \mathcal{L}(\boldsymbol{\theta})}{\partial \theta_2} \\
+\vdots
+\end{bmatrix}$$
+
+A critical point occurs when $\mathbf{g}(\boldsymbol{\theta}) = \mathbf{0}$.
+
+**2.2. Hessians and Convexity**
+
+The Hessian matrix of second derivatives determines whether a critical point is a minimum:
+
+$$\mathbf{H}(\boldsymbol{\theta}) = \nabla^2 \mathcal{L}(\boldsymbol{\theta})$$
+
+A function is strictly convex if its Hessian is positive definite everywhere, guaranteeing a unique global minimum.
+
+For regularized linear regression, the Hessian:
+$$\mathcal{H}(\boldsymbol{\beta}) = \frac{2}{N}[\mathbf{X}^T\mathbf{X} + \lambda\mathcal{I}_P]$$
+is always positive definite, ensuring a single global minimum.
+
+For logistic regression, the Hessian can be expressed as $\mathbf{X}^T\mathbf{S}\mathbf{X}$, where $\mathbf{S}$ is a diagonal matrix with positive elements, also ensuring convexity.
+
+## 3. Gradient Descent Methods
+
+**3.1. Basic Gradient Descent**
+
+The simplest optimization approach follows the direction of steepest descent:
+
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta \mathbf{g}(\boldsymbol{\beta}_t)$$
+
+Where:
+
+- $\eta$ is the step size (learning rate)
+
+- $\mathbf{g}(\boldsymbol{\beta}_t)$ is the gradient evaluated at the current position
+
+This approach guarantees convergence to a minimum with a sufficiently small step size, but the trade-off between convergence speed and precision poses practical challenges.
+
+**3.2. Stochastic Gradient Descent (SGD)**
+
+Rather than using all N training examples to compute the gradient, SGD uses a small batch B (often just one example):
+
+$$\mathbf{g}(\boldsymbol{\beta}; \mathcal{B}) = \frac{1}{B} \sum_{j \in \mathcal{B}} \mathbf{g}(\boldsymbol{\beta}; \mathbf{x}_j, y_j)$$
+
+Key advantages:
+
+- Reduced computational complexity from $\mathcal{O}(NP)$ to $\mathcal{O}(P)$ per step
+
+- Avoids wasting time on redundant examples
+
+- Allows quick initial movement away from poor starting points
+
+Challenges:
+
+- Noisy gradient estimates lead to a "noise ball" around the minimum
+
+- Sensitivity to learning rate selection
+
+- Difficulty determining convergence
+
+## 4. Improving SGD Performance
+
+**4.1. Learning Rate Schedules**
+
+Instead of a fixed learning rate, polynomial decay schedules reduce step size over time:
+
+$$\eta_t = \eta_0(bt + 1)^{-a}$$
+
+This approach allows:
+
+- Large initial steps to quickly move away from poor starting positions
+
+- Progressively smaller steps as the algorithm approaches the minimum
+
+- Reduced final noise ball size
+
+**4.2. Iterate Averaging**
+
+Computing a running average of parameter values during SGD:
+
+$$\bar{\boldsymbol{\beta}}_{t} = \frac{1}{t} \sum \boldsymbol{\beta}_t = \frac{1}{t} \boldsymbol{\beta}_t + \frac{t-1}{t} \bar{\boldsymbol{\beta}}_{t-1}$$
+
+This technique:
+
+- Provides theoretical guarantees for optimal variance
+
+- Reduces the impact of random fluctuations around the minimum
+
+- Can work effectively even without learning rate schedules
+
+## 5. Practical Implementations
+
+Empirical demonstrations with logistic regression reveal:
+
+- The critical impact of step size selection on convergence
+
+- How SGD with just one example per step can match full gradient descent with proper tuning
+
+- The effectiveness of combining SGD with learning rate schedules or iterate averaging
+
+- The challenge of balancing convergence speed with final accuracy
+
+**Conclusion:**
+
+Optimization methods like SGD make machine learning feasible for large datasets by dramatically reducing computational complexity, particularly for models without closed-form solutions. The trade-offs between computational efficiency, convergence speed, and final accuracy can be managed through techniques like learning rate scheduling and iterate averaging. Modern improvements to SGD, including momentum and adaptive methods, further enhance efficiency by reducing the "random walk" behavior characteristic of basic SGD implementations.

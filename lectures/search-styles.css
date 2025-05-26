@@ -1,0 +1,65 @@
+/* Search page specific styles */
+.search-container {
+  margin: 2rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#search-input {
+  flex-grow: 1;
+  min-width: 200px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+#search-button {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#search-button:hover {
+  opacity: 0.9;
+}
+
+#search-results {
+  margin-top: 20px;
+}
+
+#search-results ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#search-results li {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.03);
+  transition: background-color 0.2s;
+}
+
+#search-results li:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] #search-input {
+  background-color: #1e1e1e;
+  color: #e6e6e6;
+  border-color: #444;
+}
+
+[data-theme="dark"] #search-results li {
+  background-color: rgba(255,255,255,0.05);
+}
+
+[data-theme="dark"] #search-results li:hover {
+  background-color: rgba(255,255,255,0.08);
+}

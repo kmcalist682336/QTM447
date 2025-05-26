@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <!-- Neural Network Presentation Theme -->
+    <style>
+        .node { fill: #3498db; }
+        .node-outline { stroke: #2980b9; stroke-width: 2; }
+        .connection { stroke: #95a5a6; stroke-width: 2; }
+        .screen { fill: #ecf0f1; stroke: #bdc3c7; }
+    </style>
+    
+    <!-- Presentation Screen -->
+    <rect class="screen" x="40" y="40" width="160" height="120" rx="4"/>
+    
+    <!-- Neural Network on Screen -->
+    <!-- Input Layer -->
+    <circle class="node" cx="80" cy="80" r="8"/>
+    <circle class="node" cx="80" cy="110" r="8"/>
+    <circle class="node" cx="80" cy="140" r="8"/>
+    
+    <!-- Hidden Layer -->
+    <circle class="node" cx="120" cy="70" r="8"/>
+    <circle class="node" cx="120" cy="100" r="8"/>
+    <circle class="node" cx="120" cy="130" r="8"/>
+    
+    <!-- Output Layer -->
+    <circle class="node" cx="160" cy="90" r="8"/>
+    <circle class="node" cx="160" cy="120" r="8"/>
+    
+    <!-- Connections -->
+    <g class="connections">
+        <!-- Input to Hidden -->
+        <line class="connection" x1="88" y1="80" x2="112" y2="70"/>
+        <line class="connection" x1="88" y1="80" x2="112" y2="100"/>
+        <line class="connection" x1="88" y1="110" x2="112" y2="100"/>
+        <line class="connection" x1="88" y1="110" x2="112" y2="130"/>
+        <line class="connection" x1="88" y1="140" x2="112" y2="130"/>
+        
+        <!-- Hidden to Output -->
+        <line class="connection" x1="128" y1="70" x2="152" y2="90"/>
+        <line class="connection" x1="128" y1="100" x2="152" y2="90"/>
+        <line class="connection" x1="128" y1="100" x2="152" y2="120"/>
+        <line class="connection" x1="128" y1="130" x2="152" y2="120"/>
+    </g>
+    
+    <!-- Stand -->
+    <path d="M120 160 L90 200 L150 200 Z" fill="#34495e"/>
+</svg> 

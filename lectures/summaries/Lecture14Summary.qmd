@@ -1,0 +1,200 @@
+---
+title: "Lecture 14: Object Detection in Computer Vision"
+format: html
+---
+
+## Computer Vision Tasks Beyond Classification
+
+Image classification—assigning a single label to an entire image—is just one of many computer vision tasks. More advanced applications require models that can:
+
+1. Locate multiple objects within images
+
+2. Identify the class of each object
+
+3. Precisely mark boundaries around detected objects
+
+Object detection addresses the first two tasks, providing both the classification (what) and localization (where) of objects in a scene.
+
+## Transfer Learning for Advanced Vision Tasks
+
+When approaching complex vision tasks, transfer learning offers significant advantages:
+
+### Feature Extraction Approach
+
+- Use pre-trained CNN backbone (often from ImageNet) as a feature extractor
+
+- Freeze the convolutional layers to maintain learned representations
+
+- Add task-specific heads for new objectives
+
+- Train only the new heads while keeping the feature extractor fixed
+
+### Fine-Tuning Approach
+
+- Initialize model with pre-trained weights
+
+- Add task-specific layers for the desired task
+
+- Train in stages:
+
+  1. Train only the new layers with backbone frozen
+
+  2. Unfreeze deeper layers gradually ("progressive unfreezing")
+
+  3. Train the entire network with a very small learning rate
+
+Best practices for fine-tuning include:
+
+- Use significantly lower learning rates (10-100× smaller)
+
+- Require substantial task-specific data
+
+- Only unfreeze deeper layers when necessary
+
+## Object Detection Fundamentals
+
+Object detection combines classification with localization to identify multiple objects in images.
+
+### Task Definition
+
+For each object in an image, predict:
+
+- Class label (from a predefined set of categories)
+
+- Bounding box coordinates, typically represented as:
+
+  - $(x_{min}, y_{min}, width, height)$ or
+
+  - $(x_{min}, y_{min}, x_{max}, y_{max})$
+
+These bounding boxes are usually axis-aligned (parallel to image edges) for simplicity and computational efficiency.
+
+### Evaluation Metrics
+
+The primary metric for measuring bounding box accuracy is **Intersection over Union (IoU)**:
+
+$$IoU = \frac{\text{Area of Intersection}}{\text{Area of Union}}$$
+
+IoU ranges from 0 (no overlap) to 1 (perfect overlap) and provides a geometric measure of detection quality.
+
+## Two-Stage Detectors: R-CNN Family
+
+Two-stage detectors divide the detection process into region proposal and classification/refinement stages.
+
+### R-CNN (Regions with CNN)
+
+The original R-CNN approach follows these steps:
+
+1. **Region Proposal**: Use selective search to identify ~2,000 potential object regions
+
+   - Selective search merges similar regions based on color, texture, and other visual cues
+
+   - More efficient than exhaustive sliding windows (which would require billions of evaluations)
+
+2. **Feature Extraction**: Pass each proposed region through a CNN
+
+   - Resize each region to fit CNN input dimensions
+
+   - Extract fixed-length feature vectors
+
+3. **Classification**: Apply SVM classifiers to categorize each region
+
+   - One classifier per object category
+
+   - Includes a background class for non-objects
+
+4. **Bounding Box Refinement**: Apply regression to improve bounding box precision
+
+### Training Process
+
+The training procedure for R-CNN requires defining positive and negative examples:
+
+- **Positive examples**: Region proposals with IoU > 0.5 with any ground truth box
+
+- **Negative examples (hard negatives)**: Region proposals with IoU < 0.3 with all ground truth boxes
+
+- **Ignored examples**: Region proposals with IoU between 0.3 and 0.5
+
+### Prediction and Post-Processing
+
+After obtaining raw detections, **Non-Maximum Suppression (NMS)** removes redundant predictions:
+
+1. Select the highest-scoring detection
+
+2. Eliminate overlapping detections with IoU > threshold (typically 0.7)
+
+3. Repeat until no redundant detections remain
+
+### Limitations of Two-Stage Detectors
+
+Despite their accuracy, R-CNN and its variants (Fast R-CNN, Faster R-CNN) suffer from:
+
+- High computational cost (~0.5-5 frames per second)
+
+- Complex multi-stage pipeline
+
+- Impractical for real-time applications
+
+## Single-Shot Detectors
+
+Single-shot detectors perform object detection in a single forward pass through the network, dramatically improving speed.
+
+### YOLO (You Only Look Once)
+
+YOLO revolutionized object detection by reformulating it as a single regression problem:
+
+1. **Grid Division**: Divide the image into an S×S grid
+
+2. **Prediction Structure**: For each grid cell, predict:
+
+   - Object presence probability
+
+   - B bounding boxes with confidence scores
+
+   - Class probabilities
+
+3. **Output Representation**: The output is a tensor of shape:
+   $$S \times S \times (B \times 5 + C)$$
+   Where B is the number of boxes per cell and C is the number of classes
+
+4. **Unified Architecture**: Uses a fully convolutional network without separate proposal and classification stages
+
+5. **Joint Loss Function**: Combines localization, confidence, and classification losses:
+
+   - Bounding box coordinate error (weighted higher for boxes containing objects)
+
+   - Objectness score error (presence/absence of objects)
+
+   - Classification error (only for cells containing objects)
+
+### Advantages of Single-Shot Detectors
+
+YOLO and similar models (SSD, RetinaNet) offer:
+
+- Real-time detection speeds (45-155 FPS for YOLOv3-v9)
+
+- End-to-end training
+
+- Reasonable accuracy, though historically slightly lower than two-stage detectors
+
+- Practical deployment in resource-constrained environments
+
+### Evolution of Detectors
+
+Modern object detection has seen a convergence in performance:
+
+- Two-stage detectors offer higher accuracy but lower speed
+
+- Single-shot detectors offer higher speed but lower accuracy
+
+- Recent advances (YOLOv4-v9, EfficientDet) have narrowed this gap
+
+The choice between architectures depends on application requirements:
+
+- Safety-critical applications may prioritize accuracy (two-stage)
+
+- Real-time applications may prioritize speed (single-shot)
+
+- Mobile applications may prioritize efficiency (specialized single-shot)
+
+This progression reflects a fundamental engineering tradeoff between speed and accuracy that continues to drive innovation in the field.

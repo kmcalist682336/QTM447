@@ -1,0 +1,203 @@
+---
+title: "Lecture 15: Semantic Segmentation and Advanced CNN Applications"
+format: html
+---
+
+## Semantic Segmentation
+
+Semantic segmentation represents a pixel-level classification task in computer vision, where each pixel in an image is assigned a semantic class label.
+
+### Task Definition
+
+Unlike object detection that provides bounding boxes around objects, semantic segmentation:
+
+- Classifies every pixel in the image
+
+- Does not differentiate between instances of the same class (all cows are labeled as "cow")
+
+- Includes both foreground objects and background elements
+
+The output is a label map of the same dimensions as the input image, where each pixel value corresponds to a class index.
+
+### Naive Approach and Limitations
+
+A straightforward approach might attempt to:
+
+- Apply a standard CNN backbone
+
+- Use fully connected layers to classify each pixel independently
+
+This approach presents critical limitations:
+
+- Computationally expensive when processing high-resolution images
+
+- Fails to effectively utilize spatial context and neighborhood relationships
+
+- Loses localization information during downsampling
+
+## U-Net Architecture
+
+U-Net represents a specialized encoder-decoder architecture that addresses the challenges of semantic segmentation.
+
+### Encoder-Decoder Framework
+
+The U-Net architecture consists of two primary components:
+
+**Encoder Path (Contracting)**:
+
+- Progressively reduces spatial dimensions through downsampling
+
+- Increases feature channels to capture abstract representations
+
+- Follows traditional CNN pattern of convolution + pooling
+
+**Decoder Path (Expanding)**:
+
+- Progressively increases spatial dimensions through upsampling
+
+- Decreases feature channels to approach segmentation map
+
+- Uses transposed convolutions to recover spatial information
+
+### Skip Connections
+
+The defining feature of U-Net is its skip connections that:
+
+- Connect corresponding layers between encoder and decoder paths
+
+- Preserve high-resolution spatial information lost during downsampling
+
+- Concatenate feature maps from encoding path to decoding path
+
+- Form the characteristic "U" shape in the architecture diagram
+
+### Transposed Convolution for Upsampling
+
+Transposed convolution (sometimes called deconvolution) enables learnable upsampling:
+
+$$\mathbf{X} \circledast^{-1} \mathbf{K} \rightarrow \text{larger output}$$
+
+Key properties include:
+
+- Inverse operation to standard convolution with stride > 1
+
+- Expands input dimensions rather than contracting them
+
+- Weights are learned during training, unlike fixed interpolation methods
+
+- Stride in transposed convolution refers to output matrix spacing
+
+Conceptually, transposed convolution can be viewed as a learnable interpolation method that reconstructs higher-resolution features from compressed representations.
+
+### Training and Loss Functions
+
+U-Net training typically employs:
+
+- Pixel-wise cross-entropy loss for classification accuracy
+
+- Intersection over Union (IoU) metrics for evaluation:
+  $$IoU = \frac{\text{True Positives}}{\text{True Positives + False Positives + False Negatives}}$$
+
+## Instance Segmentation
+
+Instance segmentation extends semantic segmentation by distinguishing individual instances of objects.
+
+### Task Definition
+
+For each object instance in the image:
+
+- Identify the class label (as in object detection)
+
+- Generate a pixel-perfect mask (as in semantic segmentation)
+
+- Assign a unique identifier to each instance
+
+Unlike semantic segmentation, instance segmentation:
+
+- Differentiates between multiple instances of the same class
+
+- Focuses primarily on foreground objects rather than background
+
+- Requires both classification and boundary delineation
+
+### Mask R-CNN
+
+Mask R-CNN extends Faster R-CNN by adding a branch for predicting segmentation masks:
+
+1. Uses a standard object detection backbone to identify regions of interest
+
+2. For each region, generates both class predictions and bounding boxes
+
+3. Adds a parallel branch that predicts a binary mask for each detected object
+
+### Segment Anything Model (SAM)
+
+Meta's Segment Anything Model (SAM) represents a recent advancement in instance segmentation:
+
+- Trained on an unprecedented dataset of 11 million images with 1.1 billion masks
+
+- Functions as a foundation model for segmentation tasks
+
+- Can identify object "blobs" without specific class labels
+
+- Supports interactive prompting (e.g., point-based queries)
+
+- Designed for zero-shot transfer to new segmentation tasks
+
+SAM demonstrates how large-scale pretraining can create universal segmentation capabilities across diverse visual domains.
+
+## Generative Applications of CNNs
+
+CNNs can be inverted to generate images rather than classify them, shifting from discriminative models $P(y|x)$ to generative models $P(x|y)$.
+
+### Bayesian Framework
+
+This inversion uses Bayes' theorem:
+
+$$P(x|y=c) = \frac{1}{Z}P(y=c|x)P(x)$$
+
+Where:
+
+- $P(y=c|x)$ is provided by the CNN classifier (likelihood)
+
+- $P(x)$ is an image prior
+
+- $Z$ is a normalizing constant
+
+### Langevin Dynamics for Image Generation
+
+The unadjusted Langevin algorithm enables sampling from the posterior by iteratively updating:
+
+$$x_{t+1} = x_t + \epsilon_1 \frac{\partial \log P(x_t)}{\partial x_t} + \epsilon_2 \frac{\partial \log P(y=c|x_t)}{\partial x_t}$$
+
+Key components include:
+
+- Gradient of the CNN classifier with respect to input
+
+- Gradient of the image prior
+
+- Step sizes $\epsilon_1$ and $\epsilon_2$ to balance these influences
+
+### Total Variation Prior
+
+A common differentiable image prior is the total variation (TV) prior:
+
+$$TV(x) = \sum_{i,j,k} (x_{i,j,k} - x_{i+1,j,k})^2 + (x_{i,j,k} - x_{i,j+1,k})^2$$
+
+This prior:
+
+- Encourages smoothness between adjacent pixels
+
+- Penalizes sharp transitions and noise
+
+- Balances the classifier's tendency to generate exaggerated features
+
+### Creative Applications
+
+While computationally intensive, this approach has enabled creative applications:
+
+- DeepDream: Amplifying patterns recognized by CNN layers
+
+- Neural Style Transfer: Combining content from one image with style from another
+
+These techniques demonstrate how CNNs can not only analyze visual data but also generate novel visual content by leveraging learned representations.

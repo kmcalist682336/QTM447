@@ -1,0 +1,97 @@
+---
+title: "Summary: Lecture 3 - Generalization Error"
+author: "GitHub Copilot"
+date: today
+date-format: long
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    html-math-method: katex
+    self-contained: true
+editor: visual
+---
+
+This lecture, "Generalization Error," delves into the crucial concept of how well a model trained on a specific dataset will perform on new, unseen data. It establishes the fundamental principle that generalization error is always greater than or equal to training error.
+
+## 1. Understanding Generalization Error
+
+The lecture initially breaks down generalization error with a foundational formula:
+$$Generalization Error = Training Error + \frac{2}{N} \sum Cov(y_i, \hat{y}_i)$$
+This equation highlights that the discrepancy between generalization error and training error widens as the covariance between the actual outcomes ($y_i$) and the model's predictions ($\hat{y}_i$) increases.
+
+Key introductory concepts include:
+
+-   **Fixed X Assumption**: A simplifying assumption in early analysis where training features (X) are considered constant, while outcomes vary due to different noise draws (e.g., $y = f(x) + \epsilon$ vs. $y' = f(x) + \epsilon'$).
+
+-   **Polynomial Regression Example**: This serves as an illustration of how increasing model complexity (e.g., the degree of a polynomial) can lead to the model becoming overly "wiggly" and fitting to noise, a phenomenon known as overfitting. The lecture uses Python code and visualizations to demonstrate how polynomials of varying degrees fit noisy data.
+
+    -   A core idea presented is that the prediction at any given point is a weighted combination of the training outcomes: $$\hat{y}_0 = \mathbf{x}_0^T \hat{\beta} = \mathbf{x}_0^T (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$$
+
+    -   For linear models, the sum of self-covariances is shown to be $P\sigma^2$, which results in a training error offset of $\frac{2P\sigma^2}{N}$. This implies that a model with more features (a higher $P$) will have increased covariance, thereby enlarging the gap between training and generalization error. This effect is mitigated by a larger sample size $N$.
+
+-   **Primary Factors Affecting Generalization**:
+
+    1.  The magnitude of the training error.
+
+    2.  The covariance between training outcomes and the model's predictions.
+
+    3.  The size of the training sample.
+
+## 2. Bias-Variance Decomposition (for MSE)
+
+When the fixed X assumption is relaxed, the generalization error under Mean Squared Error (MSE) can be decomposed into three fundamental components:
+$$E_\mathcal{T}[(y - \hat{y})^2] = V_{y|x}[y] (Irreducible Error) + V_D[\hat{y}] (Model Variance) + (E_D[\hat{y}] - f(x))^2 (Bias^2)$$
+Let's examine each term:
+
+-   **Bias ($Bias^2$)**: Defined as $(E_D[\hat{y}] - f(x))^2$. This term quantifies the difference between the average prediction of the model (if trained on many different datasets D) and the true underlying function $f(x)$. Bias tends to decrease as model flexibility increases, but it is bounded. **Underfitting** is often characterized by high bias.
+
+-   **Model Variance ($V_D[\hat{y}]$)**: This term measures the variability of the model's predictions if it were trained on different datasets D. Model variance typically increases with model flexibility (complexity) and decreases with a larger sample size. **Overfitting** is often characterized by high model variance.
+
+-   **Irreducible Error ($V_{y|x}[y]$)**: This component represents the inherent noise or randomness in the data generating process that no model can eliminate.
+
+Python examples are used to visualize how bias and model variance change for polynomial regression models of different degrees and with varying sample sizes, effectively illustrating the **bias-variance tradeoff**.
+
+An approximation for Generalization Error encapsulates this tradeoff:
+$$\sigma^2 + \mathcal{O}(\frac{1}{C}) + \mathcal{O}(\frac{C}{N})$$
+Here, $C$ represents model complexity. This formula underscores that if $C$ is too high, model variance can dominate (overfitting), and if $C$ is too low, bias can dominate (underfitting).
+
+## 3. Generalization in Classification (0/1 Loss)
+
+For classification tasks, where 0/1 loss is common, the generalization error is the expected probability of misclassification:
+$$E_\mathcal{T}[I(y \neq \hat{y})]$$
+
+-   **Vapnik-Chervonenkis (VC) Bound**: This provides a theoretical upper bound on the generalization error for classification models:
+    $$GenError \le TrainError + \sqrt{\frac{1}{N} \left[ d \left(\log \frac{2N}{d} + 1\right) - \log \frac{\delta}{4} \right]}$$
+    In this bound, $d$ is the **VC dimension** of the classifier.
+
+-   **VC Dimension ($d$)**: This is a measure of a classifier's complexity or capacity. It's defined as the size of the largest set of points that the classifier can "shatter" (i.e., correctly classify for all $2^d$ possible binary labelings).
+
+    -   For instance, linear classifiers in $P$ dimensions have a VC dimension of $P+1$.
+
+    -   Some complex models, like 1-Nearest Neighbor (1NN) or Support Vector Machines (SVMs) with Radial Basis Function (RBF) kernels, can have an infinite VC dimension, although the VC bound represents a worst-case scenario.
+
+-   The training offset term in the VC bound (the part added to Training Error) increases with the VC dimension $d$ and decreases with the sample size $N$.
+
+-   Analogous to the MSE case, the generalization error for 0/1 loss can also be thought of in terms of a complexity tradeoff: $$GenError \approx \mathcal{O}(\frac{1}{C}) + \mathcal{O}(\frac{C}{N})$$
+
+## 4. Practical Measurement of Generalization Error
+
+Theoretical bounds are insightful, but practical estimation of generalization error is crucial for model selection and assessment.
+
+-   **Heldout Test Set**: This is a portion of data that is never used during the training or tuning phases. It provides an unbiased estimate of how the model will perform on new, unseen data.
+
+-   **Validation Set**: This dataset is used to tune model hyperparameters (e.g., selecting the value of K in K-Nearest Neighbors, or determining the strength of a regularization penalty).
+
+-   **Data Splitting Strategies**:
+
+    -   For **large datasets**, a common approach is a three-way split: training set, validation set, and test set.
+
+    -   For **smaller datasets**, K-fold cross-validation is often preferred for hyperparameter tuning to make more efficient use of limited data, followed by a final evaluation on a heldout test set.
+
+The lecture strongly emphasizes that models should **never** be chosen based solely on their performance on the training error, as this is not indicative of real-world performance.
+
+## Conclusion
+
+The lecture wraps up by highlighting that the next topics will focus on specific regression methodologies, including linear and logistic regression, the concept of likelihoods, and the use of regularization techniques to improve generalization. A detailed derivation of the MSE decomposition is also noted as being available at the end of the original lecture slides.

@@ -1,0 +1,58 @@
+---
+title: "Course Content Map"
+format:
+  html:
+    css: ../styles.css
+    toc: true
+    toc-depth: 3
+---
+
+## Course Structure
+
+This page organizes all lecture materials by topic area to help you navigate the course content.
+
+### Foundations of Machine Learning
+
+- [Lecture 1: Introduction to Machine Learning](lecture1.qmd)
+- [Lecture 2: Machine Learning Fundamentals](lecture2.qmd)
+- [Lecture 3: Generalization: The Predictive Goal](lecture3.qmd)
+- [Lecture 4: Bias-Variance Tradeoff](lecture4.qmd)
+
+### Linear Models and Regularization
+
+- [Lecture 5: Linear Regression & Regularization](lecture5.qmd)
+- [Lecture 6: Logistic Regression](lecture6.qmd)
+- [Lecture 7: Specialized Regularizers](lecture7.qmd)
+- [Lecture 8: Generalized Linear Models](lecture8.qmd)
+
+### Decision Trees and Ensemble Methods
+
+- [Lecture 9: Decision Trees](lecture9.qmd)
+- [Lecture 10: Backpropagation and Gradient Problems](lecture10.qmd)
+- [Lecture 11: Vanishing Gradients and Generalization for Deep Neural Networks](lecture11.qmd)
+- [Lecture 12: Boosting and Ensembles](lecture12.qmd)
+
+### Neural Networks and Deep Learning
+
+- [Lecture 13: Neural Networks I](lecture13.qmd)
+- [Lecture 14: Neural Networks II](lecture14.qmd)
+- [Lecture 15: Neural Networks III - Optimization](lecture15.qmd)
+- [Lecture 16: Computer Vision and CNNs](lecture16.qmd)
+- [Lecture 17: Advanced CNNs](lecture17.qmd)
+- [Lecture 18: Recurrent Neural Networks](lecture18.qmd)
+- [Lecture 19: Transformers](lecture19.qmd)
+
+### Generative Models
+
+- [Lecture 20: Generative Models: Autoregressives and Autoencoders](lecture20.qmd)
+- [Lecture 21: Variational Autoencoders (VAEs)](lecture21.qmd)
+- [Lecture 22: Bayesian Machine Learning](lecture22.qmd)
+
+### Advanced Topics
+
+- [Lecture 23: Generative Adversarial Networks](lecture23.qmd)
+- [Lecture 24: Diffusion Models](lecture24.qmd)
+- [Lecture 25: Self-supervised Learning](lecture25.qmd)
+- [Lecture 26: Reinforcement Learning I](lecture26.qmd)
+- [Lecture 27: Reinforcement Learning II](lecture27.qmd)
+- [Lecture 28: The Future of AI](lecture28.qmd)

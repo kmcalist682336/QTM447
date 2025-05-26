@@ -1,0 +1,191 @@
+---
+title: "Lecture 19: Representation Learning, Vision Transformers, and Autoregressive Generation"
+format: html
+---
+
+## Representation Learning with BERT
+
+While generative transformer models like GPT focus on predicting the next token in a sequence, representation learning approaches the problem from a fundamentally different perspective.
+
+### The Representation Learning Paradigm
+
+Representation learning models like BERT (Bidirectional Encoder Representations from Transformers) aim to develop rich contextual understanding of inputs rather than generating continuations:
+
+- Focus on capturing the meaning and relationships within data
+
+- Leverage bidirectional context rather than unidirectional prediction
+
+- Create versatile representations that can be applied to multiple downstream tasks
+
+- Emphasize understanding over generation
+
+This approach is particularly valuable for tasks where complete context is available at inference time, such as text classification, entity recognition, or question answering.
+
+### BERT Architecture and Training
+
+BERT uses the encoder portion of the transformer architecture with several key modifications:
+
+1. **Input Structure**: BERT uses special tokens to structure inputs:
+
+   - `<CLS>` token at the beginning, which aggregates sequence-level representations
+
+   - `<SEP>` tokens to separate different sentences within an input
+
+   - `<MASK>` tokens that replace words to be predicted during training
+
+2. **Pre-training Objectives**: BERT is trained with two simultaneous tasks:
+
+   - **Masked Language Modeling (MLM)**: Randomly mask 15% of input tokens and train the model to predict them based on bidirectional context
+
+   - **Next Sentence Prediction (NSP)**: Predict whether two sentences appear consecutively in text
+
+3. **Input Representation**: Each token receives three types of embeddings:
+
+   - Token embeddings representing the word identity
+
+   - Segment embeddings indicating which sentence the token belongs to
+
+   - Position embeddings encoding sequential position
+
+4. **Model Variants**:
+
+   - BERT-base: 12 layers, 768-dimensional hidden states, 12 attention heads (110M parameters)
+
+   - BERT-large: 24 layers, 1024-dimensional hidden states, 16 attention heads (340M parameters)
+
+### Transfer Learning with BERT
+
+BERT's power stems from its ability to transfer contextual language understanding to various downstream tasks:
+
+1. Pre-train on massive text corpora (Wikipedia + BooksCorpus)
+
+2. Fine-tune for specific tasks by:
+
+   - Adding task-specific layers on top of the pre-trained representations
+
+   - Updating all parameters end-to-end with a small learning rate
+
+   - Achieving state-of-the-art performance with minimal task-specific data
+
+This transfer learning approach dramatically reduces the computational resources needed for specific NLP tasks, as the general language understanding is already encoded in the pre-trained model.
+
+## Vision Transformers
+
+The success of transformers in NLP has inspired their application to computer vision, challenging the dominance of convolutional neural networks.
+
+### Adapting Transformers for Images
+
+Vision Transformers (ViT) apply self-attention mechanisms to image data, but face a fundamental challenge: images contain significantly more "tokens" than text, with each pixel potentially representing an individual token.
+
+The key innovation in ViT addresses this challenge through:
+
+1. **Patch-based Tokenization**: Instead of treating individual pixels as tokens:
+
+   - Divide the image into fixed-size patches (typically 16×16 pixels)
+
+   - Flatten each patch into a vector
+
+   - Project these vectors to the transformer's working dimension
+
+2. **Class Token**: Similar to BERT's `<CLS>` token, a learnable embedding is prepended to the sequence of patch embeddings to aggregate information for classification.
+
+3. **Position Embeddings**: Learnable position embeddings are added to patch embeddings to retain spatial information lost in the flattening process.
+
+### ViT Architecture
+
+The ViT architecture closely follows the transformer encoder:
+
+1. Input image is divided into patches and linearly embedded
+
+2. Position embeddings are added to patch embeddings
+
+3. The resulting sequence is processed through multiple transformer encoder blocks:
+
+   - Multi-head self-attention
+
+   - MLP blocks
+
+   - Layer normalization and residual connections
+
+4. The final representation of the class token is fed into a classification head
+
+### Performance and Scaling Properties
+
+Vision Transformers demonstrate several important properties:
+
+- They perform competitively with CNNs only when trained on large datasets
+
+- They scale very efficiently with more data and model size
+
+- They require fewer computational resources at comparable performance levels
+
+- They lack the inductive biases of CNNs (locality, translation equivariance)
+
+- They can capture long-range dependencies more efficiently than CNNs
+
+Recent developments like Swin Transformers combine the strengths of both approaches by incorporating local attention windows that progressively merge, similar to how CNNs hierarchically process visual information.
+
+## Autoregressive Generation
+
+Autoregressive generation represents a powerful approach to modeling complex data distributions by factorizing them as products of conditional probabilities.
+
+### Principles of Autoregressive Modeling
+
+The core insight of autoregressive models stems from the chain rule of probability:
+
+$$P(\mathbf{x}) = P(x_1) \cdot P(x_2|x_1) \cdot P(x_3|x_1,x_2) \cdot ... \cdot P(x_n|x_1,...,x_{n-1})$$
+
+This allows modeling a joint distribution as a sequence of conditional distributions, where each element depends on all previous elements. For generation:
+
+1. Sample first element from $P(x_1)$
+
+2. Sample second element from $P(x_2|x_1)$
+
+3. Continue until the entire sequence is generated
+
+This approach provides explicit likelihood modeling and allows direct sampling from the learned distribution.
+
+### Language Generation with GPT
+
+GPT (Generative Pre-trained Transformer) implements autoregressive modeling for text:
+
+- Uses masked self-attention to prevent looking at future tokens
+
+- Predicts probability distribution over next token given all previous tokens
+
+- Scales effectively with more data and parameters
+
+- Can be primed with initial text to generate contextually relevant continuations
+
+GPT's masked self-attention mechanism is perfectly suited for autoregressive modeling, as it naturally implements the conditional probability structure required.
+
+### Image Generation with PixelRNN/PixelCNN
+
+Autoregressive models can also generate images by treating them as sequences of pixels:
+
+1. **Sequence Definition**: Define an ordering of pixels (typically row by row, from top-left)
+
+2. **Context Modeling**: Model each pixel as dependent on all previous pixels
+
+3. **Network Architecture**: Use RNNs (PixelRNN) or masked convolutions (PixelCNN) to capture dependencies
+
+PixelRNN specifically uses LSTM units to model the conditional distribution of each pixel:
+
+$$\mathbf{h}_{x,y} = f(\mathbf{h}_{x-1,y}, \mathbf{h}_{x,y-1})$$
+$$P(\mathbf{x}_{x,y}|\mathbf{x}_{<(x,y)}) = g(\mathbf{h}_{x,y})$$
+
+Where $\mathbf{h}_{x,y}$ is the hidden state for position $(x,y)$ and $g$ is a function that outputs a distribution over pixel values.
+
+### Limitations of Autoregressive Generation
+
+While theoretically elegant, autoregressive models face practical challenges:
+
+1. **Sequential Generation**: Generating samples is inherently sequential and cannot be parallelized
+
+2. **Computational Complexity**: For high-dimensional data like images, generation becomes extremely slow
+
+3. **Limited Resolution**: Practical applications for images are often limited to small resolutions (e.g., 64×64)
+
+4. **Long-range Dependencies**: Capturing dependencies between distant elements remains challenging
+
+These limitations have motivated alternative approaches to generative modeling, such as variational autoencoders and generative adversarial networks, which offer different tradeoffs between likelihood modeling, sampling efficiency, and generation quality.

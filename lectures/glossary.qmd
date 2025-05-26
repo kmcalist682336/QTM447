@@ -1,0 +1,936 @@
+---
+title: "Machine Learning Glossary"
+format:
+  html:
+    css: ../styles.css
+    toc: true
+    toc-depth: 1
+---
+
+## Introduction
+
+This glossary provides definitions for key machine learning concepts covered in QTM 447. Each entry includes a concise, academically-focused explanation derived directly from course lectures, along with links to the specific lectures where the concept is discussed in detail. Use this resource as a reference guide throughout the course.
+
+## A
+
+### Accuracy
+A performance metric quantifying the proportion of correct predictions (both true positives and true negatives) among all cases examined. While useful for balanced datasets, accuracy can be misleading when class distributions are skewed.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error), [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### Activation Function
+Mathematical functions applied to neural network layer outputs that introduce non-linearity, enabling networks to learn complex patterns. Key activation functions include:
+
+- **ReLU (Rectified Linear Unit):** $f(x) = \max(0, x)$, widely used due to efficient gradient computation and helping mitigate vanishing gradients
+- **Sigmoid:** $f(x) = \frac{1}{1+e^{-x}}$, maps values to [0,1], useful for binary classification outputs
+- **Tanh:** $f(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$, maps values to [-1,1], often performs better than sigmoid in hidden layers
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 9](lecture9.qmd) (Deep Neural Networks)
+
+### Adam Optimizer
+An adaptive learning rate optimization algorithm that combines ideas from momentum and RMSProp, maintaining per-parameter learning rates adapted based on first and second moments of gradients. Features include:
+
+- Bias correction for moments
+- Adaptive step sizes for each parameter
+- Computational efficiency
+- Good performance across a wide range of problems without extensive hyperparameter tuning
+
+**Related lectures:** [Lecture 6](lecture6.qmd) (Adaptive Methods for Minimization)
+
+### Area Under the Curve (AUC)
+A performance metric for binary classification that measures the area under the ROC curve. AUC represents the probability that a randomly chosen positive instance ranks higher than a randomly chosen negative instance. An AUC of 1.0 indicates perfect ranking, while 0.5 represents random chance.
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals)
+
+### Attention Mechanism
+A neural network component that allows models to focus on different parts of the input when producing outputs. Attention computes weighted sums of input elements based on relevance scores, enabling models to selectively emphasize important information. This mechanism is fundamental to modern sequence processing architectures like Transformers.
+
+**Related lectures:** [Lecture 18](lecture18.qmd) (Transformers and the Attention Revolution)
+
+### Autoencoder
+Neural networks designed to learn efficient data representations (encodings) in an unsupervised manner by attempting to reconstruct their own inputs. The architecture consists of:
+
+- **Encoder:** Compresses input data into a lower-dimensional latent representation
+- **Bottleneck/latent space:** The compressed representation capturing essential features
+- **Decoder:** Reconstructs the original input from the latent representation
+
+Applications include dimensionality reduction, denoising, anomaly detection, and as components in generative models.
+
+**Related lectures:** [Lecture 20](lecture20.qmd) (Generative Models: Autoregressives and Autoencoders)
+
+### Autoregressive Models
+Models that predict sequential outputs where each element depends on previously generated elements, modeling the probability distribution as:
+
+$$p(x_1, x_2, ..., x_n) = \prod_{i=1}^n p(x_i | x_1, x_2, ..., x_{i-1})$$
+
+Used extensively in sequential data modeling such as language models, time series forecasting, and some generative models. Examples include traditional AR models, RNN-based language models, and GPT architectures.
+
+**Related lectures:** [Lecture 16](lecture16.qmd) (Recurrent Neural Networks and Sequence Modeling), [Lecture 20](lecture20.qmd) (Generative Models: Autoregressives and Autoencoders)
+
+## B
+
+### Backpropagation
+The primary algorithm for training neural networks by computing gradients of the loss function with respect to model parameters. Consists of two main phases:
+
+1. **Forward pass:** Computing all intermediate values through the network to calculate the output and loss
+2. **Backward pass:** Efficiently calculating gradients using the chain rule by propagating derivatives backward from the loss
+
+The algorithm leverages computational graphs to track dependencies and facilitates efficient parameter updates through gradient-based optimization.
+
+**Related lectures:** [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+### Batch Normalization
+A technique that normalizes layer inputs across mini-batches during training, maintaining internal representations with zero mean and unit variance:
+
+$$\hat{x}^{(k)} = \frac{x^{(k)} - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$$
+
+After normalization, learnable parameters $\gamma$ and $\beta$ allow the network to undo the normalization if optimal:
+
+$$y^{(k)} = \gamma^{(k)} \hat{x}^{(k)} + \beta^{(k)}$$
+
+Advantages include:
+
+- Accelerated training by reducing internal covariate shift
+- Improved gradient flow
+- Regularizing effect that reduces overfitting
+- Enables higher learning rates
+
+**Related lectures:** [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization), [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+### Bayesian Machine Learning
+A probabilistic approach to machine learning that applies Bayesian statistics to model uncertainty by:
+
+- Incorporating prior beliefs about parameters using probability distributions
+- Updating these beliefs with observed data using Bayes' theorem
+- Producing posterior distributions over parameters rather than point estimates
+- Enabling principled uncertainty quantification in predictions
+
+Key methods include Bayesian linear regression, Bayesian neural networks, and Gaussian processes.
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning)
+
+### Bias-Variance Tradeoff
+A fundamental concept in statistical learning theory that decomposes prediction error into three components:
+
+- **Bias:** Systematic error from incorrect model assumptions or insufficient complexity
+- **Variance:** Error from sensitivity to training data fluctuations
+- **Irreducible error:** Inherent noise that cannot be eliminated
+
+As model complexity increases, bias typically decreases while variance increases. Finding the optimal complexity minimizes the combined error (bias² + variance) to achieve better generalization.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Boosting
+An ensemble learning approach where weak learners (typically shallow decision trees) are trained sequentially, with each new model focusing on the mistakes of previous models. Examples include:
+
+- **AdaBoost:** Adjusts instance weights to emphasize previously misclassified examples
+- **Gradient Boosting:** Iteratively fits models to the residual errors of previous models
+- **XGBoost/LightGBM:** Optimized implementations with regularization and efficient training
+
+**Related lectures:** [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+## C
+
+### Categorical Cross-Entropy Loss
+A loss function for multi-class classification problems measuring the difference between predicted probability distribution $\hat{p}$ and true distribution $p$ (usually one-hot encoded):
+
+$$L = -\sum_{i=1}^C p_i \log(\hat{p}_i)$$
+
+Where $C$ is the number of classes, $p_i$ is the true probability of class $i$ (typically 0 or 1), and $\hat{p}_i$ is the predicted probability. Minimizing this loss maximizes the log-likelihood of the correct classifications.
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals), [Lecture 5](lecture5.qmd) (Optimization Foundations and Stochastic Gradient Descent), [Lecture 8](lecture8.qmd) (Introduction to Neural Networks)
+
+### Computational Graph
+A directed acyclic graph representation of mathematical operations where nodes represent operations (addition, multiplication, activation functions) and edges represent data flow. This structure enables:
+
+- Systematic computation of gradients using the chain rule
+- Efficient implementation of backpropagation by storing intermediate values
+- Automatic differentiation in deep learning frameworks
+
+**Related lectures:** [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+### Confusion Matrix
+A table used to evaluate classification model performance, showing the counts of true positives, true negatives, false positives, and false negatives. Helps calculate precision, recall, F1 score, and other metrics.
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals), [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Convolutional Neural Network (CNN)
+Neural network architectures specialized for processing grid-structured data (especially images) through specialized layers:
+
+- **Convolutional layers:** Apply learned filters across spatial dimensions, detecting local patterns while sharing parameters
+- **Pooling layers:** Reduce spatial dimensions by summarizing regions (max pooling, average pooling)
+- **Fully connected layers:** Typically used in final stages for classification or regression
+
+Key benefits include translation invariance, parameter efficiency through weight sharing, and hierarchical feature learning. Notable architectures include LeNet, AlexNet, VGG, and ResNet.
+
+**Related lectures:** [Lecture 12](lecture12.qmd) (Image Classification with Convolutional Neural Networks), [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+### Cross-Validation
+A model evaluation technique that partitions data into training and validation sets multiple times to estimate performance. Common approaches include:
+
+- **K-fold cross-validation:** Divides data into k equal subsets (folds), trains on k-1 folds and tests on the remaining fold, rotating through all folds
+- **Leave-one-out cross-validation:** Uses a single observation for validation and all others for training, repeated for each observation
+- **Stratified cross-validation:** Maintains class distribution proportions in each fold
+
+Cross-validation provides more reliable performance estimates than single train-test splits, especially with limited data.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Curriculum Learning
+Training strategy where models are taught easier concepts before harder ones, similar to how humans learn. This approach can lead to better performance and faster convergence by gradually increasing task complexity during training.
+
+**Related lectures:** [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+## D
+
+### Data Augmentation
+A regularization technique that artificially expands training datasets by applying label-preserving transformations to existing samples. Common transformations include:
+
+- **Image domain:** Rotations, flips, crops, color adjustments, elastic distortions
+- **Text domain:** Synonym substitution, back-translation, random deletion
+- **Audio domain:** Time stretching, pitch shifting, adding noise
+
+**Related lectures:** [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+### Decision Boundaries
+The separating surfaces in feature space that demarcate different class regions in classification models. In linear models, these are hyperplanes; in nonlinear models, they can form complex shapes. Decision boundaries directly relate to model complexity - more flexible models can create more intricate decision boundaries.
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 9](lecture9.qmd) (Deep Neural Networks)
+
+### Decision Trees
+Non-parametric supervised learning models that recursively partition the feature space based on feature values to create a tree-like model of decisions. Key components include:
+
+- **Nodes:** Test a particular feature against a threshold
+- **Branches:** Outcomes of the tests
+- **Leaf nodes:** Final predictions or class assignments
+- **Splitting criteria:** Metrics like entropy, information gain, or Gini impurity that determine optimal splits
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Deep Learning
+A subset of machine learning using neural networks with multiple layers to progressively extract higher-level features from raw input. Characterized by:
+
+- Automatic feature extraction without manual engineering
+- End-to-end learning from raw data to final output
+- Hierarchical representations increasing in abstraction with network depth
+- Capacity to model extremely complex, non-linear relationships
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 9](lecture9.qmd) (Deep Neural Networks)
+
+### Diffusion Models
+Generative models that learn to convert noise into structured data by reversing a gradual noising process. The approach involves:
+
+1. **Forward process:** Gradually adding Gaussian noise to training data according to a fixed schedule until it becomes pure noise
+2. **Reverse process:** Training a neural network to denoise images step by step
+3. **Sampling:** Generating new data by starting with random noise and iteratively denoising
+
+Key advantages include high-quality generation, stable training, and good sample diversity. Examples include DDPM and Stable Diffusion.
+
+**Related lectures:** [Lecture 26](lecture26.qmd) (Diffusion Models)
+
+### Dropout
+A regularization technique where randomly selected neurons are temporarily removed during training iterations:
+
+1. For each training batch, each neuron has probability $p$ of being retained
+2. During testing, all neurons are used but outputs are scaled by $p$ to maintain expected activation levels
+
+This prevents co-adaptation of neurons, effectively training an ensemble of subnetworks, which reduces overfitting and improves generalization.
+
+**Related lectures:** [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+## E
+
+### Early Stopping
+A regularization technique where training is halted when performance on a validation set stops improving. Implementation typically involves:
+
+1. Monitoring validation loss/metric during training
+2. Stopping when validation performance has not improved for a specified number of iterations (patience)
+3. Reverting to the model weights that achieved best validation performance
+
+This prevents overfitting by not allowing the model to continue learning noise in the training data.
+
+**Related lectures:** [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+### Embedding
+A learned mapping from discrete entities (words, categories, user IDs) to continuous vector spaces of lower dimensionality. Embeddings:
+
+- Capture semantic relationships between entities in vector space
+- Enable neural networks to process categorical inputs
+- Place similar entities close together in the embedding space
+- Serve as dense, information-rich features for downstream tasks
+
+Common applications include word embeddings (Word2Vec, GloVe), entity embeddings, and graph embeddings.
+
+**Related lectures:** [Lecture 17](lecture17.qmd) (Sequence-to-Sequence Models and Attention Mechanisms), [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+### Ensemble Methods
+Techniques that combine multiple models to improve predictive performance and robustness. Major approaches include:
+
+- **Bagging (Bootstrap Aggregating):** Trains models on random subsets of data with replacement and averages predictions
+- **Boosting:** Sequentially trains models with each focusing on errors from previous models
+- **Stacking:** Uses a meta-model that learns how to best combine predictions from base models
+- **Random Forests:** Combines bagging with random feature subset selection in decision trees
+
+Ensembles typically achieve better generalization by reducing variance or bias depending on the method used.
+
+**Related lectures:** [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization), [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+### Explainable AI (XAI)
+Methods and techniques that make AI systems' decisions understandable and interpretable to humans. Approaches include:
+- **Post-hoc methods:** Feature importance, SHAP values, LIME, attention visualization
+- **Glass-box models:** Inherently interpretable models like decision trees, linear models
+- **Concept attribution:** Mapping activations to human-understandable concepts
+- **Counterfactual explanations:** Identifying minimal changes to inputs that would change outputs
+
+XAI is crucial for building trust, ensuring fairness, meeting regulatory requirements, and identifying potential biases in models.
+
+**Related lectures:** [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+### Evidence Lower Bound (ELBO)
+A key concept in variational inference that provides a tractable lower bound on the marginal log-likelihood of observed data:
+
+$$\text{ELBO} = \mathbb{E}_Q[\log P(\mathbf{x}|\mathbf{z},\boldsymbol{\theta})] - D_{KL}(Q(\mathbf{z}|\mathbf{x},\boldsymbol{\phi}) || P(\mathbf{z}))$$
+
+The ELBO consists of two components:
+
+- **Reconstruction term**: Expected log-likelihood of data given latent variables
+- **Regularization term**: KL divergence between the approximate posterior and the prior
+
+Maximizing the ELBO is equivalent to minimizing the KL divergence between the approximate and true posterior distributions. This objective function is central to training variational autoencoders and other approximate Bayesian methods.
+
+**Related lectures:** [Lecture 23](lecture23.qmd) (Variational Autoencoders)
+
+## F
+
+### Feature Engineering
+The process of using domain knowledge to extract or create features from raw data to improve machine learning model performance. Techniques include:
+
+- **Transformation:** Applying mathematical functions to create new representations
+- **Encoding:** Converting categorical variables to numerical form
+- **Discretization:** Binning continuous variables into categories
+- **Interaction features:** Creating new features from combinations of existing ones
+- **Feature extraction:** Deriving informative features from raw data
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 9](lecture9.qmd) (Deep Neural Networks)
+
+### Feature Selection
+Techniques for identifying and selecting the most relevant variables for model building. Common approaches include:
+
+- **Filter methods:** Evaluate features independently using statistical measures (correlation, chi-square)
+- **Wrapper methods:** Test feature subsets using the model itself (recursive feature elimination)
+- **Embedded methods:** Perform selection during model training (L1 regularization)
+
+Effective feature selection improves model performance, reduces training time, and enhances model interpretability.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error), [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### Forward and Backward Passes
+The two fundamental computational phases in neural network training:
+
+- **Forward Pass**: The computation flow from input to output where:
+  - Input data propagates through the network layer by layer
+  - Each layer applies weights, biases, and activation functions
+  - Intermediate values and final outputs are computed and stored
+  - The loss function evaluates prediction quality
+
+- **Backward Pass**: The computation flow from output back to input where:
+  - Gradients of the loss with respect to parameters are computed
+  - The chain rule is applied to propagate error signals backward
+  - Parameter updates are calculated for optimization algorithms
+  - Weights and biases are adjusted to minimize the loss
+
+**Related lectures:** [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+### Fine-tuning
+The process of further training a pre-trained model on a specific target task with domain-specific data. The approach typically involves:
+
+1. Starting with a model pre-trained on a large general dataset
+2. Replacing or modifying the output layers for the target task
+3. Training on the target dataset, typically with lower learning rates
+4. Potentially freezing early layers to preserve general features
+
+Fine-tuning leverages knowledge transfer to achieve better performance with less task-specific data.
+
+**Related lectures:** [Lecture 19](lecture19.qmd) (Transfer Learning)
+
+### F1 Score
+A performance metric that combines precision and recall into a single harmonized score:
+
+$$F1 = 2 \cdot \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}$$
+
+F1 score ranges from 0 (worst) to 1 (best) and is particularly valuable for imbalanced classification problems where both false positives and false negatives are important considerations.
+
+**Related lectures:** [Lecture 6](lecture6.qmd) (Classification Performance Metrics)
+
+## G
+
+### Gated Recurrent Unit (GRU)
+A type of recurrent neural network architecture that uses gating mechanisms to control information flow. Simpler than LSTMs with fewer parameters, GRUs use reset and update gates to handle the vanishing gradient problem while maintaining good performance.
+
+**Related lectures:** [Lecture 16](lecture16.qmd) (Recurrent Neural Networks and Sequence Modeling)
+
+### Generalization Error
+The expected error when applying a model to new, unseen data. It measures how well a model performs beyond its training data and can be estimated using validation sets or cross-validation. Good generalization is the ultimate goal of machine learning.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Generative Adversarial Networks (GANs)
+Framework where two neural networks compete in a game-theoretic scenario:
+
+- **Generator**: Creates synthetic data samples trying to fool the discriminator
+- **Discriminator**: Distinguishes between real and generated samples
+
+Through this adversarial process, the generator learns to produce increasingly realistic data, while the discriminator becomes better at detecting fakes. This minimax game continues until equilibrium, resulting in a generator that creates high-quality synthetic data.
+
+**Related lectures:** [Lecture 24](lecture24.qmd) (VAE Extensions and GANs Introduction), [Lecture 25](lecture25.qmd) (Generative Adversarial Networks)
+
+### Generative Models
+Models that learn to generate new data samples from the same distribution as the training data. Types include:
+
+- **Autoregressive models**: Model sequential dependencies (e.g., PixelCNN, GPT)
+- **Variational Autoencoders**: Learn probabilistic latent representations
+- **GANs**: Use adversarial training to generate realistic samples
+- **Diffusion models**: Generate data by reversing a noising process
+- **Flow-based models**: Use invertible transformations to model probability distributions
+
+**Related lectures:** [Lecture 20](lecture20.qmd) (Generative Models: Autoregressives and Autoencoders), [Lecture 24](lecture24.qmd) (VAE Extensions and GANs Introduction), [Lecture 25](lecture25.qmd) (Generative Adversarial Networks), [Lecture 26](lecture26.qmd) (Diffusion Models)
+
+### Generalized Linear Models (GLMs)
+Extension of linear regression that allows for response variables with non-normal distributions. GLMs consist of:
+
+- **Random component**: Specifies the distribution of the response variable (e.g., Gaussian, Binomial, Poisson)
+- **Systematic component**: Linear combination of predictors
+- **Link function**: Connects the expected value of the response to the linear predictor
+
+Common examples include logistic regression, Poisson regression, and log-linear models.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### Gradient Descent
+An optimization algorithm used to minimize loss functions by iteratively adjusting parameters in the direction of steepest descent of the gradient. Variants include:
+
+- **Batch Gradient Descent**: Uses entire dataset for each update
+- **Stochastic Gradient Descent (SGD)**: Uses a single sample for each update
+- **Mini-batch Gradient Descent**: Uses a small random subset of data for each update
+
+**Related lectures:** [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization), [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+## H
+
+### Hyperparameter
+Parameters set before training begins (unlike model parameters that are learned during training). Examples include learning rate, number of layers, number of neurons per layer, batch size, and regularization strength. Tuning hyperparameters typically requires techniques like grid search, random search, or Bayesian optimization.
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+## I
+
+### Information Gain
+A metric used in decision trees to determine the quality of a split, based on the reduction in entropy after a dataset is split. Higher information gain indicates a more useful split.
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Instance Segmentation
+Computer vision task that involves identifying each instance of each object in an image at the pixel level. It combines elements of object detection (finding and classifying objects) with semantic segmentation (determining the class of each pixel).
+
+**Related lectures:** [Lecture 14](lecture14.qmd) (Object Detection in Computer Vision), [Lecture 15](lecture15.qmd) (Semantic Segmentation and Advanced CNN Applications)
+
+## K
+
+### K-means Clustering
+An unsupervised learning algorithm that partitions data into K clusters by minimizing the sum of squared distances between data points and their assigned cluster centroids. The algorithm works by:
+
+1. Randomly initializing K cluster centroids
+2. Assigning each data point to the nearest centroid
+3. Updating centroids based on assigned points
+4. Repeating steps 2-3 until convergence
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals)
+
+### Kernel Methods
+Techniques that implicitly transform data into higher-dimensional spaces without explicitly computing the coordinates in that space. The kernel trick allows for efficient computation of inner products in these spaces, making non-linear patterns linearly separable. Support Vector Machines often use kernel methods.
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Kullback-Leibler (KL) Divergence
+A statistical measure that quantifies the difference between two probability distributions P and Q:
+
+$$D_{KL}(P||Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)} \text{ or } \int P(x) \log \frac{P(x)}{Q(x)} dx$$
+
+Key properties include:
+
+- Always non-negative (≥ 0)
+- Equals zero only when the distributions are identical
+- Asymmetric: $D_{KL}(P||Q) \neq D_{KL}(Q||P)$
+
+In machine learning, KL divergence serves as:
+
+- A regularization term in variational autoencoders
+- A component in the evidence lower bound (ELBO)
+- A loss function for matching probability distributions
+- A way to measure how much information is lost when approximating one distribution with another
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning), [Lecture 23](lecture23.qmd) (Variational Autoencoders)
+
+## M
+
+### Machine Learning Fundamentals
+The core components that define machine learning as articulated by Tom Mitchell (1997):
+
+- **Tasks (T)**: The objectives the algorithm aims to achieve:
+  - **Prediction**: Forecasting future or unknown values
+  - **Description**: Uncovering patterns or structures in data
+  - **Inference/Explanation**: Understanding causal relationships and variable impacts
+
+- **Experience (E)**: The data that fuels learning:
+  - **Supervised Learning**: Uses labeled data
+  - **Unsupervised Learning**: Uses unlabeled data
+  - **Semi-supervised Learning**: Uses both labeled and unlabeled data
+  - **Reinforcement Learning**: Learning through environment interaction
+
+- **Performance Measure (P)**: Metrics quantifying algorithm performance, typically through loss functions
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals)
+
+## L
+
+### L1 Regularization (LASSO)
+Regularization technique that adds the sum of absolute values of coefficients to the loss function, promoting sparsity by shrinking less important feature coefficients to exactly zero. The regularization term is $\lambda\sum|w_i|$, where $\lambda$ controls the strength of the penalty.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### L2 Regularization (Ridge)
+Regularization technique that adds the sum of squared coefficients to the loss function, preventing overfitting by shrinking all coefficients toward zero but rarely setting them exactly to zero. The regularization term is $\lambda\sum w_i^2$, where $\lambda$ controls the strength of the penalty.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+### Laplace Approximation
+A method for approximating Bayesian posterior distributions with a multivariate Gaussian distribution centered at the maximum a posteriori (MAP) estimate:
+
+$$P(\boldsymbol{\theta}|\mathcal{D}) \approx \mathcal{N}(\boldsymbol{\theta}|\hat{\boldsymbol{\mu}}, \hat{\boldsymbol{\Sigma}})$$
+
+Where:
+
+- $\hat{\boldsymbol{\mu}} = \arg\max_{\boldsymbol{\theta}} P(\boldsymbol{\theta}|\mathcal{D})$ is the MAP estimate
+- $\hat{\boldsymbol{\Sigma}} = -\left[\frac{\partial^2 \log P(\hat{\boldsymbol{\mu}}|\mathcal{D})}{\partial \boldsymbol{\theta} \partial \boldsymbol{\theta}'}\right]^{-1}$ is the inverse Hessian of the negative log posterior
+
+This approximation is particularly useful for models with intractable posterior distributions, providing both parameter estimates and uncertainty quantification. The Bernstein-von Mises theorem guarantees that under certain conditions, the posterior distribution converges to this normal approximation as sample size increases.
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning)
+
+### Latent Space
+A compressed representation in lower dimensions that captures the essential features of the input data. In autoencoders and VAEs, this is the bottleneck layer. Points that are close in latent space should represent semantically similar inputs.
+
+**Related lectures:** [Lecture 20](lecture20.qmd) (Generative Models: Autoregressives and Autoencoders), [Lecture 24](lecture24.qmd) (VAE Extensions and GANs Introduction)
+
+### Learning Rate
+A hyperparameter that controls how much to adjust model weights in response to the estimated error during training. Too high a learning rate can cause training to diverge; too low can cause it to converge too slowly or get stuck in suboptimal solutions.
+
+**Related lectures:** [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization), [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+### Learning Rate Scheduling
+Techniques to adjust the learning rate during training, typically reducing it over time. Common approaches include step decay, exponential decay, cosine annealing, and warm restarts.
+
+**Related lectures:** [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization), [Lecture 6](lecture6.qmd) (Adaptive Methods for Minimization)
+
+### Likelihood
+In statistical inference, the conditional probability of observing the data given specific parameter values, expressed as $P(\mathcal{D}|\boldsymbol{\theta})$. The likelihood function:
+
+- Measures how well different parameter values explain observed data
+- Forms the basis for maximum likelihood estimation (MLE) when maximizing $P(\mathcal{D}|\boldsymbol{\theta})$
+- Serves as a critical component in Bayes' theorem: $P(\boldsymbol{\theta}|\mathcal{D}) \propto P(\mathcal{D}|\boldsymbol{\theta})P(\boldsymbol{\theta})$
+- Often expressed and optimized in logarithmic form (log-likelihood) for computational stability
+
+Common examples include Gaussian likelihood for regression and Bernoulli likelihood for binary classification.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 22](lecture22.qmd) (Bayesian Machine Learning)
+
+### Long Short-Term Memory (LSTM)
+A specialized recurrent neural network architecture designed to address the vanishing gradient problem in standard RNNs. LSTMs use gating mechanisms (input, forget, and output gates) to retain information over long sequences.
+
+**Related lectures:** [Lecture 16](lecture16.qmd) (Recurrent Neural Networks and Sequence Modeling)
+
+### Logistic Regression
+Statistical model used for binary classification that applies the logistic (sigmoid) function to a linear combination of features, transforming an unbounded output to a probability between 0 and 1. The formula is:
+
+$$P(y = 1 | \mathbf x) = \frac{1}{1 + \exp[-\mathbf w^T \mathbf x - b]}$$
+
+
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization)
+
+### Loss Function
+A function that quantifies how well a model's predictions match the true values. Common loss functions include:
+
+- **Mean Squared Error (MSE)**: For regression problems
+- **Cross-Entropy Loss**: For classification problems
+- **Hinge Loss**: Used in SVMs
+- **Kullback-Leibler Divergence**: Measures difference between probability distributions
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals), [Lecture 3](lecture3.qmd) (Generalization Error), [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization)
+
+## M
+
+### Marginal Likelihood
+Also known as model evidence, the marginal likelihood represents the probability of observing the data integrated over all possible parameter values:
+
+$$P(\mathcal{D}) = \int P(\mathcal{D}|\boldsymbol{\theta})P(\boldsymbol{\theta})d\boldsymbol{\theta}$$
+
+Key properties and applications include:
+
+- Serves as the normalizing constant in Bayes' theorem
+- Automatically implements Occam's razor, balancing model fit and complexity
+- Used for model comparison and hyperparameter selection 
+- Often computationally intractable, requiring approximation methods
+- For linear regression with normal prior: $P(\mathbf{y}|\mathbf{X}) = \mathcal{N}(\mathbf{y}|\mathbf{X}\boldsymbol{\mu}_0, \sigma^2\mathbf{I} + \mathbf{X}\boldsymbol{\Sigma}_0\mathbf{X}^T)$
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning), [Lecture 23](lecture23.qmd) (Variational Autoencoders)
+
+### Maximum Likelihood Estimation (MLE)
+A method for estimating the parameters of a statistical model by finding values that maximize the likelihood function, which measures how probable the observed data is given the parameter values.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### Model Calibration
+The property that a model's predicted probabilities accurately reflect true probabilities. A well-calibrated model's confidence should match its accuracy. Techniques include Platt scaling and temperature scaling.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+### Multi-Head Attention
+An extension of self-attention that runs multiple attention mechanisms in parallel, allowing the model to focus on different aspects of the input simultaneously. Each "head" projects the input into different subspaces before computing attention, capturing diverse relationships in the data. The outputs from all heads are concatenated and linearly transformed to produce the final result. This approach enhances model expressivity by enabling attention to different representation subspaces and positions.
+
+**Related lectures:** [Lecture 18](lecture18.qmd) (Transformers and the Attention Revolution)
+
+### Multi-Layer Perceptron (MLP)
+A feedforward neural network with at least one hidden layer between input and output layers. Each neuron in one layer connects to every neuron in the next layer, using non-linear activation functions to learn complex patterns.
+
+**Related lectures:** [Lecture 8](lecture8.qmd) (Introduction to Neural Networks), [Lecture 9](lecture9.qmd) (Deep Neural Networks)
+
+## N
+
+### Neural Network Architecture
+The specific arrangement of layers, neurons, and connections in a neural network. Includes the number of layers (depth), neurons per layer (width), types of layers, activation functions, and connectivity patterns.
+
+**Related lectures:** [Lecture 9](lecture9.qmd) (Deep Neural Networks), [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+### Normalization
+Techniques that adjust the scale of inputs or internal representations to improve neural network training. Examples include:
+
+- **Batch Normalization**: Normalizes layer inputs within a mini-batch
+- **Layer Normalization**: Normalizes across features for each sample
+- **Instance Normalization**: Normalizes across spatial dimensions for each sample
+- **Group Normalization**: Normalizes across subsets of channels
+
+**Related lectures:** [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization), [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+## O
+
+### Object Detection
+Computer vision task that involves identifying and localizing multiple objects in images. Combines classification (what objects are present) with localization (where they are). Common architectures include R-CNN, Fast R-CNN, Faster R-CNN, YOLO, and SSD.
+
+**Related lectures:** [Lecture 14](lecture14.qmd) (Object Detection in Computer Vision)
+
+### One-Hot Encoding
+A representation of categorical variables as binary vectors where each position corresponds to a category, and only one position has a value of 1 (the category that applies), while all others are 0.
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals), [Lecture 6](lecture6.qmd) (Adaptive Methods for Minimization)
+
+### Optimization Algorithms
+Methods used to minimize the loss function and update model parameters. Beyond basic gradient descent, advanced algorithms include:
+
+- **Momentum**: Adds a fraction of the previous update to accelerate convergence
+- **RMSProp**: Adapts learning rates using a moving average of squared gradients
+- **Adam**: Combines momentum and RMSProp approaches
+- **AdamW**: A variant of Adam with improved weight decay regularization
+
+**Related lectures:** [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization), [Lecture 6](lecture6.qmd) (Adaptive Methods for Minimization)
+
+### Overfitting
+When a model learns the training data too well, capturing noise instead of the underlying pattern, leading to poor generalization. Signs include:
+
+- High accuracy on training data but low accuracy on validation/test data
+- Complex model with many parameters relative to the amount of training data
+- Model memorizes training examples rather than learning general patterns
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error), [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+## P
+
+### Parameter Sharing
+A technique in neural networks where the same parameters are used across different parts of the model. Most prominently used in CNNs, where the same convolutional filters are applied across the entire image, drastically reducing the number of parameters and making the network translation invariant.
+
+**Related lectures:** [Lecture 12](lecture12.qmd) (Image Classification with Convolutional Neural Networks)
+
+### Pooling
+Operations in convolutional neural networks that reduce spatial dimensions by summarizing values in local regions. Common pooling types include:
+
+- **Max pooling**: Takes the maximum value in each window
+- **Average pooling**: Takes the average value in each window
+- **Global pooling**: Reduces each feature map to a single value
+
+**Related lectures:** [Lecture 12](lecture12.qmd) (Image Classification with Convolutional Neural Networks)
+
+### Pre-training
+Training a model on a large dataset for a general task before fine-tuning it on a specific task with less data. Enables transfer learning by learning general features that can be adapted to new tasks.
+
+**Related lectures:** [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning), [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+### Principal Component Analysis (PCA)
+A dimensionality reduction technique that transforms data into a new coordinate system where the greatest variance lies along the first coordinate (first principal component), the second greatest variance along the second coordinate, and so on.
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Prior
+A probability distribution $P(\boldsymbol{\theta})$ that expresses beliefs about model parameters before observing data. Within Bayesian statistics, priors:
+
+- Encode domain knowledge or subjective beliefs
+- Range from informative (strong beliefs) to diffuse/non-informative (minimal assumptions)
+- Are updated to posterior distributions through Bayes' theorem
+- Can have significant impact with small datasets but diminish in influence as data increases
+
+Common examples include:
+
+- Normal priors for regression coefficients
+- Laplace priors leading to L1 regularization (LASSO)
+- Normal priors leading to L2 regularization (Ridge)
+- Dirichlet priors for multinomial parameters
+- Conjugate priors that result in closed-form posteriors
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning)
+
+### Precision
+A classification metric measuring the proportion of true positive predictions among all positive predictions: TP/(TP+FP). High precision means a low false positive rate, which is important when the cost of a false positive is high.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+## Q
+
+### Q-Learning
+A model-free reinforcement learning algorithm that learns the value of actions in states (Q-values) and selects actions based on these values. The goal is to find an optimal policy that maximizes the expected cumulative reward.
+
+**Related lectures:** [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+## R
+
+### Random Forest
+An ensemble learning method that constructs multiple decision trees during training and outputs the mode of the classes (for classification) or mean prediction (for regression) of the individual trees. Reduces overfitting by combining many trees trained on different subsets of data and features.
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Recall
+A classification metric measuring the proportion of actual positive cases that were correctly identified: TP/(TP+FN). High recall means a low false negative rate, which is important when the cost of missing a positive case is high.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Recurrent Neural Networks (RNNs)
+Neural network architectures designed to process sequential data by maintaining internal state through recurrent connections. The defining feature is the recurrence relation: h_t = f_w(h_{t-1}, x_t), where h_t is the current hidden state, h_{t-1} is the previous hidden state, and x_t is the current input.
+
+RNNs can handle various sequence relationships:
+
+- **One-to-Many**: Single input generates a sequence (e.g., image captioning)
+- **Many-to-One**: Sequence produces single output (e.g., sentiment analysis)
+- **Many-to-Many (Unaligned)**: Input sequence yields different-length output sequence (e.g., translation)
+- **Many-to-Many (Aligned)**: Each input element corresponds to an output element (e.g., part-of-speech tagging)
+
+Challenges include vanishing and exploding gradients when processing long sequences, which specialized architectures like LSTMs and GRUs address.
+
+**Related lectures:** [Lecture 16](lecture16.qmd) (Recurrent Neural Networks and Sequence Modeling)
+
+### Regularization
+Techniques to prevent overfitting by adding constraints or penalties to model complexity. Common methods include:
+
+- **L1 regularization**: Encourages sparse models by penalizing absolute weight values
+- **L2 regularization**: Penalizes large weights using squared magnitude
+- **Dropout**: Randomly ignores neurons during training
+- **Early stopping**: Halts training when validation performance stops improving
+- **Data augmentation**: Artificially expands training data with transformations
+- **Weight decay**: Gradually reduces weights during training
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+
+### ResNet (Residual Network)
+A deep neural network architecture that addresses the vanishing gradient problem by introducing skip connections (residual connections) that allow gradients to flow directly through the network. This innovation enables training of very deep networks with hundreds of layers.
+
+**Related lectures:** [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+## S
+
+### Sequence Modeling
+A machine learning paradigm focusing on data where order and temporal dependencies matter. Sequence models can handle various input-output relationships:
+
+- **One-to-Many**: Single input generates a sequence (e.g., image captioning)
+- **Many-to-One**: Sequence produces single output (e.g., sentiment analysis)
+- **Many-to-Many (Unaligned)**: Input sequence yields different-length output sequence (e.g., machine translation)
+- **Many-to-Many (Aligned)**: Each input element corresponds to an output element (e.g., part-of-speech tagging)
+
+Architectures for sequence modeling include RNNs, LSTMs, GRUs, Transformers, and specialized convolutional architectures.
+
+**Related lectures:** [Lecture 16](lecture16.qmd) (Recurrent Neural Networks and Sequence Modeling)
+
+### Semantic Segmentation
+Computer vision task that classifies each pixel in an image into a predefined category, assigning a semantic label to every pixel. Unlike instance segmentation, it doesn't distinguish between different instances of the same class.
+
+**Related lectures:** [Lecture 15](lecture15.qmd) (Semantic Segmentation and Advanced CNN Applications)
+
+### Self-Attention
+A neural network mechanism that allows models to directly connect any position in a sequence to any other position, enabling the model to focus on different parts of the input when producing outputs. The self-attention operation works by:
+
+1. Computing three vectors for each token through learned linear projections:
+   
+   - **Query vector (q_i)**: Represents what information the token is "looking for"
+   - **Key vector (k_i)**: Represents what information the token "contains" 
+   - **Value vector (v_i)**: Represents the actual content of the token
+
+2. Calculating attention weights by comparing queries to keys: e_{ij} = (q_i^T k_j)/√d_k
+
+3. Normalizing weights using softmax function
+
+4. Computing a weighted sum of all value vectors
+
+This mechanism forms the core of transformer architectures and enables constant computational complexity regardless of sequence distance.
+
+**Related lectures:** [Lecture 18](lecture18.qmd) (Transformers and the Attention Revolution)
+
+### Self-Supervised Learning
+Training paradigm where models generate supervisory signals from the data itself without explicit labels. The model creates pretext tasks from unlabeled data (like predicting masked tokens, image rotations, or contrastive objectives) to learn useful representations, which can then be fine-tuned for downstream tasks with limited labeled data.
+
+**Related lectures:** [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+### Softmax Function
+A function that converts a vector of real numbers into a probability distribution. It exponentiates each input and normalizes by the sum of all exponentiated values, ensuring all outputs are between 0 and 1 and sum to 1. Commonly used for multi-class classification.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 8](lecture8.qmd) (Introduction to Neural Networks)
+
+### Stochastic Gradient Descent (SGD)
+An optimization algorithm that updates model parameters using the gradient of the loss function with respect to those parameters, computed on randomly selected subsets (mini-batches) of the training data rather than the entire dataset.
+
+**Related lectures:** [Lecture 5](lecture5.qmd) (Loss Minimization and Optimization), [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems)
+
+### Support Vector Machine (SVM)
+A supervised learning algorithm that finds a hyperplane in an N-dimensional space that distinctly separates data points of different classes. SVMs maximize the margin between classes and can perform non-linear classification using the kernel trick.
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+## T
+
+### Temperature Scaling
+A post-processing calibration technique for deep neural networks that divides the logits (pre-softmax outputs) by a scalar parameter called temperature. Higher temperatures produce softer probability distributions, while lower temperatures make them sharper.
+
+**Related lectures:** [Lecture 4](lecture4.qmd) (Linear Models and Likelihood), [Lecture 27](lecture27.qmd) (Interpretable Machine Learning)
+
+### Transfer Learning
+A machine learning technique where knowledge gained from training a model on one task is applied to a different but related task. This approach is particularly effective when the target task has limited training data. Common strategies include:
+
+- **Feature extraction**: Reuse learned features from pre-trained models
+- **Fine-tuning**: Adapt a pre-trained model by updating some or all of its parameters for a new task
+
+**Related lectures:** [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning), [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+### Transformers
+Neural network architecture introduced in "Attention is All You Need" (Vaswani et al., 2017) that overcomes limitations of recurrent networks through self-attention mechanisms. Transformers offer several key advantages:
+
+- Parallel processing of sequences rather than sequential computation
+- Constant path length between any positions in a sequence
+- Direct modeling of long-range dependencies
+- Highly parallelizable computation
+
+The architecture consists of:
+
+- **Multi-head self-attention**: Allows the model to focus on different aspects of the input simultaneously
+- **Position encodings**: Incorporate sequence order information since attention has no inherent position awareness
+- **Feed-forward networks**: Process attention outputs with two linear transformations and a non-linearity
+- **Layer normalization**: Stabilizes training by normalizing activations
+- **Residual connections**: Help with gradient flow in deep networks
+
+Transformers have revolutionized NLP with models like BERT (bidirectional encoding), GPT (autoregressive generation), and T5 (sequence-to-sequence), and have been adapted for vision (ViT), audio, and multimodal tasks.
+
+**Related lectures:** [Lecture 18](lecture18.qmd) (Transformers and the Attention Revolution), [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+## U
+
+### Underfitting
+When a model is too simple to capture the underlying pattern in the data, resulting in poor performance on both training and test data. Signs include high bias and high error on training data.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error), [Lecture 4](lecture4.qmd) (Linear Models and Likelihood)
+
+### Universal Approximation Theorem
+A mathematical result stating that a feedforward neural network with a single hidden layer containing a finite number of neurons can approximate any Borel measurable function from one finite-dimensional space to another with arbitrary precision, under mild assumptions about the activation function. Key aspects include:
+
+- Provides the theoretical foundation for neural networks' ability to model complex, nonlinear relationships
+- Explains why neural networks are considered "universal approximators"
+- Despite theoretical capability to represent any function, practical limitations arise from optimization challenges and overfitting
+- Indicates neural networks' capacity to achieve zero training error given sufficient resources
+
+**Related lectures:** [Lecture 7](lecture7.qmd) (Nonlinearities and Expressive Learning Methods)
+
+### Unsupervised Learning
+A type of machine learning where the algorithm is given data without explicit instructions on what to do with it. The system tries to learn the underlying structure or distribution of the data on its own. Common applications include clustering, dimensionality reduction, and density estimation.
+
+**Related lectures:** [Lecture 2](lecture2.qmd) (Machine Learning Fundamentals)
+
+## V
+
+### Validation Set
+A portion of the data set aside from training data to tune hyperparameters and evaluate model performance during development. It helps detect overfitting and guides model selection without contaminating the test set.
+
+**Related lectures:** [Lecture 3](lecture3.qmd) (Generalization Error)
+
+### Variational Autoencoders (VAEs)
+Probabilistic generative models that learn a latent space representation of data using an encoder-decoder architecture with a variational inference approach. VAEs:
+
+- Encode inputs to parameters of probability distributions in latent space (typically mean and variance of Gaussian distributions)
+- Regularize the latent space by forcing it towards a standard normal distribution using KL divergence
+- Sample from the latent distribution using the reparameterization trick
+- Decode the sampled point to reconstruct the input
+- Enable both reconstruction and generation of new data points
+
+**Related lectures:** [Lecture 23](lecture23.qmd) (Variational Autoencoders)
+
+### Variational Bayesian Inference
+An approximate Bayesian inference method that transforms posterior computation into an optimization problem by:
+
+1. Introducing a simpler parametric family of distributions $Q(\boldsymbol{\theta}|\boldsymbol{\phi})$ to approximate the true posterior $P(\boldsymbol{\theta}|\mathcal{D})$
+2. Finding the parameters $\boldsymbol{\phi}$ that minimize the KL divergence between the approximation and the true posterior
+3. Optimizing the Evidence Lower Bound (ELBO): $\mathcal{L}(\boldsymbol{\phi}) = \mathbb{E}_Q[\log P(\mathcal{D}|\boldsymbol{\theta})] - D_{KL}(Q(\boldsymbol{\theta}|\boldsymbol{\phi})||P(\boldsymbol{\theta}))$
+
+Key advantages include:
+
+- Scalability to large datasets through stochastic optimization
+- Applicability to models with non-conjugate priors
+- Ability to handle complex posterior distributions
+- Amortized inference in the case of variational autoencoders
+
+**Related lectures:** [Lecture 22](lecture22.qmd) (Bayesian Machine Learning), [Lecture 23](lecture23.qmd) (Variational Autoencoders)
+
+### Vanishing/Exploding Gradients
+Challenges in training deep neural networks where gradients become extremely small (vanishing) or large (exploding) during backpropagation through many layers. These problems:
+
+- Make it difficult to learn long-range dependencies
+- Cause unstable or stalled training
+- Can be addressed through techniques like careful weight initialization, gradient clipping, residual connections, batch normalization, and specialized architectures like LSTMs and GRUs
+
+**Related lectures:** [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems), [Lecture 11](lecture11.qmd) (Vanishing Gradients and Generalization)
+
+### Vision Transformer (ViT)
+An adaptation of the transformer architecture for computer vision tasks that treats an image as a sequence of patches, using self-attention to process relationships between all patches simultaneously. ViTs have achieved state-of-the-art performance on image classification and other vision tasks.
+
+**Related lectures:** [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)
+
+## W
+
+### Wasserstein GAN (WGAN)
+A variant of Generative Adversarial Networks that uses the Wasserstein distance (Earth Mover's distance) instead of Jensen-Shannon divergence to measure the difference between the generated and real data distributions. WGANs offer more stable training and better quality gradients.
+
+**Related lectures:** [Lecture 25](lecture25.qmd) (Generative Adversarial Networks)
+
+### Weight Initialization
+Strategies for setting the initial values of neural network weights before training begins. Proper initialization helps prevent vanishing/exploding gradients and accelerates convergence. Common methods include Xavier/Glorot initialization and He initialization.
+
+**Related lectures:** [Lecture 10](lecture10.qmd) (Backpropagation and Gradient Problems), [Lecture 13](lecture13.qmd) (Advanced CNN Architectures and Transfer Learning)
+
+## Z
+
+### Zero-shot Learning
+A machine learning paradigm where a model can recognize objects or perform tasks it hasn't encountered during training. The model learns to generalize from seen classes to unseen classes by leveraging additional information like semantic attributes or embeddings.
+
+**Related lectures:** [Lecture 19](lecture19.qmd) (Representation Learning, Vision Transformers, and Autoregressive Generation)

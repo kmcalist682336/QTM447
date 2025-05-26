@@ -1,0 +1,156 @@
+/* Additional styles for nicer aesthetics */
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--navbar-bg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navbar-title {
+    color: var(--heading-color);
+    font-weight: bold;
+}
+
+.nav-link {
+    color: var(--nav-link-color) !important;
+}
+
+.nav-link:hover {
+    color: var(--nav-link-hover) !important;
+}
+
+/* Table styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--table-border);
+}
+
+th {
+    background-color: var(--table-header-bg);
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid var(--table-border);
+}
+
+td {
+    padding: 0.75rem;
+    border: 1px solid var(--table-border);
+}
+
+tr:hover {
+    background-color: var(--table-row-hover);
+}
+
+/* Blockquote styling */
+blockquote {
+    background-color: var(--blockquote-bg);
+    border-left: 4px solid var(--blockquote-border);
+    padding: 1em 1.5em;
+    margin: 1.5em 0;
+    border-radius: 4px;
+}
+
+/* Lecture navigation styling */
+.lecture-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Top navigation styling (different from bottom navigation) */
+.lecture-nav a {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background-color: var(--background-color);
+    color: var(--link-color);
+    border: 1px solid var(--link-color);
+    transition: all 0.2s ease;
+}
+
+.lecture-nav a:hover {
+    background-color: var(--link-color);
+    color: white;
+    text-decoration: none;
+}
+
+/* Search container styling */
+.search-container {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#search-input {
+    flex-grow: 1;
+    min-width: 200px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: white;
+}
+
+#search-button {
+    padding: 10px 20px;
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: var(--heading-color);
+}
+
+/* Material type cards */
+.material-type {
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.material-type:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Make images look nicer */
+img {
+    max-width: 100%;
+    border-radius: 4px;
+}
+
+/* Code blocks should have nice margin */
+pre {
+    margin: 1.5em 0;
+}
+
+/* Make code output look distinct */
+.cell-output pre {
+    background-color: #f0f4f8;
+    border-left: 3px solid #90cdf4;
+}
+
+/* Style for TOC */
+#toc-title {
+    color: var(--heading-color);
+    font-size: 1.2em;
+    margin-bottom: 1em;
+}
+
+nav.toc-active > ul > li > a {
+    color: var(--link-color);
+}

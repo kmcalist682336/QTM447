@@ -1,0 +1,144 @@
+---
+title: "Lecture 6 Summary: Adaptive Methods for Minimization"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary introduces advanced optimization techniques for training machine learning models, focusing on adaptive methods that intelligently adjust learning rates to accelerate convergence and improve performance in complex loss landscapes.
+
+## 1. Gradient Descent: The Foundation
+
+When analytical solutions for minimizing empirical risk are unavailable, gradient-based optimization methods become essential. The standard gradient descent algorithm iteratively updates parameters:
+
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta_t \mathbf{g}(\boldsymbol{\beta}_t)$$
+
+Where:
+
+- $\mathbf{g}(\boldsymbol{\beta}_t)$ is the gradient of the loss function evaluated at the current parameter values
+
+- $\eta_t$ is the step size (learning rate) at iteration $t$
+
+For most machine learning problems, the loss takes the form of an average across observations:
+
+$$\mathcal{L}(\boldsymbol{\beta}) = \frac{1}{N} \sum_{i=1}^N \mathcal{L}_i(\boldsymbol{\beta})$$
+
+Consequently, the gradient calculation requires evaluating gradients for all $N$ observations, becoming computationally expensive as datasets grow.
+
+## 2. Stochastic Gradient Descent (SGD)
+
+Stochastic Gradient Descent addresses the computational burden by approximating the full gradient using small batches of observations:
+
+$$\mathbf{g}(\boldsymbol{\beta}) \approx \frac{1}{B} \sum_{i \in \mathcal{B}} \mathbf{g}_i(\boldsymbol{\beta})$$
+
+Where $\mathcal{B}$ represents a randomly sampled batch of $B$ observations.
+
+Even with batch size as small as 1, SGD converges to the minimum with appropriate learning rate schedules, drastically reducing computational requirements at the cost of introducing noise into the optimization path.
+
+**2.1. Challenges with SGD**
+
+While computationally efficient, SGD faces several challenges:
+
+- High variance around the true minimum
+
+- Sensitivity to learning rate selection
+
+- Slow convergence in flat regions of the loss landscape
+
+- Poor performance in ravines and saddle points
+
+## 3. Second-Order Methods: Leveraging Curvature
+
+Second-order methods incorporate information about the curvature of the loss function through the Hessian matrix. Using a multivariate Taylor series expansion, the update rule becomes:
+
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta \mathbf{H}(\boldsymbol{\beta}_t)^{-1}\mathbf{g}(\boldsymbol{\beta}_t)$$
+
+Where $\mathbf{H}(\boldsymbol{\beta}_t)$ is the Hessian matrix containing second derivatives of the loss function.
+
+This approach "deskews" the loss space, accounting for curvature rather than following straight-line paths from each position. For logistic regression, the Hessian can be expressed as:
+
+$$\mathbf{H}(\boldsymbol{\beta}_t) = \frac{1}{N} \sum_{i=1}^N \mathbf{x}_i \mathbf{x}_i^T \sigma(\mathbf{x}_i^T \boldsymbol{\beta}_t)(1 - \sigma(\mathbf{x}_i^T \boldsymbol{\beta}_t))$$
+
+While theoretically powerful, computing and inverting the full Hessian becomes prohibitively expensive in high dimensions.
+
+## 4. Momentum: The Heavy Ball Approach
+
+Momentum methods accelerate optimization by accumulating a running average of past gradients, analogous to a heavy ball rolling down a hill:
+
+$$\mathbf{m}_{t+1} = b \mathbf{m}_t + \mathbf{g}(\boldsymbol{\beta}_t)$$
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta \mathbf{m}_{t+1}$$
+
+Where $b \in [0,1)$ is the momentum coefficient, typically set around 0.9.
+
+Momentum provides two key advantages:
+
+- Accelerated progress in consistent gradient directions (flat regions)
+
+- Dampened oscillations in regions with rapidly changing gradients
+
+When gradient directions remain consistent, momentum effectively multiplies the learning rate by a factor approaching $\frac{1}{1-b}$. With $b=0.9$, this can yield a 10x speedup in consistent gradient regions.
+
+## 5. Adaptive Gradient Methods
+
+Adaptive methods dynamically adjust learning rates for each parameter based on their historical gradient information.
+
+**5.1. AdaGrad: Parameter-Specific Learning Rates**
+
+AdaGrad scales the learning rate inversely proportional to the accumulated squared gradients:
+
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta \frac{\mathbf{g}(\boldsymbol{\beta}_t)}{\sqrt{\mathbf{s}_t + \epsilon}}$$
+
+Where:
+
+- $\mathbf{s}_t = \sum_{h=1}^t \mathbf{g}(\boldsymbol{\beta}_h)^2$ (elementwise squaring)
+
+- $\epsilon$ is a small constant to prevent division by zero
+
+This approximates the diagonal of the Hessian, allowing larger updates for parameters with small gradients and smaller updates for parameters with large gradients. However, AdaGrad's accumulation of squared gradients can cause learning rates to diminish too quickly, stalling progress.
+
+**5.2. RMSprop: Exponential Moving Average**
+
+RMSprop addresses AdaGrad's diminishing learning rates by replacing the sum with an exponential moving average:
+
+$$\mathbf{s}_t = a \mathbf{s}_{t-1} + (1-a) \mathbf{g}(\boldsymbol{\beta}_t)^2$$
+
+Where $a \in [0,1]$ controls the decay rate of historical information.
+
+**5.3. Adam: Combining Momentum and Adaptive Learning Rates**
+
+Adam (Adaptive Moment Estimation) combines the benefits of momentum and adaptive learning rates:
+
+$$\mathbf{m}_t = b_1 \mathbf{m}_{t-1} + (1-b_1) \mathbf{g}(\boldsymbol{\beta}_t)$$
+$$\mathbf{v}_t = b_2 \mathbf{v}_{t-1} + (1-b_2) \mathbf{g}(\boldsymbol{\beta}_t)^2$$
+$$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \eta \frac{\mathbf{m}_t}{\sqrt{\mathbf{v}_t + \epsilon}}$$
+
+Common hyperparameter values are:
+
+- $\eta = 0.001$ (initial learning rate)
+
+- $b_1 = 0.9$ (momentum decay)
+
+- $b_2 = 0.999$ (squared gradient decay)
+
+- $\epsilon = 10^{-8}$ (numerical stability constant)
+
+## 6. Practical Considerations
+
+The choice of optimization method significantly impacts model performance:
+
+- **Standard SGD**: Simple but requires careful learning rate tuning and may converge slowly
+
+- **Momentum**: Faster convergence in flat regions but still sensitive to learning rate
+
+- **AdaGrad/RMSprop**: Parameter-specific adaptation but may require tuning of decay rates
+
+- **Adam**: Generally robust performance across a variety of problems, particularly in high-dimensional spaces
+
+These adaptive methods form the foundation of modern deep learning optimization, enabling effective training across diverse architectures and problem domains, especially for models with numerous parameters and complex loss landscapes.

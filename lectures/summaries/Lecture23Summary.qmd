@@ -1,0 +1,124 @@
+---
+title: "Lecture 23: Variational Autoencoders"
+format: html
+---
+
+## Generative Models
+
+### Goals of Generative Modeling
+
+- **Density estimation**: Determine probability $P(\mathbf{x})$ of observing data points
+
+- **Sampling**: Generate novel data from the model distribution
+
+- **Representation learning**: Extract meaningful feature representations and manipulate specific features
+
+### Limitations of Deterministic Models
+
+- PCA and deterministic autoencoders can learn mappings between input space and latent space
+
+- Both fail to compute $P(\mathbf{x}|\boldsymbol{\Theta}) = \int P(\mathbf{x}|\boldsymbol{\Theta}, \mathbf{z})P(\mathbf{z})d\mathbf{z}$
+
+- Cannot properly generate new samples from latent space
+
+## Factor Analysis
+
+### Probabilistic Approach
+
+- Assumes each input follows a distribution: $P(\mathbf{x}|\mathbf{z}) = \mathcal{P}(\mathbf{x}|f(\mathbf{z},\boldsymbol{\Theta}))$
+
+- $f(\mathbf{z})$ maps latent variables to original feature space
+
+- $\boldsymbol{\Theta}$ contains parameters that define the mapping
+
+### Optimization Challenge
+
+- Goal: maximize likelihood $\hat{\boldsymbol{\Theta}} = \underset{\boldsymbol{\Theta}}{\text{argmax}} \prod_{i=1}^N P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})$
+
+- Since $\mathbf{z}$ is unknown, must integrate: $\hat{\boldsymbol{\Theta}} = \underset{\boldsymbol{\Theta}}{\text{argmax}} \prod_{i=1}^N \int P(\mathbf{x}_i|\mathbf{z},\boldsymbol{\Theta})P(\mathbf{z}_i)d\mathbf{z}$
+
+- Log-likelihood involves intractable log-integral: $\hat{\boldsymbol{\Theta}} = \underset{\boldsymbol{\Theta}}{\text{argmax}} \sum_{i=1}^N \log \int P(\mathbf{x}_i|\mathbf{z},\boldsymbol{\Theta})P(\mathbf{z}_i)d\mathbf{z}$
+
+## Variational Inference
+
+### Bayesian Framework
+
+- Rearranging Bayes' rule: $P(\mathbf{x}_i|\boldsymbol{\Theta}) = \frac{P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})P(\mathbf{z}_i)}{P(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Theta})}$
+
+- Known components:
+
+  - Decoder (likelihood): $P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})$
+
+  - Prior: $P(\mathbf{z}_i)$
+
+- Unknown components:
+
+  - Marginal likelihood: $P(\mathbf{x}_i|\boldsymbol{\Theta})$
+
+  - Encoder (posterior): $P(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Theta})$
+
+### Approximation Strategy
+
+- Introduce approximate posterior: $Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi}) \approx P(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Theta})$
+
+- Rearrange log-likelihood: 
+  $\log P(\mathbf{x}_i|\boldsymbol{\Theta}) = \log P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta}) - \log \frac{Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi})}{P(\mathbf{z}_i)} + \log \frac{Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi})}{P(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Theta})}$
+
+- Taking expectation with respect to $Q$:
+  $E_Q[\log P(\mathbf{x}_i|\boldsymbol{\Theta})] = E_Q[\log P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})] - E_Q[\log \frac{Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi})}{P(\mathbf{z}_i)}] + E_Q[\log \frac{Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi})}{P(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Theta})}]$
+
+### Evidence Lower Bound (ELBO)
+
+- Recognize KL divergence terms: 
+  $D_{KL}(Q(\mathbf{z}_i|\mathbf{x}_i) || P(\mathbf{z}_i)) = \int Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi}) \log \frac{Q(\mathbf{z}_i|\mathbf{x}_i,\boldsymbol{\Phi})}{P(\mathbf{z}_i)} d\mathbf{z}_i$
+
+- Since $D_{KL}(Q(\mathbf{z}_i|\mathbf{x}_i) || P(\mathbf{z}_i|\mathbf{x}_i)) \geq 0$:
+  $\log P(\mathbf{x}_i|\boldsymbol{\Theta}) \geq E_Q[\log P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})] - D_{KL}(Q(\mathbf{z}_i|\mathbf{x}_i) || P(\mathbf{z}_i))$
+
+- ELBO interpretations:
+
+  - $E_Q[\log P(\mathbf{x}_i|\mathbf{z}_i,\boldsymbol{\Theta})]$: Expected reconstruction error
+
+  - $D_{KL}(Q(\mathbf{z}_i|\mathbf{x}_i) || P(\mathbf{z}_i))$: Regularization forcing approximate posterior to stay close to prior
+
+## Variational Autoencoders (VAEs)
+
+### Model Architecture
+
+- Prior on latent variables: $P(\mathbf{z}) \sim \mathcal{N}_K(\mathbf{0},\mathcal{I}_K)$
+
+- Decoder (likelihood): $P(\mathbf{x}|\mathbf{z}) \sim \mathcal{N}_P(f(\mathbf{z}),\boldsymbol{\Sigma}_x)$
+
+- Encoder (approximate posterior): $Q(\mathbf{z}|\mathbf{x}) \sim \mathcal{N}_K(g(\mathbf{x}),\boldsymbol{\Sigma}_z)$
+
+- Functions $f(\mathbf{z})$ and $g(\mathbf{x})$ implemented using neural networks
+
+### Implementation Details
+
+- Encoder network maps input to parameters of latent distribution (mean and variance)
+
+- Decoder network maps latent samples to parameters of output distribution
+
+- Training objective: Maximize ELBO (minimize negative ELBO)
+  $-E_Q[\log P(\mathbf{x}|\mathbf{z})] + D_{KL}(Q(\mathbf{z}|\mathbf{x}) || P(\mathbf{z}))$
+
+- For standard normal prior and diagonal normal proposal:
+  $D_{KL}(Q(\mathbf{z}_i|\mathbf{x}_i) || P(\mathbf{z}_i)) = \frac{1}{2} \sum_{k=1}^K [\sigma^2_k + \mu^2_k - 1 - \log(\sigma^2_k)]$
+
+### Practical Considerations
+
+- Often restrict covariance matrices to be diagonal for computational efficiency
+
+- Use multivariate normal distributions for tractable KL divergence computation
+
+- Amortized inference: Rather than learning separate posteriors for each data point, learn functions mapping inputs to distribution parameters
+
+### Advantages
+
+- Creates probabilistic mappings between input and latent space
+
+- Fills gaps between training examples in a principled way
+
+- Enables sampling new coherent images from the prior
+
+- Supports image editing through latent space manipulation

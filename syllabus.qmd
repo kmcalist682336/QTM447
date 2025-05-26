@@ -1,0 +1,275 @@
+---
+title: "Course Syllabus"
+format:
+  html:
+    css: styles.css
+    toc: false
+    include-in-header:
+      text: |
+        <style>
+          .syllabus-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--link-color);
+          }
+          
+          .syllabus-card h2 {
+            color: var(--heading-color);
+            margin-top: 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+          }
+          
+          .grade-chart {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+          }
+          
+          .grade-pie {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--link-color) 0% 50%, var(--heading-color) 50% 100%);
+            margin-right: 2rem;
+          }
+          
+          .grade-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          
+          .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          
+          .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+          }
+          
+          .deadlines {
+            background-color: var(--background-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+          }
+          
+          .deadline-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+          }
+          
+          .deadline-item:last-child {
+            border-bottom: none;
+          }
+          
+          .due-date {
+            color: #e53e3e;
+            font-weight: bold;
+          }
+          
+          .policy-list li {
+            margin-bottom: 0.5rem;
+          }
+        </style>
+---
+
+::: {.syllabus-card}
+## Problem Sets (50%)
+
+::: {.panel-tabset}
+### Overview
+
+- 6-7 problem sets throughout the semester
+- Can be completed in groups of up to 3 students
+- Each problem set includes:
+  - Theoretical exercises (derivations and proofs)
+  - Coding exercises
+  - Real-world data applications
+
+### Submission Guidelines
+
+- Use Quarto or Jupyter notebooks for submissions
+- Submit both source file (.qmd or .ipynb) and rendered HTML/PDF
+- Include all required package dependencies
+- Write-ups should be clear and concise
+- Each student must submit individually, even when working in groups
+
+### Late Policy
+
+- One "freebie" allowed for a 5-day extension on any problem set
+- Beyond the freebie: 10% penalty per day late
+- Weekends count as a single day
+- No assignments accepted more than 5 days late without prior approval
+:::
+:::
+
+::: {.syllabus-card}
+## Final Project (50%)
+
+::: {.panel-tabset}
+### Overview
+
+A significant application or methodological extension of course topics, divided into three deliverables:
+
+| Component | Weight | Due Date |
+|-----------|--------|----------|
+| Project Proposal | 5% | March 25, 2025 |
+| Project Poster | 20% | April 25, 2025 |
+| Final Deliverable | 25% | May 7, 2025 |
+
+### Project Proposal (5%)
+
+- Due: March 25th, 12:00 PM
+- One slide presentation
+- 90-second pitch
+- Submit proposal slide to Canvas
+
+### Project Poster (20%)
+
+- Present at QTM DataBlitz on April 25th, 2025
+- Demonstrate substantial progress
+- Poster printing instructions will be provided in April
+
+### Final Deliverable (25%)
+
+- Due: May 7th, 2025, 11:59 PM EST
+- Scientific paper format (max 15 pages)
+- Include figures and tables
+- Submit reproducible code repository
+- Can be submitted as .zip or GitHub repository
+
+### Guidelines
+
+- Work in groups of up to 3 students
+- Choose a novel dataset or methodological extension
+- Avoid basic comparisons on standard datasets (e.g., MNIST)
+- Consult with instructor during office hours after spring break
+- For generative approaches, reading ahead may be necessary
+:::
+:::
+
+::: {.syllabus-card}
+## Grading Scale
+
+::: {.panel-tabset}
+### Scale
+
+| Grade | Range |
+|-------|-------|
+| A     | 93-100% |
+| A-    | 90-92%  |
+| B+    | 87-89%  |
+| B     | 83-86%  |
+| B-    | 80-82%  |
+| C+ and below | < 80% |
+
+### No Curve Policy
+
+There is no curve for final course grades. If everyone scores high enough for an A, everyone will receive an A. There is no competition for grades.
+
+### Grade Appeals
+
+If you believe your grade on any assignment is incorrect:
+
+1. Wait 48 hours before submitting an appeal (unless it's a simple addition error)
+2. Submit concerns in writing
+3. Fully summarize the problems and justification for the appeal
+:::
+:::
+
+::: {.syllabus-card}
+## Academic Resources
+
+::: {.info-grid}
+::: {.info-card}
+### ![Book icon](images/book.svg){.fa-icon width=24 height=24} Required Texts
+
+All main textbooks are available for free:
+
+- [Murphy, K. P. (2022). Probabilistic Machine Learning: An Introduction](https://probml.github.io/pml-book/book1.html)
+- [Murphy, K. P. (2023). Probabilistic Machine Learning: Advanced topics](https://probml.github.io/pml-book/book2.html)
+- [Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning](https://www.deeplearningbook.org/)
+- [Friedman, J., Hastie, T., & Tibshirani, R. (2017). The Elements of Statistical Learning, 2nd Edition](https://hastie.su.domains/ElemStatLearn/)
+- [Prince, S. J. D. (2023). Understanding Deep Learning](https://udlbook.github.io/udlbook/)
+
+Additional resources will be posted on Canvas.
+:::
+
+::: {.info-card}
+### ![Laptop icon](images/laptop.svg){.fa-icon width=24 height=24} Computing Resources
+
+- Google Colab will be available for computationally intensive assignments
+- Instructions for Colab usage will be provided when needed
+- Students are encouraged to read package documentation thoroughly
+
+[Google Colab ![External link icon](images/external-link.svg){.fa-icon width=16 height=16}](https://colab.research.google.com/){.quick-link target="_blank"}
+:::
+:::
+:::
+
+::: {.syllabus-card}
+## Course Policies
+
+::: {.panel-tabset}
+### Attendance
+
+- Attendance is not mandatory but strongly encouraged
+- All lecture materials will be posted online
+- Students are responsible for all material covered in class
+
+### Late Work
+
+- See specific policies for problem sets and project deadlines
+- Extensions may be granted for documented emergencies
+- Plan ahead for known conflicts
+
+### Academic Integrity
+
+- All work must be your own unless collaboration is explicitly allowed
+- Cite all sources and inspirations
+- Violations will be reported to the Honor Council
+- When in doubt, ask for clarification
+
+### Communication
+
+- Email is the preferred method for questions outside of class
+- Allow 24-48 hours for email responses
+- Include "QTM 447" in the subject line
+- For code-related questions, please include relevant code snippets
+:::
+:::
+
+::: {.syllabus-card}
+## Support Resources
+
+::: {.panel-tabset}
+### Academic Support
+
+- [EPASS Tutoring](https://college.emory.edu/student-success/epass/index.html) offers peer tutoring services
+- [Emory Writing Center](https://writingcenter.emory.edu/) provides writing assistance
+- [Emory Office of Accessibility Services](https://accessibility.emory.edu/) for accommodation needs
+
+### Technical Support
+
+- Canvas support is available 24/7 through the Help button
+- For Google Colab issues, consult the documentation or course TAs
+- For computational resources, the library offers workstations and technical support
+
+### Mental Health
+
+- [Emory Counseling and Psychological Services (CAPS)](https://counseling.emory.edu/)
+- Student Health Services: 404-727-7551
+- [TimelyCare](https://timelycare.com/emory) provides 24/7 mental health support
+:::
+:::

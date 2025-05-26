@@ -1,0 +1,220 @@
+---
+title: "Lecture 26: Diffusion Models"
+format: html
+---
+
+## Overview of Generative Models
+
+### Comparison of Approaches
+
+- **Autoregressive models**: Direct $P(\mathbf{x})$ computation, high quality, but slow training/generation, no latent code
+
+- **VAEs**: Fast generation, rich latent codes, but lower bound optimization, blurry images
+
+- **GANs**: Fast generation, assumption-free, good image editing, but minimal control, difficult training
+
+### Diffusion Models Introduction
+
+- Combination of VAE and autoregressive model concepts
+
+- Sequential process: add noise to images until purely random, then learn reverse mapping
+
+- New approach to generative modeling with high-quality results
+
+## Diffusion Model Theory
+
+### Forward Process (Encoder)
+
+- Start with image $\mathbf{x} = \mathbf{z}_0$
+
+- Define sequence of latent variables: $\{\mathbf{z}_0, \mathbf{z}_1, ..., \mathbf{z}_T\}$
+
+- Forward diffusion step: $\mathbf{z}_t = \sqrt{1 - \beta_t} \mathbf{z}_{t-1} + \sqrt{\beta_t} \epsilon_t$
+
+- Conditional distribution: $Q(\mathbf{z}_t | \mathbf{z}_{t-1}) = \mathcal{N}(\mathbf{z}_t | \sqrt{1 - \beta_t} \mathbf{z}_{t-1}, \beta_t \mathcal{I})$
+
+- Markovian process: $P(\mathbf{z}_1, \mathbf{z}_2, ..., \mathbf{z}_T | \mathbf{z}_0) = \prod_{t=1}^T P(\mathbf{z}_t | \mathbf{z}_{t-1})$
+
+### Diffusion Kernel
+
+- Direct computation from $\mathbf{z}_0$ to any time $t$: 
+  $P(\mathbf{z}_t | \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t | \sqrt{\tilde{\beta}_t} \mathbf{z}_0, (1 - \tilde{\beta}_t) \mathcal{I}\right)$
+
+- Where $\tilde{\beta}_t = \prod_{s=1}^t (1 - \beta_s)$
+
+- Mean approaches zero and variance approaches identity as $t \to T$
+
+- All images converge to $\mathbf{z}_T \sim \mathcal{N}(\mathbf{0}, \mathcal{I})$
+
+### Reverse Process (Decoder)
+
+- Goal: Learn mapping from noise back to original image
+
+- Target: $P(\mathbf{z}_{t-1} | \mathbf{z}_t)$ or $P(\mathbf{z}_0 | \mathbf{z}_t)$
+
+- Challenge: Marginal distributions $P(\mathbf{z}_t)$ and $P(\mathbf{z}_{t-1})$ are intractable
+
+- Forward normal assumption doesn't guarantee reverse normality
+
+### Tractable Reverse Conditional
+
+- Known conditional: $P(\mathbf{z}_{t-1} | \mathbf{z}_t, \mathbf{z}_0)$ (conditioned on original input)
+
+- Using Bayes' rule and Markov property: $P(\mathbf{z}_{t-1} | \mathbf{z}_t, \mathbf{z}_0) \propto P(\mathbf{z}_t | \mathbf{z}_{t-1})P(\mathbf{z}_{t-1} | \mathbf{z}_0)$
+
+- Result: $P(\mathbf{z}_{t-1} | \mathbf{z}_t, \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_{t-1} | \frac{1 - \tilde{\beta}_{t-1}}{1 - \tilde{\beta}_t} \sqrt{1 - \beta_t} \mathbf{z}_t + \frac{\sqrt{\tilde{\beta}_{t-1}}\beta_t}{1 - \tilde{\beta}_t} \mathbf{z}_0, \frac{\beta_t (1 - \tilde{\beta}_{t-1})}{1 - \tilde{\beta}_t} \mathcal{I}\right)$
+
+## Training Diffusion Models
+
+### Approximation Strategy
+
+- Approximate reverse mapping without $\mathbf{z}_0$: $Q(\mathbf{z}_{t-1} | \mathbf{z}_t, \boldsymbol{\theta}_t) = \mathcal{N}(\mathbf{z}_{t-1} | g(\mathbf{z}_t, \boldsymbol{\theta}_t), \sigma^2_t \mathcal{I})$
+
+- Objective: $\hat{\boldsymbol{\theta}}_{1,2,...,T} = \underset{\boldsymbol{\theta}}{\text{argmax}} \left[\sum_{i=1}^N \log P(\mathbf{x}_i | \boldsymbol{\theta}_{1,2,...,T})\right]$
+
+- Intractable marginal: $P(\mathbf{x} | \boldsymbol{\theta}_{1,2,...,T}) = \int P(\mathbf{x}, \mathbf{z}_1, ..., \mathbf{z}_T | \boldsymbol{\theta}_{1,2,...,T}) d\mathbf{z}_1 ... d\mathbf{z}_T$
+
+### Evidence Lower Bound (ELBO)
+
+- Approximate posterior: $Q(\mathbf{z}_{1...T} | \mathbf{x})$
+
+- ELBO form: $E_Q[\log P(\mathbf{x} | \mathbf{z}_1, \boldsymbol{\theta}_1)] - \sum_{t=2}^T E_Q[D_{KL}[P(\mathbf{z}_{t-1} | \mathbf{z}_t, \mathbf{x}) || Q(\mathbf{z}_{t-1} | \mathbf{z}_t, \boldsymbol{\theta}_t)]]$
+
+### Loss Function
+
+- Analytical loss for KL divergence between two normals:
+  $\sum_{i=1}^N -\log \mathcal{N}(\mathbf{x}_i | g(\mathbf{z}_{i1}, \boldsymbol{\theta}_1), \sigma^2_1 \mathcal{I}) + \sum_{t=2}^T \frac{1}{2\sigma^2_t} \left\| \frac{1 - \tilde{\beta}_{t-1}}{1 - \tilde{\beta}_t} \sqrt{1 - \beta_t} \mathbf{z}_{it} + \frac{\sqrt{\tilde{\beta}_{t-1}} \beta_t}{1 - \tilde{\beta}_t} \mathbf{x}_i - g_t[\mathbf{z}_{it}, \boldsymbol{\theta}_t] \right\|^2$
+
+- First term: reconstruction error
+
+- Second term: distance between target and approximated means
+
+## Implementation Considerations
+
+### Architecture Challenges
+
+- Each diffusion step requires separate parameters $\boldsymbol{\theta}_t$
+
+- Training different networks for each step is impractical
+
+- Need image-to-image prediction capability
+
+### UNet with Time Embeddings
+
+- Single UNet architecture for all time steps
+
+- **Positional embeddings** encode time information
+
+- Each block represents a time step in diffusion process
+
+- **Self-attention** across all time points to relate diffusion steps
+
+- **Transformer-style** architecture with encoder-side attention
+
+### Training Considerations
+
+- **Large $T$, small $\beta$**: More steps with smaller noise increments improve quality
+
+- **Computational intensity**: Requires significant GPU resources for training
+
+- **Parallelization**: Self-attention enables GPU parallelization
+
+- **Practical reparameterization**: Often reformulated in terms of noise for easier training
+
+## Stable Diffusion
+
+### Overview
+
+- Text-to-image generation using diffusion models
+
+- Combines multiple advances in generative and discriminative modeling
+
+- Input: $N$ images with $N$ associated text prompts
+
+- High-quality, high-resolution image generation from text
+
+### Architecture Components
+
+#### Step 1: VAE Compression
+
+- Encode high-resolution image to smaller latent space (e.g., 32×32)
+
+- Structured latent space as smaller image rather than vector
+
+- Reduces computational requirements while preserving essential information
+
+- Addresses VAE blurriness through subsequent diffusion refinement
+
+#### Step 2: Forward Diffusion
+
+- Apply diffusion process to compressed latent representation
+
+- Hundreds of steps with small noise variance for training
+
+- Computationally less intensive than full-resolution diffusion
+
+#### Step 3: Prompt Embeddings
+
+- Text prompt processing using pre-trained BERT model
+
+- 512 or 1024 dimensional embeddings
+
+- Enables conditioning on textual descriptions
+
+#### Step 4: Denoising UNet
+
+- **Cross-attention** with prompt embeddings at each step
+
+- **Self-attention** across all diffusion time steps
+
+- Positional embeddings for time dependencies
+
+- High-parameter models: separate UNet for each time transition (resource-intensive)
+
+#### Step 5: VAE Decoder
+
+- Transform low-resolution output back to high-resolution
+
+- Complete the generation pipeline from text to final image
+
+### Training and Properties
+
+- **End-to-end backpropagation**: Entire pipeline trainable as single network
+
+- **Superior image quality**: Matches or exceeds GAN performance
+
+- **Enhanced control**: Text conditioning more flexible than conditional GANs
+
+- **Resource requirements**: Requires substantial GPU resources for training
+
+## Advantages and Limitations
+
+### Advantages
+
+- **High-quality generation**: Superior image quality compared to many alternatives
+
+- **Text conditioning**: Natural integration of textual control
+
+- **Theoretical foundation**: Well-grounded mathematical framework
+
+- **Flexibility**: Fewer distributional assumptions than some alternatives
+
+### Limitations
+
+- **Computational cost**: Slower than GANs and VAEs
+
+- **Resource requirements**: Training requires extensive computational resources
+
+- **Generation speed**: Multiple denoising steps needed for generation
+
+- **Complexity**: Multi-component architecture increases implementation complexity
+
+### Research Directions
+
+- Understanding why transformer-style diffusion outperforms alternatives
+
+- Efficiency improvements for computational requirements
+
+- Comparison with self-attention GANs
+
+- Applications beyond image generation

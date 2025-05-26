@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <!-- Code Editor Theme -->
+    <style>
+        .editor { fill: #2c3e50; }
+        .line { fill: none; stroke: #3498db; stroke-width: 2; }
+        .text { fill: #ecf0f1; font-family: monospace; }
+        .comment { fill: #95a5a6; }
+        .keyword { fill: #e74c3c; }
+        .string { fill: #2ecc71; }
+    </style>
+    
+    <!-- Editor Background -->
+    <rect class="editor" x="40" y="40" width="160" height="160" rx="4"/>
+    
+    <!-- Code Lines -->
+    <g transform="translate(50, 60)">
+        <!-- Import Line -->
+        <text class="text" y="20">
+            <tspan class="keyword">import</tspan>
+            <tspan x="60">tensorflow as tf</tspan>
+        </text>
+        
+        <!-- Model Definition -->
+        <text class="text" y="45">
+            <tspan class="keyword">model</tspan>
+            <tspan x="50">= tf.keras.Sequential()</tspan>
+        </text>
+        
+        <!-- Layer Addition -->
+        <text class="text" y="70">model.add(Dense(64))</text>
+        
+        <!-- Activation -->
+        <text class="text" y="95">model.add(ReLU())</text>
+        
+        <!-- Comment -->
+        <text class="comment" y="120"># Train the model</text>
+        
+        <!-- Training -->
+        <text class="text" y="145">model.fit(X, y)</text>
+    </g>
+    
+    <!-- Cursor -->
+    <line class="line" x1="50" y1="185" x2="60" y2="185">
+        <animate attributeName="opacity"
+                 values="1;0;1" dur="1s"
+                 repeatCount="indefinite"/>
+    </line>
+</svg> 

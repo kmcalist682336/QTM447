@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <!-- Notebook Theme -->
+    <style>
+        .notebook { fill: white; stroke: #bdc3c7; }
+        .plot { fill: #f8f9fa; }
+        .line { fill: none; stroke: #3498db; stroke-width: 2; }
+        .point { fill: #e74c3c; }
+        .axis { stroke: #95a5a6; stroke-width: 1; }
+        .grid { stroke: #ecf0f1; stroke-width: 1; }
+    </style>
+    
+    <!-- Notebook Background -->
+    <rect class="notebook" x="40" y="40" width="160" height="160" rx="4"/>
+    
+    <!-- Plot Area -->
+    <rect class="plot" x="60" y="60" width="120" height="120" rx="2"/>
+    
+    <!-- Grid Lines -->
+    <g class="grid">
+        <line x1="60" y1="90" x2="180" y2="90"/>
+        <line x1="60" y1="120" x2="180" y2="120"/>
+        <line x1="60" y1="150" x2="180" y2="150"/>
+        <line x1="90" y1="60" x2="90" y2="180"/>
+        <line x1="120" y1="60" x2="120" y2="180"/>
+        <line x1="150" y1="60" x2="150" y2="180"/>
+    </g>
+    
+    <!-- Axes -->
+    <g class="axis">
+        <line x1="60" y1="180" x2="180" y2="180"/>
+        <line x1="60" y1="60" x2="60" y2="180"/>
+    </g>
+    
+    <!-- Data Points and Line -->
+    <g transform="translate(0, 0)">
+        <path class="line" d="M70,150 Q90,70 120,130 T170,90"/>
+        <circle class="point" cx="70" cy="150" r="3"/>
+        <circle class="point" cx="90" cy="70" r="3"/>
+        <circle class="point" cx="120" cy="130" r="3"/>
+        <circle class="point" cx="150" cy="110" r="3"/>
+        <circle class="point" cx="170" cy="90" r="3"/>
+    </g>
+    
+    <!-- Decision Boundary -->
+    <path class="line" d="M60,120 Q120,150 180,100" 
+          style="stroke: #2ecc71; stroke-dasharray: 4;"/>
+</svg> 

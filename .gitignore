@@ -1,0 +1,88 @@
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ruby
+.bundle/
+vendor/
+
+# Quarto
+/.quarto/
+__pycache__/
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Include the docs directory for GitHub Pages
+!/docs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+/.quarto/
+# Large data files and PDFs
+*.pdf
+*.csv
+!requirements.txt
+*.word2vec
+*.ipynb
+
+# Exclude large generated directories
+lectures/ipynbs_html/
+lectures/slideipynb_html/
+lectures/ipynbs/
+lectures/slideipynb/
+lectures/htmls/
+lectures/pdfs/
+
+# Exclude specific large files
+lectures/slideipynb/X_train_MNIST.csv
+lectures/slideipynb/glove.6B.100d.txt
+lectures/slideipynb/glove.6B.100d.txt.word2vec
+
+# Exclude docs/_site directory
+docs/_site/
+
+# Exclude syllabus PDF
+syllabus/QTM447SyllabusSpring2025Dec14*.pdf
+
+# Exclude qmds
+lectures/qmds/
+
+# Only include essential files for GitHub Pages
+!/docs/index.html
+!/docs/syllabus.html
+!/docs/additional-styles.css
+!/docs/styles.css
+!/docs/dark-mode.css
+!/docs/images/**
+!/docs/site_libs/**
+!/docs/lectures/*.html
