@@ -1,0 +1,318 @@
+---
+title: "Course Lectures"
+format:
+  html:
+    css: ../styles.css
+---
+
+::: {.intro-section}
+
+## Course Materials
+
+Welcome to the lecture materials for QTM 447! Each lecture page contains three types of resources to help you master the concepts of statistical machine learning:
+
+::: {.material-types}
+::: {.material-type}
+### 📊 Lecture Slides
+
+Interactive HTML presentations covering theoretical concepts, mathematical foundations, and practical examples.
+
+:::
+
+::: {.material-type}
+### 🔍 Slide Code
+
+Python notebooks containing code to reproduce all figures and demonstrations from the slides.
+:::
+
+::: {.material-type}
+### 💻 Lecture Code
+
+Supplementary Python notebooks with extended examples and implementations of key algorithms.
+:::
+:::
+
+
+:::
+
+# Review and Foundations {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture1.html'"}
+:::{.lecture-number}
+Lecture 1
+:::
+:::{.lecture-title}
+Introduction
+:::
+![](images/lecture1.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture2.html'"}
+:::{.lecture-number}
+Lecture 2
+:::
+:::{.lecture-title}
+Statistical Machine Learning Basics
+:::
+![](images/lecture2.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture3.html'"}
+:::{.lecture-number}
+Lecture 3
+:::
+:::{.lecture-title}
+Generalization: The Predictive Goal
+:::
+![](images/lecture3.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture4.html'"}
+:::{.lecture-number}
+Lecture 4
+:::
+:::{.lecture-title}
+Linear Models: The Starting Point
+:::
+![](images/lecture4.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture5.html'"}
+:::{.lecture-number}
+Lecture 5
+:::
+:::{.lecture-title}
+Loss Minimization and Optimization
+:::
+![](images/lecture5.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture6.html'"}
+:::{.lecture-number}
+Lecture 6
+:::
+:::{.lecture-title}
+Adaptive Minimization Methods
+:::
+![](images/lecture6.png){.lecture-image}
+::::
+::::
+
+# Neural Networks for Tabular Data {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture7.html'"}
+:::{.lecture-number}
+Lecture 7
+:::
+:::{.lecture-title}
+Nonlinearities and Universal Approximators
+:::
+![](images/lecture7.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture8.html'"}
+:::{.lecture-number}
+Lecture 8
+:::
+:::{.lecture-title}
+Introduction to Neural Networks for Tabular Data
+:::
+![](images/lecture8.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture9.html'"}
+:::{.lecture-number}
+Lecture 9
+:::
+:::{.lecture-title}
+Deep Neural Networks: What do they learn? Do they learn things?? Let's find out!
+:::
+![](images/lecture9.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture10.html'"}
+:::{.lecture-number}
+Lecture 10
+:::
+:::{.lecture-title}
+Backpropogation: The microwave dinner of optimization algorithms
+:::
+![](images/lecture10.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture11.html'"}
+:::{.lecture-number}
+Lecture 11
+:::
+:::{.lecture-title}
+Vanishing Gradients and Generalization for Deep Neural Networks
+:::
+![](images/lecture11.png){.lecture-image}
+::::
+::::
+
+# Convolutional Neural Networks {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture12.html'"}
+:::{.lecture-number}
+Lecture 12
+:::
+:::{.lecture-title}
+Convolutional Neural Networks for Image Classification
+:::
+![](images/lecture12.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture13.html'"}
+:::{.lecture-number}
+Lecture 13
+:::
+:::{.lecture-title}
+CNN Architectures and Transfer Learning
+:::
+![](images/lecture13.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture14.html'"}
+:::{.lecture-number}
+Lecture 14
+:::
+:::{.lecture-title}
+Object Detection in Images
+:::
+![](images/lecture14.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture15.html'"}
+:::{.lecture-number}
+Lecture 15
+:::
+:::{.lecture-title}
+Semantic Segmentation
+:::
+![](images/lecture15.png){.lecture-image}
+::::
+::::
+
+# Neural Networks for Sequences {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture16.html'"}
+:::{.lecture-number}
+Lecture 16
+:::
+:::{.lecture-title}
+A Very Fast Lecture on Recurrent Neural Networks and LSTMs
+:::
+![](images/lecture16.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture17.html'"}
+:::{.lecture-number}
+Lecture 17
+:::
+:::{.lecture-title}
+Sequence Models and Attention
+:::
+![](images/lecture17.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture18.html'"}
+:::{.lecture-number}
+Lecture 18
+:::
+:::{.lecture-title}
+Transformers: RNNs are so last decade
+:::
+![](images/lecture18.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture19.html'"}
+:::{.lecture-number}
+Lecture 19
+:::
+:::{.lecture-title}
+Representation Learning and Vision Transformers
+:::
+![](images/lecture19.png){.lecture-image}
+::::
+::::
+
+# Generative Machine Learning and Bayesian Methods {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture20.html'"}
+:::{.lecture-number}
+Lecture 20
+:::
+:::{.lecture-title}
+Intro to Generative Models: Autoregressives and Autoencoders
+:::
+![](images/lecture20.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture21.html'"}
+:::{.lecture-number}
+Lecture 21
+:::
+:::{.lecture-title}
+Deterministic Autoencoders (and why they fail for image generation); Intro to Bayesian Machine Learning
+:::
+![](images/lecture21.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture22.html'"}
+:::{.lecture-number}
+Lecture 22
+:::
+:::{.lecture-title}
+Bayesian Machine Learning
+:::
+![](images/lecture22.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture23.html'"}
+:::{.lecture-number}
+Lecture 23
+:::
+:::{.lecture-title}
+Variational Autoencoders
+:::
+![](images/lecture23.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture24.html'"}
+:::{.lecture-number}
+Lecture 24
+:::
+:::{.lecture-title}
+More on Variational Autoencoders and Introduction to Generative Adversarial Networks
+:::
+![](images/lecture24.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture25.html'"}
+:::{.lecture-number}
+Lecture 25
+:::
+:::{.lecture-title}
+Generative Adversarial Networks
+:::
+![](images/lecture25.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture26.html'"}
+:::{.lecture-number}
+Lecture 26
+:::
+:::{.lecture-title}
+Diffusion Models and Stable Diffusion
+:::
+![](images/lecture26.png){.lecture-image}
+::::
+::::
+
+# Interpretability and Ethics {.section-title}
+
+:::: {.section-grid}
+:::: {.lecture-box onclick="window.location.href='lecture27.html'"}
+:::{.lecture-number}
+Lecture 27
+:::
+:::{.lecture-title}
+Interpretable Deep Learning: Post-Hoc Methods and Glass-Box Models
+:::
+![](images/lecture27.png){.lecture-image}
+::::
+:::: {.lecture-box onclick="window.location.href='lecture28.html'"}
+:::{.lecture-number}
+Lecture 28
+:::
+:::{.lecture-title}
+Ethics and Fairness in Deep Learning and Modern Artificial Intelligence
+:::
+![](images/lecture28.png){.lecture-image}
+::::
+::::

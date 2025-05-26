@@ -1,0 +1,122 @@
+---
+title: "Lecture 2 Summary: Machine Learning Fundamentals"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This lecture lays the groundwork for understanding machine learning. We explore the core definition of learning, categorize algorithmic tasks, and then focus on predictive modeling, the role of loss functions, and the critical concept of generalization error.
+
+## 1. What is Machine Learning?
+
+At its heart, machine learning involves algorithms that learn from data.
+> "A computer program is said to learn from **experience E** with respect to some class of **tasks T** and **performance measure P**, if its performance at tasks in T, as measured by P, improves with experience E." (Mitchell, 1997)
+
+Let's break down these components:
+
+-   **Tasks (T):** The objectives the algorithm aims to achieve.
+
+    -   **Prediction:** Forecasting future or unknown values (e.g., stock prices, disease likelihood).
+
+    -   **Description:** Uncovering patterns or structures in data (e.g., customer segmentation via clustering, topic modeling in texts). This often involves dimensionality reduction or density estimation.
+
+    -   **Inference/Explanation:** Understanding the causal relationships and the impact of variables on one another.
+
+        -   *Loss focus:* Accuracy of parameter estimates, e.g., for regression coefficients $\boldsymbol{\beta}$, a common loss is Mean Squared Error of the estimate: $E[(\hat{\boldsymbol{\beta}} - \boldsymbol{\beta})^2]$.
+
+-   **Experience (E):** The data that fuels the learning process.
+
+    -   **Supervised Learning:** Uses labeled data, where each data point has features and a known outcome (e.g., images labeled with "cat" or "dog").
+
+    -   **Unsupervised Learning:** Uses unlabeled data, focusing on finding inherent structure in the features themselves (e.g., grouping similar news articles).
+
+    -   **Semi-supervised Learning:** A hybrid approach using a small amount of labeled data and a large amount of unlabeled data.
+
+    -   **Reinforcement Learning:** The algorithm learns by interacting with an environment and receiving feedback (rewards or penalties) for its actions (e.g., training a robot to navigate a maze).
+
+-   **Performance Measure (P):** A metric to quantify how well the algorithm is performing its task. This is typically achieved through a **loss function**.
+
+## 2. Predictive Performance & Loss Functions
+
+In predictive modeling, we often assume an underlying true relationship:
+$y = f(\mathbf{x}) + \epsilon$
+where:
+
+-   $y$ is the outcome variable.
+
+-   $f(\mathbf{x})$ represents the systematic information (the "signal") that features $\mathbf{x}$ provide about $y$.
+
+-   $\epsilon$ is irreducible random error or "noise."
+
+The goal is to learn an approximation, $\hat{f}(\mathbf{x})$, that accurately captures $f(\mathbf{x})$ from the training data.
+
+**Common Loss Functions:**
+
+-   **For Continuous Outcomes:**
+
+    -   **Mean Squared Error (MSE):** Measures the average squared difference between predicted and actual values.
+        $$\text{MSE} = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{f}(\mathbf{x}_i))^2$$
+
+-   **For Discrete/Categorical Outcomes:**
+
+    -   **0/1 Loss:** Assigns a loss of 1 for an incorrect classification and 0 for a correct one.
+        $$\text{0/1 Loss} = \frac{1}{N} \sum_{i=1}^{N} I(\hat{f}(\mathbf{x}_i) \neq y_i)$$
+        where $I(\cdot)$ is the indicator function. In probability terms for a single instance: $1 - P(\hat{f}(\mathbf{x}) = y)$.
+
+    -   **Cross-Entropy Loss (or Log Loss):** Penalizes confident but incorrect predictions more heavily. For a multi-class problem with K classes:
+        $$\text{Cross-Entropy} = - \frac{1}{N} \sum_{i=1}^{N} \sum_{k=1}^{K} I(y_i = k) \log P(\hat{f}(\mathbf{x}_i) = k)$$
+
+## 3. Generalization Error: The True Test of a Model
+
+While performance on training data is informative, the ultimate goal is a model that performs well on **unseen data**. This is captured by **generalization error**.
+
+**3.1. Defining Generalization Error**
+
+Assuming our data samples $\lbrace\mathbf{x}_i, y_i\rbrace$ are independent and identically distributed (i.i.d.) draws from a true, underlying data-generating distribution $\mathcal{T}$, the generalization error is the expected loss of our model $\hat{f}(\mathbf{x})$ over this entire distribution:
+$$\text{Generalization Error} = E_{\mathcal{T}}[\mathcal{L}(\hat{f}(\mathbf{x}), y)]$$
+
+**3.2. Training Error vs. Generalization Error**
+
+In practice, we can only directly compute the **training error** using our observed training dataset $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$:
+$$\text{Training Error} = E_{\mathcal{D}}[\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})] = \frac{1}{N} \sum_{i=1}^{N} \mathcal{L}(y_i, \hat{f}(\mathbf{x}_i))$$
+
+**3.3. The Relationship: The Role of Covariance**
+
+A key insight connects these two error measures. Under certain assumptions (e.g., fixed features $\mathbf{X}$, and outcomes $y$ and $y'$ differing only by noise for training and test sets respectively), for Mean Squared Error, the relationship is:
+$$\text{Expected Test Error} \approx \text{Training Error} + \frac{2}{N} \sum_{i=1}^{N} \text{Cov}(y_i, \hat{y}_i)$$
+Here, $\text{Cov}(y_i, \hat{y}_i)$ is the covariance between the true training outcomes and the model's predictions at those training points.
+
+-   **Interpretation:** The gap between generalization (test) error and training error increases with the average covariance between the training outcomes and their predictions. A high covariance suggests the model is fitting the noise in the training data (overfitting).
+
+**3.4. Implications for Linear Models**
+
+For linear models of the form $\hat{\mathbf{y}} = \mathbf{X}\hat{\boldsymbol{\beta}}$, where $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$, the sum of covariances can be further analyzed.
+
+-   The term $\sum_{i=1}^{N} \text{Cov}(y_i, \hat{y}_i)$ simplifies to $\sigma^2 \text{tr}(\mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T)$.
+
+-   The trace of the "hat matrix" $\mathbf{H} = \mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T$ is equal to $P$, the number of parameters (features) in the model.
+
+-   Thus, the generalization error offset becomes: $$\frac{2P\sigma^2}{N}$$
+
+**3.5. Key Factors Influencing Generalization Error:**
+
+This leads to a crucial understanding of what drives generalization:
+
+1.  **Training Error:** The baseline error on the data used to build the model.
+
+2.  **Model Complexity ($P$):** More complex models (larger $P$) tend to increase the covariance term, widening the gap between training and generalization error.
+
+3.  **Inherent Noise Variance ($\sigma^2$):** Higher irreducible error in the data-generating process naturally leads to a larger error gap.
+
+4.  **Sample Size ($N$):** Increasing the training sample size $N$ helps to reduce the impact of the covariance term, thereby shrinking the gap and improving generalization.
+
+**Conclusion:**
+
+The lecture demonstrates through examples (decision trees, polynomial regression) that finding the right model involves balancing its flexibility against the amount of training data available. An overly complex model might achieve low training error but generalize poorly (overfitting), while an overly simple model might not capture the underlying patterns even in the training data (underfitting). The optimal model complexity often scales with the size of the training dataset.

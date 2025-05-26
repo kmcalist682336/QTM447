@@ -1,0 +1,222 @@
+---
+title: "QTM 447 Lecture 1: Introduction"
+format:
+  html:
+    css: 
+      - ../styles.css
+      - ../dark-mode.css
+---
+
+::: {.content}
+::: {.material-types style="margin-bottom: 2rem;"}
+<div class="material-type">
+### Lecture Slides
+<a href="htmls/Lecture1.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+<img src="images/interface/slides.svg" alt="Lecture Slides" style="width: 100%; opacity: 1;">
+</a>
+</div>
+
+<div class="material-type" style="opacity: 0.5; pointer-events: none;">
+### Slide Code
+<img src="images/interface/code.svg" alt="Slide Code" style="width: 100%;">
+</div>
+
+<div class="material-type" style="opacity: 0.5; pointer-events: none;">
+### Lecture Code
+<img src="images/interface/notebook.svg" alt="Lecture Code" style="width: 100%;">
+</div>
+:::
+
+::: {.intro-section}
+## Lecture Summary
+
+### Course Overview
+
+#### Course Structure and Goals
+- Advanced statistical methods underlying modern machine learning techniques
+- Focus on extending introductory machine learning concepts with statistical/mathematical foundations
+- Three main parts:
+  1. Review of fundamentals, regression methods, regularization, first-order optimization
+  2. Neural Networks and Deep Learning (tabular data, CNNs, RNNs, Transformers)
+  3. Generative Machine Learning (PCA, Autoencoders, Autoregressive Models, GANs)
+
+#### Prerequisites
+- Linear regression (QTM 220 level)
+- Machine Learning (QTM 347 level)
+- Calculus 1-3
+- Linear algebra
+- Basic understanding of core concepts, though perfect recall not required
+
+### Course Components
+
+#### Lectures
+- Tuesday/Thursday 2:30 PM - 3:45 PM
+- Attendance strongly encouraged
+- Interactive participation expected
+- Simulcast on Zoom (not recorded)
+- Slides posted before class
+
+#### Problem Sets (50% of grade)
+- 6-8 assignments throughout semester
+- Implementation and extension of class materials
+- Mix of coding, software implementation, derivations, and proofs
+- Group work allowed (max 3 students)
+- Markdown format required (Quarto or Jupyter Notebook)
+- One free late submission (up to 5 days)
+- 10% per day penalty thereafter
+
+#### Final Project (50% of grade)
+- Significant application of course methods
+- Three checkpoints:
+  1. Team presentation (March 25th, 5%)
+  2. Project poster presentation (April 25th, 20%)
+  3. Final paper submission (May 7th, 25%)
+- Portfolio-worthy project encouraged
+
+### Technical Environment
+
+#### Programming Tools
+- Python 3.10 primary language
+- VSCode recommended IDE
+- Jupyter Notebooks/Quarto for documentation
+- PyTorch and PyTorch Lightning for deep learning
+- GitHub Copilot and ChatGPT encouraged for coding assistance
+- Google Colab Pro recommended for GPU access
+
+### Machine Learning Foundations
+
+#### Core Definition
+Mitchell (1997): "A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E."
+
+#### Key Tasks and Approaches
+
+##### Basic Supervised Learning
+1. Regression
+   - Predicting continuous outcomes
+   - Input features → real-valued predictions
+   
+2. Classification
+   - Predicting discrete classes
+   - Input features → class predictions
+
+##### Advanced Tasks
+1. Classification with Missing Inputs
+   - Handling incomplete feature vectors
+   - Generative vs. discriminative approaches
+   
+2. Structured Inputs/Outputs
+   - Handling sequences (text, images)
+   - Managing correlated outputs
+   
+3. Synthesis
+   - Generating new examples similar to training data
+   - Applications in text and image generation (e.g., DALL-E, ChatGPT)
+
+#### Modern Applications
+- Medical diagnosis with incomplete test data
+- Survey response analysis with missing values
+- Sports prediction with incomplete matchup data
+- Image generation and manipulation
+- Natural language processing and generation
+:::
+:::
+
+```{=html}
+<style>
+/* Material Grid Styles */
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 60px auto;
+    max-width: 1200px;
+}
+
+.material-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.material-box:not(.disabled):hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: #3498db;
+}
+
+.material-box.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8f9fa;
+}
+
+.material-title {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.material-image {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.interface-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.material-box:hover .interface-image {
+    transform: scale(1.05);
+}
+
+.interface-image.disabled {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+@media (max-width: 1200px) {
+    .materials-grid {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .materials-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .materials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .material-box {
+        aspect-ratio: auto;
+        height: 300px;
+    }
+}
+</style>
+
+::: {.lecture-nav style="display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd;"}
+<div></div>
+<div>
+[Next: Lecture 2 →](lecture2.qmd)
+</div>
+:::

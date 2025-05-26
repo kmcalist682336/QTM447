@@ -1,0 +1,142 @@
+---
+title: "Lecture 12: Image Classification with Convolutional Neural Networks"
+format: html
+---
+
+## Limitations of Fully Connected Networks for Images
+
+Fully connected neural networks (FCNNs) encounter several challenges when applied to image data:
+
+1. **Loss of Spatial Information**: When images are flattened into vectors, the spatial relationships between neighboring pixels are lost.
+
+2. **Lack of Translational Invariance**: FCNNs are sensitive to the exact position of features within an image, making them inefficient for pattern recognition tasks where the position of a feature might vary.
+
+3. **Parameter Explosion**: For even modest-sized images, FCNNs require an enormous number of parameters. A 28×28 grayscale image with 128 hidden units requires 100,352 parameters in just the first layer.
+
+4. **Inefficient Feature Learning**: FCNNs struggle to identify localized patterns that are critical for image recognition.
+
+## Convolutional Neural Networks
+
+Convolutional Neural Networks (CNNs) address these limitations through specialized layers designed for processing grid-like data, particularly images.
+
+### Convolution Operations
+
+The core operation in CNNs is the convolution, which slides a small weight matrix (kernel or filter) over the input image, computing the dot product at each position:
+
+$$(\mathbf{A} \circledast \mathbf{W})_{ij} = \sum_{m} \sum_{n} \mathbf{A}_{i+m,j+n} \mathbf{W}_{m,n}$$
+
+For a 2D input with a 2×2 filter example:
+
+$$c_{11} = a_{11}w_{11} + a_{12}w_{12} + a_{21}w_{21} + a_{22}w_{22}$$
+
+This operation produces a feature map that highlights regions where patterns match the filter.
+
+### Output Dimensions
+
+For an input of size $n_h \times n_w$ and a filter of size $f_h \times f_w$, the output dimensions are:
+
+$$\text{Output Size} = (n_h - f_h + 1) \times (n_w - f_w + 1)$$
+
+With zero-padding of $p$ and stride $s$, the output dimensions become:
+
+$$\text{Output Size} = \left(\frac{n_h + 2p - f_h + s}{s}\right) \times \left(\frac{n_w + 2p - f_w + s}{s}\right)$$
+
+### Key Properties
+
+Convolution operations provide several advantages:
+
+1. **Parameter Sharing**: The same filter is applied across the entire image, dramatically reducing the number of parameters. A 5×5 filter requires only 25 parameters compared to thousands in FCNNs.
+
+2. **Translational Invariance**: Patterns are detected regardless of their position in the image.
+
+3. **Hierarchical Feature Learning**: Early layers detect simple features (edges, corners), while deeper layers combine these to recognize complex patterns.
+
+## CNN Architecture Components
+
+### Convolutional Layers
+
+Each convolutional layer applies a set of learnable filters to produce multiple feature maps:
+
+$$\text{Feature Map}_k = \text{ReLU}(\mathbf{W}_k \circledast \mathbf{X} + b_k)$$
+
+Where:
+
+- $\mathbf{W}_k$ is the $k$-th filter
+
+- $b_k$ is the bias term
+
+- ReLU is the activation function
+
+### Pooling Layers
+
+Pooling reduces the spatial dimensions of feature maps while preserving important information:
+
+1. **Max Pooling**: Takes the maximum value in each window
+   
+   $$\text{MaxPool}(A)_{ij} = \max_{m,n \in \text{window}} A_{i+m,j+n}$$
+
+2. **Average Pooling**: Takes the average of values in each window
+
+For a pooling operation with filter size $K \times K$ and stride $s$, the output size is:
+
+$$\text{Output Size} = \left(\frac{H - K}{s} + 1\right) \times \left(\frac{W - K}{s} + 1\right)$$
+
+Pooling provides:
+
+- Further translational invariance
+
+- Reduced computational complexity
+
+- Resistance to small distortions
+
+### Multi-Channel Convolutions
+
+For RGB images or multi-channel feature maps, filters extend through all input channels:
+
+- Input: $C_{in} \times H \times W$
+
+- Filter: $C_{in} \times K_h \times K_w$
+
+- Output: Single channel feature map
+
+With $C_{out}$ filters, the output becomes a $C_{out} \times H_{out} \times W_{out}$ feature map.
+
+## Standard CNN Architecture
+
+The LeNet-5 architecture (1998) exemplifies the standard CNN structure:
+
+1. **Input Layer**: Raw image (e.g., 1×28×28 for MNIST)
+
+2. **Convolutional Layer**: Apply filters to detect features
+
+3. **Activation Layer**: Apply nonlinearity (typically ReLU)
+
+4. **Pooling Layer**: Reduce spatial dimensions
+
+5. **Repeat Steps 2-4**: Build hierarchical representations
+
+6. **Fully Connected Layers**: Combine features for classification
+
+7. **Output Layer**: Final classification (e.g., softmax for multi-class)
+
+This architecture progressively transforms the input from pixel values to high-level features:
+
+- First-layer filters typically detect edges and simple textures
+
+- Middle layers combine these to form parts of objects
+
+- Deeper layers represent complete objects or scenes
+
+## Advantages of CNNs
+
+CNNs offer significant benefits for image processing:
+
+1. **Efficiency**: Despite performing many operations, convolutions are computationally efficient, especially on GPUs.
+
+2. **Reduced Parameters**: A CNN with 6 filters of size 5×5 requires only 150 parameters, compared to 4,704 for an equivalent FCNN.
+
+3. **Performance**: CNNs consistently outperform FCNNs on image tasks in both accuracy and training speed.
+
+4. **Feature Interpretability**: Convolutional filters often correspond to human-interpretable image features, unlike the abstract representations in FCNNs.
+
+These advantages have made CNNs the dominant architecture for computer vision tasks, including image classification, object detection, and segmentation.

@@ -1,0 +1,177 @@
+---
+title: "Lecture 17: Sequence-to-Sequence Models and Attention Mechanisms"
+format: html
+---
+
+## Sequence-to-Sequence Modeling
+
+Sequence-to-sequence (Seq2Seq) models represent a powerful framework for transforming one sequence into another, with applications across numerous domains.
+
+### Architecture Overview
+
+The standard Seq2Seq architecture consists of two primary components:
+
+1. **Encoder**: Processes the input sequence and compresses its information into context vectors
+
+   - Typically implemented as an RNN (often LSTM) that reads the input sequence
+
+   - Produces hidden states at each step, with the final hidden state serving as the "context" vector
+
+2. **Decoder**: Generates the output sequence based on the encoded information
+
+   - Also implemented as an RNN that generates one output element at a time
+
+   - Takes the previous output element and previous hidden state as inputs
+
+   - Initialized with the final encoder hidden state (context vector)
+
+This encoder-decoder framework provides a flexible approach for mapping arbitrary-length input sequences to arbitrary-length output sequences.
+
+### Bottleneck Problem
+
+Despite its elegance, the standard Seq2Seq architecture suffers from a fundamental limitation:
+
+- All information from the input sequence must be compressed into a fixed-length context vector
+
+- For long sequences, this creates an information bottleneck
+
+- The model struggles to retain details from early parts of the input sequence
+
+- Performance degrades as sequence length increases
+
+For example, when translating a long sentence, information about the first few words may be lost by the time the encoder processes the entire input.
+
+## Attention Mechanisms
+
+Attention mechanisms address the bottleneck problem by allowing the decoder to focus on different parts of the input sequence at each decoding step.
+
+### Intuition and Motivation
+
+Attention draws inspiration from human cognition:
+
+- When translating a sentence, humans don't process the entire source sentence at once
+
+- Instead, they focus on specific words or phrases relevant to the current word being translated
+
+- Attention allows neural networks to implement a similar focusing mechanism
+
+### Attention in Seq2Seq Models
+
+In attention-augmented Seq2Seq models:
+
+1. The encoder still processes the entire input sequence
+
+2. However, instead of using only the final hidden state, all encoder hidden states are preserved
+
+3. At each decoding step, the decoder computes a weighted sum of these encoder states
+
+4. The weights determine how much "attention" to pay to each input position
+
+This creates direct pathways between each decoder step and all encoder positions, effectively bypassing the bottleneck.
+
+### Computing Attention Weights
+
+Attention scores between a decoder state and encoder states are computed through various mechanisms:
+
+1. **Bahdanau Attention** (Additive Attention):
+   $$e_{ti} = \mathbf{w}_2^T \odot \tanh(\mathbf{W}_1 [\mathbf{h}_i, \mathbf{s}_{t-1}])$$
+
+   - Concatenates encoder and decoder states
+
+   - Passes them through a small neural network
+
+   - Learns alignment through trainable parameters $\mathbf{W}_1$ and $\mathbf{w}_2$
+
+2. **Scaled Dot-Product Attention**:
+   $$e_{ti} = \frac{\mathbf{h}_i^T \mathbf{W}_g \mathbf{s}_{t-1}}{\sqrt{m}}$$
+
+   - Computes similarity through dot product of transformed vectors
+
+   - Scaling by $\sqrt{m}$ prevents dot products from growing too large in magnitude
+
+   - More computationally efficient than additive attention
+
+The attention weights are then normalized using softmax:
+   $$a_{ti} = \frac{\exp(e_{ti})}{\sum_j \exp(e_{tj})}$$
+
+### Context Vector Computation
+
+The context vector for each decoder step is computed as a weighted sum of encoder hidden states:
+
+$$\mathbf{c}_t = \sum_{i=1}^{T_e} a_{ti} \mathbf{h}_i$$
+
+This context vector is then used as an additional input to the decoder:
+
+$$\mathbf{s}_t = f(\mathbf{y}_{t-1}, \mathbf{s}_{t-1}, \mathbf{c}_t)$$
+$$\mathbf{y}_t = g(\mathbf{s}_t, \mathbf{y}_{t-1}, \mathbf{c}_t)$$
+
+Where $f$ and $g$ are the state update and output functions, respectively.
+
+### Visualizing Attention
+
+Attention weights can be visualized as a matrix where each cell represents how much the decoder focuses on a particular encoder position when generating a specific output:
+
+- Rows correspond to output positions
+
+- Columns correspond to input positions
+
+- Brighter cells indicate higher attention weights
+
+In language translation, attention weights often reveal alignment between source and target words, capturing:
+
+- Word reordering across languages
+
+- One-to-many and many-to-one word correspondences
+
+- Relevant contextual information beyond direct translations
+
+## Query-Key-Value Framework
+
+The attention mechanism can be generalized using the Query-Key-Value (QKV) framework, which provides a more flexible way to think about attention.
+
+### Core Components
+
+- **Query (Q)**: The vector representing the current decoder state
+
+- **Key (K)**: The vectors against which the query is compared (encoder states)
+
+- **Value (V)**: The vectors that are weighted to produce the context (typically the same as keys)
+
+### Attention Layer Computation
+
+The attention layer performs the following operations:
+
+1. Transform input vectors into keys and values:
+   $$\mathbf{K} = \mathbf{X}\mathbf{W}_K$$
+   $$\mathbf{V} = \mathbf{X}\mathbf{W}_V$$
+   
+2. Compute similarity scores between queries and keys:
+   $$\mathbf{E} = \frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{m}}$$
+   
+3. Normalize scores to obtain attention weights:
+   $$\mathbf{A} = \text{softmax}(\mathbf{E})$$
+   
+4. Compute weighted values:
+   $$\mathbf{Y} = \mathbf{A}\mathbf{V}$$
+
+This framework generalizes attention beyond the encoder-decoder context, allowing for applications in various network architectures.
+
+## Beyond Sequential Processing
+
+The QKV framework suggests that attention can operate without requiring sequential processing of inputs:
+
+- Traditional RNNs must process inputs sequentially due to their recurrent nature
+
+- Attention can theoretically compute weights for all positions simultaneously
+
+- However, standard attention still lacks positional information
+
+This insight leads to several questions:
+
+1. Can we replace sequential encoding entirely with attention-based mechanisms?
+
+2. How do we incorporate positional information without sequential processing?
+
+3. Can attention look at relationships between input elements themselves?
+
+These questions set the stage for self-attention mechanisms and transformer architectures, where attention becomes the primary computational mechanism rather than an augmentation of recurrent networks.

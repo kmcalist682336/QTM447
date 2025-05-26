@@ -1,0 +1,212 @@
+---
+title: "Lecture 18: Transformers and the Attention Revolution"
+format: html
+---
+
+## From Seq2Seq to Transformers
+
+Sequence-to-sequence models with attention represented a significant advancement in handling sequential data, but they still relied on recurrent structures that limited their efficiency and capacity to handle long-range dependencies.
+
+### Limitations of Recurrent Seq2Seq Models
+
+Recurrent seq2seq models suffer from several fundamental constraints:
+
+- Sequential processing introduces computational bottlenecks
+
+- Information must flow through multiple time steps, leading to vanishing gradients
+
+- Training requires time-sequential operations that cannot be parallelized
+
+- Deep networks (one layer per token) become increasingly difficult to train
+
+For a sequence with hundreds of tokens, these limitations severely restrict model capacity and training efficiency, particularly when handling complex tasks like language translation or question answering.
+
+## Self-Attention: The Core Innovation
+
+Self-attention represents the key breakthrough that enabled the transformer architecture, allowing models to directly connect any position in a sequence to any other position with constant computational complexity.
+
+### Self-Attention Mechanism
+
+The self-attention operation computes weighted representations of the entire input sequence for each position:
+
+1. For each input token, compute three vectors through learned linear projections:
+
+   - **Query vector** ($\mathbf{q}_i$): Represents what information the token is "looking for"
+
+   - **Key vector** ($\mathbf{k}_i$): Represents what information the token "contains"
+
+   - **Value vector** ($\mathbf{v}_i$): Represents the actual content of the token
+
+2. For each position $i$, calculate attention weights by comparing its query to all keys:
+   $$e_{ij} = \frac{\mathbf{q}_i^T\mathbf{k}_j}{\sqrt{d_k}}$$
+
+3. Normalize weights using softmax:
+   $$a_{ij} = \frac{\exp(e_{ij})}{\sum_{m=1}^n \exp(e_{im})}$$
+
+4. Compute a weighted sum of all value vectors:
+   $$\mathbf{o}_i = \sum_{j=1}^n a_{ij}\mathbf{v}_j$$
+
+This operation allows each token to attend to all other tokens, capturing contextual relationships regardless of their distance in the sequence.
+
+### Multi-Head Attention
+
+To capture different types of relationships simultaneously, the transformer employs multi-head attention:
+
+- Apply multiple sets of query/key/value projections in parallel
+
+- Each "head" can attend to different aspects of the input (e.g., syntactic vs. semantic relationships)
+
+- Concatenate the outputs from all heads and project to the original dimension
+
+Multi-head attention enables the model to jointly attend to information from different representational subspaces, enhancing the model's ability to capture complex patterns.
+
+## Positional Encodings
+
+A critical insight in transformers is addressing the lack of inherent sequence ordering in self-attention. Unlike RNNs, self-attention has no built-in notion of token position.
+
+### Sinusoidal Position Embeddings
+
+The transformer architecture incorporates position information through additive sinusoidal encodings:
+
+$$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+$$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+Where:
+
+- $pos$ is the position in the sequence
+
+- $i$ is the dimension index
+
+- $d_{model}$ is the embedding dimension
+
+These encodings have important properties:
+
+- They provide unique patterns for each position
+
+- They capture relative distances between positions
+
+- They allow the model to extrapolate to sequence lengths not seen in training
+
+- They don't require additional parameters to be learned
+
+## The Transformer Architecture
+
+The complete transformer architecture combines multiple components into an encoder-decoder structure that entirely replaces recurrence with attention.
+
+### Encoder Block
+
+Each encoder block consists of:
+
+1. Multi-head self-attention layer
+
+2. Position-wise feed-forward network (FFN)
+
+3. Layer normalization and residual connections
+
+The encoder processes the entire input sequence in parallel, generating contextual representations for each token that incorporate information from the entire sequence.
+
+### Decoder Block
+
+Each decoder block contains:
+
+1. Masked multi-head self-attention (prevents attending to future positions)
+
+2. Multi-head cross-attention over encoder outputs
+
+3. Position-wise feed-forward network
+
+4. Layer normalization and residual connections
+
+The masking in the self-attention layer ensures that predictions for position $i$ can only depend on known outputs at positions less than $i$, preserving the autoregressive property needed for generation.
+
+### Parallelization Advantage
+
+The transformer architecture offers significant computational advantages:
+
+- Self-attention operations can be parallelized across all sequence positions
+
+- Multiple attention heads can be computed simultaneously
+
+- For a sequence of length $n$, complexity reduces from $O(n)$ sequential operations to $O(1)$
+
+- GPU acceleration becomes dramatically more effective
+
+This parallelization enables training on substantially larger datasets and with more parameters than was previously feasible with recurrent architectures.
+
+## The Generative Pre-trained Transformer (GPT)
+
+GPT represents a decoder-only variant of the transformer architecture, optimized for autoregressive language modeling.
+
+### Architecture and Training
+
+GPT consists of:
+
+- Token and position embeddings
+
+- Multiple layers of masked self-attention blocks
+
+- A final linear layer with softmax activation
+
+The model is trained to predict the next token given all previous tokens in the sequence, using a language modeling objective:
+
+$$L(\theta) = \sum_i \log P(x_i | x_{<i}; \theta)$$
+
+During training, all tokens are processed in parallel with appropriate masking, while generation remains sequential.
+
+### Autoregressive Generation
+
+At inference time, GPT generates text one token at a time:
+
+1. Start with a prompt sequence
+
+2. Feed the sequence through the model to get a probability distribution over the next token
+
+3. Sample from this distribution (using techniques like top-k or nucleus sampling)
+
+4. Append the sampled token to the sequence
+
+5. Repeat until an end condition is met
+
+This approach allows GPT to generate coherent, contextually relevant text that follows the statistical patterns observed in its training data.
+
+### Scaling Properties
+
+GPT models have demonstrated remarkable scaling properties:
+
+- Performance improves predictably with more parameters and training data
+
+- Larger models exhibit emergent capabilities not present in smaller variants
+
+- The same architecture can be applied across diverse language tasks
+
+Modern implementations like GPT-3 and GPT-4 have scaled to hundreds of billions of parameters, enabling unprecedented capabilities in language understanding and generation.
+
+## Bidirectional Encoder Representations from Transformers (BERT)
+
+While GPT focuses on generative capabilities, BERT represents an encoder-only approach optimized for representational learning.
+
+### Bidirectional Context
+
+Unlike the unidirectional context of GPT, BERT:
+
+- Processes the entire input sequence simultaneously
+
+- Attends to both left and right context for each token
+
+- Develops rich bidirectional representations
+
+This bidirectional approach is particularly suited for tasks that require deep understanding of context, such as question answering and natural language inference.
+
+## The Transformer Revolution
+
+The introduction of transformer architectures marked a paradigm shift in machine learning for sequential data:
+
+- Eliminated the sequential bottleneck of recurrent models
+
+- Enabled efficient training of much larger models
+
+- Established a fundamental architecture that scales effectively with compute
+
+- Provided a unified approach to diverse language and sequence modeling tasks
+
+This architectural innovation directly enabled the development of today's large language models and continues to drive advancements across machine learning domains from natural language processing to computer vision.

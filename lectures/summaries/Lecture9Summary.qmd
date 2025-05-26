@@ -1,0 +1,185 @@
+---
+title: "Lecture 9 Summary: Deep Neural Networks"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary explores deep neural networks, building on the foundation of single-layer networks to examine how increased depth enables more sophisticated feature learning, hierarchical representations, and improved model performance despite potential training challenges.
+
+## 1. From Single-Layer to Deep Networks
+
+Single-layer neural networks can theoretically approximate any function with sufficient hidden units, but may require an impractically large number of parameters. A standard single-layer, fully-connected neural network is defined as:
+
+$$\theta_i = g(\boldsymbol{\beta}^T \varphi(\mathbf{W}^T \mathbf{x}_i + \mathbf{c}) + b)$$
+
+Where:
+
+- $\mathbf{W}$ is a $P \times K$ weight matrix connecting inputs to hidden units
+
+- $\mathbf{c}$ is a vector of bias terms for the hidden layer
+
+- $\varphi()$ is a nonlinear activation function (typically ReLU)
+
+- $\boldsymbol{\beta}$ is a vector of weights connecting hidden units to the output
+
+- $b$ is an output bias term
+
+Deep neural networks extend this architecture by incorporating multiple hidden layers, transforming the model to:
+
+$$\theta_i = g(\boldsymbol{\beta}^T \varphi(\mathbf{W}_2^T \varphi(\mathbf{W}_1^T \mathbf{x}_i + \mathbf{c}_1) + \mathbf{c}_2) + b)$$
+
+This nested structure allows for more complex transformations of the input data through successive nonlinear mappings.
+
+## 2. The Power of Hierarchical Representations
+
+Deep neural networks derive their effectiveness from learning hierarchical representations of data, with each layer building upon the features extracted by the previous layer.
+
+**2.1. Feature Learning in Practice**
+
+Using the MNIST dataset of handwritten digits (focusing on 3s and 8s) demonstrates how neural networks learn meaningful representations:
+
+- First-layer units learn to identify primitive features like edges, curves, and regions of the digit
+
+- Subsequent layers combine these primitive features into more complex patterns
+
+- The final layers create abstract representations that enable effective classification
+
+This hierarchical approach follows a similar process to human visual perception, where complex recognition emerges from the combination of simpler features.
+
+**2.2. Latent Space Transformations**
+
+Each layer of a deep network creates a transformed representation of the data:
+
+$$\mathbf{Z}^{(l)} = \varphi(\mathbf{Z}^{(l-1)}\mathbf{W}^{(l)} + \mathbf{c}^{(l)})$$
+
+Where $\mathbf{Z}^{(l)}$ represents the activations at layer $l$. These transformations progressively map the data into spaces where:
+
+- Class separation becomes more apparent
+
+- Relevant features are emphasized
+
+- Irrelevant variations are suppressed
+
+This can be viewed as a nonlinear generalization of dimensionality reduction techniques like PCA, where each layer creates increasingly abstract representations of the data.
+
+## 3. Advantages of Depth Over Width
+
+Deep networks with multiple layers offer several advantages over equivalent-sized wide networks with a single hidden layer:
+
+**3.1. Parameter Efficiency**
+
+Deep networks can represent complex functions with fewer parameters than wide networks. For example, representing an XOR-like decision boundary may require:
+
+- A single hidden layer with dozens of units
+
+- A deep network with just a few units per layer
+
+This efficiency stems from the ability to reuse and combine features across layers, allowing complex functions to be decomposed into simpler hierarchical components.
+
+**3.2. Compositional Structure**
+
+Deep networks naturally model compositional relationships, where complex concepts are built from simpler ones. This aligns with the hierarchical structure found in many real-world data types:
+
+- In images: edges → shapes → parts → objects
+
+- In language: characters → words → phrases → sentences
+
+- In audio: waveforms → phonemes → words → speech
+
+This compositional representation provides an inductive bias that helps the network generalize better to unseen examples.
+
+## 4. Training Deep Neural Networks
+
+While deep networks offer greater representational power, they also introduce training challenges that require specialized techniques.
+
+**4.1. Loss Landscape Complexity**
+
+The loss landscapes of deep neural networks contain:
+
+- Multiple local minima of varying quality
+
+- Flat minima that may generalize better than sharp minima
+
+- Saddle points that can slow optimization
+
+- Plateaus where gradients provide little guidance
+
+Stochastic gradient descent (SGD) with appropriate learning rate schedules often converges to flat minima, which can lead to better generalization performance compared to exact optimization methods.
+
+**4.2. Gradient Challenges**
+
+Deep networks face several gradient-related challenges:
+
+- Vanishing gradients: When gradients become extremely small in early layers
+
+- Exploding gradients: When gradients become extremely large
+
+- Discontinuities from ReLU activations
+
+- High-dimensional Jacobian matrices that are computationally intensive
+
+These issues are addressed through techniques like careful initialization, gradient clipping, batch normalization, and alternative activation functions.
+
+## 5. Geometric Interpretation of Deep Networks
+
+Deep networks create a sequence of nonlinear transformations that progressively reshape the input space:
+
+**5.1. Visualization of Hidden Representations**
+
+By visualizing the activations of hidden layers, we can observe how the network:
+
+- Clusters similar examples together
+
+- Separates different classes
+
+- Creates increasingly linear decision boundaries in the transformed spaces
+
+For the MNIST digits 3 and 8, early layers learn to identify distinctive features such as the empty space on the left side of a 3 or the double circle structure of an 8.
+
+**5.2. Decision Boundaries**
+
+Through successive nonlinear transformations, deep networks create complex decision boundaries that would be difficult to achieve with simpler models:
+
+- Early layers fold and warp the input space
+
+- Middle layers further transform the data to enhance separability
+
+- Later layers perform the final classification in the transformed space
+
+This process allows deep networks to learn complex patterns while maintaining computational efficiency.
+
+## 6. The Role of Optimization in Generalization
+
+The optimization process itself plays a critical role in how well deep networks generalize:
+
+**6.1. Implicit Regularization of SGD**
+
+Stochastic gradient descent provides an implicit form of regularization:
+
+- The noise in gradient estimates helps escape sharp minima
+
+- SGD tends to converge to flatter regions of the loss landscape
+
+- These flat minima often correspond to simpler models that generalize better
+
+This phenomenon helps explain why deep networks can generalize well despite being highly overparameterized.
+
+**6.2. The Backpropagation Algorithm**
+
+Training deep networks efficiently requires the backpropagation algorithm, which:
+
+- Applies the chain rule to compute gradients across multiple layers
+
+- Reuses intermediate computations to avoid redundant calculations
+
+- Allows for end-to-end training of all network parameters
+
+Despite its effectiveness, backpropagation still faces challenges with very deep networks, necessitating careful initialization and normalization techniques.

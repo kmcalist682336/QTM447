@@ -1,0 +1,183 @@
+---
+title: "Lecture 20: Generative Models: Autoregressives and Autoencoders"
+format: html
+---
+
+## Foundations of Generative Modeling
+
+Generative modeling represents a fundamental shift from the predictive focus of supervised learning to modeling the intrinsic structure of data. While supervised learning aims to model $P(y|\mathbf{x})$, generative approaches target the joint distribution $P(\mathbf{x})$.
+
+### Generative vs. Discriminative Learning
+
+The core distinction between these paradigms lies in their objectives:
+
+- **Discriminative Models** learn decision boundaries between classes
+
+- **Generative Models** learn the underlying data distribution
+
+This distinction is crucial because modeling the full data distribution enables:
+
+1. Sampling new instances that resemble training data
+
+2. Estimating the likelihood of observed data
+
+3. Uncovering latent structure within data
+
+4. Performing conditional generation given constraints
+
+### Challenges in Generative Modeling
+
+Generative modeling faces significant challenges, particularly for high-dimensional data:
+
+- **Dimensionality**: A 6000×4000 RGB image has approximately 72 million dimensions
+
+- **Complex Dependencies**: Pixels/tokens exhibit intricate spatial and contextual relationships
+
+- **Structure Preservation**: Generated outputs must maintain semantic coherence
+
+- **Evaluation**: Success requires both perceptual quality and statistical fidelity
+
+Despite these challenges, the success of modern generative models demonstrates that capturing the statistical structure of complex data is possible, enabling the creation of realistic synthetic content across modalities.
+
+## Autoregressive Models
+
+Autoregressive models provide a tractable approach to generative modeling by factorizing the joint distribution using the chain rule of probability.
+
+### Chain Rule Factorization
+
+For a sequence $\mathbf{x} = [x_1, x_2, ..., x_P]$, the joint distribution can be expressed as:
+
+$$P(\mathbf{x}) = P(x_1) \cdot P(x_2|x_1) \cdot P(x_3|x_1,x_2) \cdot ... \cdot P(x_P|x_1,...,x_{P-1})$$
+
+This factorization transforms the complex task of modeling a high-dimensional joint distribution into a sequence of more manageable conditional distributions.
+
+### Text Generation with GPT
+
+Generative Pre-trained Transformers (GPT) implement autoregressive modeling for text:
+
+- Use masked self-attention to enforce the autoregressive constraint
+
+- Process the input sequence with transformer decoder blocks
+
+- Output a probability distribution over the next token
+
+- Sample from this distribution and append to the sequence
+
+- Repeat until generation is complete
+
+GPT's success in language generation comes from its ability to capture complex patterns in linguistic data through this autoregressive approach.
+
+### Image Generation with PixelRNN/PixelCNN
+
+Autoregressive image generation follows similar principles but must define a spatial ordering for pixels:
+
+- Typically process pixels in raster scan order (row by row from top-left)
+
+- Model RGB values at each position conditioned on all previously generated pixels
+
+- Use recurrent architectures (PixelRNN) or masked convolutions (PixelCNN) to preserve the autoregressive property
+
+The hidden state update for PixelRNN can be expressed as:
+
+$$\mathbf{h}_{x,y} = f(\mathbf{h}_{x-1,y}, \mathbf{h}_{x,y-1})$$
+
+Where the function $f$ is implemented using LSTM units to capture spatial dependencies.
+
+### Limitations of Autoregressive Generation
+
+Despite their theoretical elegance, autoregressive models face significant practical limitations:
+
+- **Sequential Generation**: Sampling must proceed one element at a time
+
+- **Computational Intensity**: Particularly problematic for high-dimensional data like images
+
+- **Resolution Constraints**: Practical implementations often limited to small images (e.g., 64×64)
+
+- **Training Time**: Requires extensive computational resources
+
+These limitations have motivated the development of alternative approaches that can generate high-dimensional data more efficiently.
+
+## Dimensionality Reduction and Autoencoders
+
+An alternative approach to generative modeling begins with dimensionality reduction techniques that learn compact representations of data.
+
+### Principal Component Analysis
+
+PCA represents a classical approach to dimensionality reduction that finds a linear projection minimizing reconstruction error:
+
+$$\min_{\mathbf{W}} \frac{1}{N} \sum_{i=1}^N \|\mathbf{x}_i - \mathbf{W}\mathbf{W}^T\mathbf{x}_i\|^2_2$$
+
+Where:
+
+- $\mathbf{W}$ is a $P \times K$ matrix of orthonormal basis vectors
+
+- $K \ll P$ is the dimensionality of the latent space
+
+- $\mathbf{z}_i = \mathbf{W}^T\mathbf{x}_i$ represents the latent encoding
+
+PCA provides the optimal linear reconstruction under squared error, but its linearity severely restricts its expressive power for complex data like images or text.
+
+### Deterministic Autoencoders
+
+Autoencoders generalize the dimensionality reduction framework by replacing linear projections with neural networks:
+
+1. **Encoder** $e(\mathbf{x})$: Maps input data to a low-dimensional latent code $\mathbf{z}$
+
+2. **Bottleneck**: Forces the model to learn a compressed representation
+
+3. **Decoder** $d(\mathbf{z})$: Reconstructs the original input from the latent code
+
+The model is trained to minimize reconstruction error:
+
+$$\min_{e,d} \frac{1}{N} \sum_{i=1}^N \|\mathbf{x}_i - d(e(\mathbf{x}_i))\|^2_2$$
+
+Autoencoders can leverage arbitrary neural architectures, including convolutional networks for images, enabling them to capture complex non-linear relationships in data.
+
+### Limitations as Generative Models
+
+While autoencoders excel at representation learning, they have significant limitations as generative models:
+
+1. **No Explicit Density Model**: They don't define a probability distribution over data
+
+2. **Discontinuous Latent Space**: Random points in latent space may decode to unrealistic samples
+
+3. **No Sampling Mechanism**: No principled way to generate novel samples
+
+4. **Overfitting Risk**: May memorize training examples rather than learning data distribution
+
+These limitations arise because standard autoencoders focus solely on reconstruction rather than learning a proper statistical model of data.
+
+## Toward Probabilistic Generative Models
+
+To overcome the limitations of deterministic autoencoders, we need to incorporate probabilistic elements.
+
+### Factor Analysis
+
+Factor analysis represents an early probabilistic approach to dimensionality reduction:
+
+$$P(\mathbf{z}) = \mathcal{N}(\mathbf{z}|0, \mathbf{I})$$
+$$P(\mathbf{x}|\mathbf{z}) = \mathcal{N}(\mathbf{x}|\mathbf{W}\mathbf{z} + \boldsymbol{\alpha}, \boldsymbol{\Psi})$$
+
+This formulation explicitly models:
+
+- A prior distribution over latent variables
+
+- A conditional distribution generating observations from latent variables
+
+- Uncertainty in the reconstruction process
+
+This probabilistic perspective lays the foundation for more sophisticated models like variational autoencoders, which extend these ideas to deep neural networks while maintaining a principled probabilistic interpretation.
+
+### Toward Variational Autoencoders
+
+The framework of factor analysis points toward variational autoencoders, which:
+
+1. Replace linear mappings with neural networks
+
+2. Maintain probabilistic interpretations of encodings and decodings
+
+3. Enable principled sampling and density estimation
+
+4. Support conditional generation
+
+This combination of deep learning with probabilistic modeling delivers both the flexibility of neural networks and the statistical rigor of generative models.

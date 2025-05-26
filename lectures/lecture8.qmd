@@ -1,0 +1,54 @@
+---
+title: "Lecture 8: Introduction to Neural Networks for Tabular Data"
+format:
+  html:
+    css: ../styles.css
+---
+
+::: {.lecture-nav style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);"}
+<div>
+[← Previous: Lecture 7](lecture7.qmd)
+</div>
+<div>
+[Next: Lecture 9 →](lecture9.qmd)
+</div>
+:::
+
+::: {.content}
+::: {.material-types style="margin-bottom: 2rem;"}
+<div class="material-type">
+### Lecture Slides
+<a href="htmls/Lecture8.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+<img src="images/interface/slides.svg" alt="Lecture Slides" style="width: 100%; opacity: 1;">
+</a>
+</div>
+
+<div class="material-type">
+### Slide Code
+<a href="slideipynb_html/Lecture8.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+<img src="images/interface/code.svg" alt="Slide Code" style="width: 100%; opacity: 1;">
+</a>
+</div>
+
+<div class="material-type" style="opacity: 0.5; pointer-events: none;">
+### Lecture Code
+<img src="images/interface/notebook.svg" alt="Lecture Code" style="width: 100%;">
+</div>
+:::
+
+```{python}
+#| echo: false
+#| output: asis
+import re
+with open("summaries/Lecture8Summary.qmd", "r") as f:
+    content = f.read()
+if content.startswith("---"):
+    parts = content.split("---", 2)
+    if len(parts) >= 3:
+        content = parts[2]
+print(content)
+```
+
+:::
+
+

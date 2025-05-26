@@ -1,0 +1,127 @@
+---
+title: "Lecture 24: VAE Extensions and GANs Introduction"
+format: html
+---
+
+## VAE Extensions
+
+### β-VAEs (Beta Variational Autoencoders)
+
+- Modified training objective: $\mathcal{L} = E_Q[\log P(\mathbf{x}|\mathbf{z})] - \beta \cdot D_{KL}(Q(\mathbf{z}|\mathbf{x}) || P(\mathbf{z}))$
+
+- β parameter controls trade-off between reconstruction quality and regularization
+
+- **β > 1**: Stronger regularization, encourages disentangled representations
+
+- **β < 1**: Emphasizes reconstruction, may lead to entangled latent factors
+
+- Benefits: Improved disentanglement of latent factors, more interpretable representations
+
+### Image Editing with VAEs
+
+- **Latent space interpolation**: Smooth transitions between encoded images
+
+- **Attribute manipulation**: Edit specific features by moving in learned latent directions
+
+- **Arithmetic operations**: Combine latent representations to transfer attributes
+
+- Process:
+
+  1. Encode images to latent space: $\mathbf{z} = \text{Encoder}(\mathbf{x})$
+
+  2. Perform operations in latent space
+
+  3. Decode modified latent vectors: $\mathbf{x}' = \text{Decoder}(\mathbf{z}')$
+
+### Conditional VAEs (CVAEs)
+
+- Extend VAEs to incorporate conditioning information $\mathbf{c}$
+
+- Modified architecture:
+
+  - Encoder: $Q(\mathbf{z}|\mathbf{x}, \mathbf{c})$
+
+  - Decoder: $P(\mathbf{x}|\mathbf{z}, \mathbf{c})$
+
+  - Prior: $P(\mathbf{z}|\mathbf{c})$ or unchanged $P(\mathbf{z})$
+
+- Training objective: $\mathcal{L} = E_Q[\log P(\mathbf{x}|\mathbf{z}, \mathbf{c})] - D_{KL}(Q(\mathbf{z}|\mathbf{x}, \mathbf{c}) || P(\mathbf{z}|\mathbf{c}))$
+
+- Applications: Class-conditional generation, attribute-specific sampling
+
+## Generative Adversarial Networks (GANs)
+
+### Motivation and Overview
+
+- Alternative approach to generative modeling that avoids explicit density estimation
+
+- Uses adversarial training between two neural networks
+
+- Does not require inference networks or variational approximations
+
+- Focuses on generating samples that are indistinguishable from real data
+
+### Density Ratio Perspective
+
+- Consider distinguishing between two distributions: $P_{data}(\mathbf{x})$ and $P_{model}(\mathbf{x})$
+
+- Optimal classifier for this task: $f^*(\mathbf{x}) = \frac{P_{data}(\mathbf{x})}{P_{data}(\mathbf{x}) + P_{model}(\mathbf{x})}$
+
+- When distributions are identical: $P_{data}(\mathbf{x}) = P_{model}(\mathbf{x})$, then $f^*(\mathbf{x}) = 0.5$
+
+- Key insight: Train classifier to distinguish real from generated data
+
+### GAN Architecture
+
+- **Generator network** $G(\mathbf{z}; \boldsymbol{\theta}_g)$: Maps noise $\mathbf{z} \sim P_z(\mathbf{z})$ to data space
+
+- **Discriminator network** $D(\mathbf{x}; \boldsymbol{\theta}_d)$: Outputs probability that input is real data
+
+- Generator objective: Fool discriminator by generating realistic samples
+
+- Discriminator objective: Correctly classify real vs. generated samples
+
+### Minimax Game Formulation
+
+- Two-player minimax game with value function:
+  $\min_G \max_D V(D,G) = E_{\mathbf{x} \sim P_{data}(\mathbf{x})}[\log D(\mathbf{x})] + E_{\mathbf{z} \sim P_z(\mathbf{z})}[\log(1 - D(G(\mathbf{z})))]$
+
+- **Discriminator maximization**: $\max_D \{E_{\mathbf{x} \sim P_{data}}[\log D(\mathbf{x})] + E_{\mathbf{z} \sim P_z}[\log(1 - D(G(\mathbf{z})))]\}$
+
+- **Generator minimization**: $\min_G E_{\mathbf{z} \sim P_z}[\log(1 - D(G(\mathbf{z})))]$
+
+### Training Algorithm
+
+1. **Discriminator update**: Train to maximize ability to distinguish real from fake
+
+   - Sample mini-batch of real data $\{\mathbf{x}^{(1)}, ..., \mathbf{x}^{(m)}\}$
+
+   - Sample mini-batch of noise $\{\mathbf{z}^{(1)}, ..., \mathbf{z}^{(m)}\}$
+
+   - Update discriminator by ascending gradient: $\nabla_{\boldsymbol{\theta}_d} \frac{1}{m} \sum_{i=1}^m [\log D(\mathbf{x}^{(i)}) + \log(1 - D(G(\mathbf{z}^{(i)})))]$
+
+2. **Generator update**: Train to minimize discriminator's ability to detect fakes
+
+   - Sample mini-batch of noise $\{\mathbf{z}^{(1)}, ..., \mathbf{z}^{(m)}\}$
+
+   - Update generator by descending gradient: $\nabla_{\boldsymbol{\theta}_g} \frac{1}{m} \sum_{i=1}^m \log(1 - D(G(\mathbf{z}^{(i)})))$
+
+### Theoretical Properties
+
+- **Global optimum**: When $P_g = P_{data}$, the global minimum is achieved with $D^*(\mathbf{x}) = \frac{1}{2}$
+
+- **Convergence**: Under ideal conditions, the minimax game converges to Nash equilibrium
+
+- **Mode collapse**: Generator may learn to produce limited variety of samples
+
+- **Training instability**: Adversarial training can be difficult to stabilize
+
+### Practical Considerations
+
+- Alternative generator objective: $\max_G E_{\mathbf{z} \sim P_z}[\log D(G(\mathbf{z}))]$ (instead of minimizing $\log(1-D(G(\mathbf{z})))$)
+
+- Provides stronger gradients early in training when discriminator is confident
+
+- Careful balance required between generator and discriminator training
+
+- Various techniques developed to improve training stability

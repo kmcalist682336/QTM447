@@ -1,0 +1,6 @@
+execute:
+  freeze: auto
+  include: false
+  echo: false
+  warning: false
+  error: false 

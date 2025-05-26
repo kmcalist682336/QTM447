@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M5.5,0 L58.5,0 C61.5375661,0 64,2.46243388 64,5.5 L64,58.5 C64,61.5375661 61.5375661,64 58.5,64 L5.5,64 C2.46243388,64 0,61.5375661 0,58.5 L0,5.5 C0,2.46243388 2.46243388,0 5.5,0 Z" fill="#F37626"/>
+        <text x="32" y="42" font-family="Arial" font-size="24" fill="white" text-anchor="middle">.ipynb</text>
+    </g>
+</svg> 

@@ -1,0 +1,180 @@
+---
+title: "Lecture 13: Advanced CNN Architectures and Transfer Learning"
+format: html
+---
+
+## CNN Architecture Design Principles
+
+Convolutional Neural Networks (CNNs) require careful architectural design to achieve optimal performance on complex image classification tasks. Several key design principles have emerged from empirical research:
+
+### Feature Map Progression
+
+Effective CNN architectures follow a consistent pattern:
+
+- Start with rich input representations (e.g., 3×32×32 for RGB images)
+
+- Apply successive convolution and pooling layers to downsample spatial dimensions
+
+- Compensate for downsampling by increasing the number of filters
+
+- Preserve approximate volume through the network (H×W×C remains roughly constant)
+
+For example, a typical progression might transform:
+
+- Input: 3×32×32 (3,072 values)
+
+- Early layers: 64×16×16 (16,384 values)
+
+- Middle layers: 128×8×8 (8,192 values)
+
+- Deep layers: 256×4×4 (4,096 values)
+
+### Batch Normalization
+
+Batch normalization is essential for training deep CNNs, helping to address vanishing gradients. For each channel in the feature maps:
+
+$$\mu_c = \frac{1}{N \times H \times W} \sum_{i,j,k} x_{i,j,k}$$
+
+$$\sigma^2_c = \frac{1}{N \times H \times W} \sum_{i,j,k} (x_{i,j,k} - \mu_c)^2$$
+
+$$\hat{x}_{i,j,k} = \frac{x_{i,j,k} - \mu_c}{\sqrt{\sigma^2_c + \epsilon}}$$
+
+$$y_{i,j,k} = \gamma_c \hat{x}_{i,j,k} + \delta_c$$
+
+Where:
+
+- $\gamma_c$ and $\delta_c$ are learnable parameters
+
+- Normalization layers typically follow convolution layers
+
+- This process stabilizes and accelerates training
+
+## Advanced CNN Architectures
+
+As image recognition tasks became increasingly complex, CNN architectures evolved significantly to address various challenges.
+
+### VGG Architecture
+
+The VGG architecture introduced systematic design principles:
+
+- Use consistent 3×3 convolutions with stride 1
+
+- Apply 2×2 max pooling with stride 2
+
+- Double the number of filters after each pooling operation
+
+This systematic approach made networks deeper while maintaining computational efficiency, with improved performance over earlier architectures like AlexNet.
+
+### Addressing Overfitting
+
+Two primary techniques help CNNs generalize better:
+
+1. **Dropout**: Randomly deactivating connections during training:
+
+   - Forces the network to learn redundant representations
+
+   - Creates an implicit ensemble of networks
+
+   - Significantly improves generalization performance
+
+2. **Data Augmentation**: Systematically creating variations of training images:
+
+   - Flipping (horizontal/vertical)
+
+   - Rotation and scaling
+
+   - Color jittering
+
+   - Random cropping
+   
+   These transformations help the model learn invariant features and generalize to unseen images.
+
+### Residual Networks (ResNets)
+
+A breakthrough in deep CNN architecture, ResNets introduced **skip connections** that bypass layers:
+
+$$H(x) = F(x) + x$$
+
+This simple modification has profound effects on gradient flow:
+
+Traditional CNN gradient:
+$$\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial \mathcal{L}}{\partial x_k} \cdot \prod_{i=1}^{k} \left( \phi_i'(z_i) \, W_i \right)$$
+
+ResNet gradient:
+$$\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial \mathcal{L}}{\partial x_n} \cdot \prod_{i=1}^{k} \left( \mathcal{I} + J_{F_i}(x_i) \right)$$
+
+The identity matrix term prevents gradient vanishing, allowing for much deeper networks:
+
+- Even if $J_{F_i}(x_i)$ has small eigenvalues, gradients can still flow
+
+- Each residual block learns an incremental transformation 
+
+- Networks can reach hundreds of layers while still training effectively
+
+ResNets also employ **global average pooling** instead of fully connected layers, where each feature map is reduced to a single value by averaging, significantly reducing parameters while maintaining performance.
+
+## Visualizing CNN Features
+
+Understanding what features CNNs extract helps interpret their behavior:
+
+1. **Exemplar Approach**: Finding images that maximally activate specific filters
+
+   - Compute activations for all images at a given filter
+
+   - Identify images with the highest activation values
+
+   - Look for common patterns across these high-activation images
+
+2. **Activation Maximization**: Synthesizing images that maximize specific activations
+
+   - Start with random noise
+
+   - Iteratively modify the image to increase activation at a target filter
+
+   - Ascend the gradient to visualize what patterns the filter detects
+
+## Transfer Learning for CNNs
+
+Transfer learning has become the standard approach for applying CNNs to new image tasks. This approach leverages pre-trained feature extractors:
+
+### Motivation
+
+- CNNs trained on ImageNet (14+ million images, 20,000+ categories) learn general-purpose visual features
+
+- Lower layers detect universal patterns (edges, textures, simple shapes)
+
+- These features are transferable across most visual tasks
+
+- Training such networks requires enormous computational resources
+
+### Implementation Process
+
+1. **Feature Extraction**:
+
+   - Take a pre-trained CNN (e.g., ResNet-50)
+
+   - Remove the final classification layer
+
+   - Pass your images through this truncated network
+
+   - Extract the feature maps from the last layer
+
+2. **New Classifier Training**:
+
+   - Use these extracted features as inputs to a new classifier
+
+   - Train only this new classifier on your specific task
+
+   - Optionally fine-tune some of the later layers of the pre-trained network
+
+### Advantages
+
+- Dramatically reduces training time and computational requirements
+
+- Improves performance on small datasets
+
+- Leverages knowledge from millions of images
+
+- Enables state-of-the-art performance with modest resources
+
+Transfer learning has democratized advanced computer vision, making sophisticated image analysis accessible without requiring massive computational resources or enormous labeled datasets.

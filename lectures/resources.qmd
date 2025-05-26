@@ -1,0 +1,99 @@
+---
+title: "Additional Learning Resources"
+format:
+  html:
+    css: ../styles.css
+    toc: true
+---
+
+## Reference Materials
+
+This page provides additional learning resources to supplement the course materials.
+
+### Textbooks and Online References
+
+#### Machine Learning Foundations
+* [Elements of Statistical Learning](https://hastie.su.domains/ElemStatLearn/) by Hastie, Tibshirani, and Friedman
+* [Pattern Recognition and Machine Learning](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf) by Christopher Bishop
+* [Introduction to Statistical Learning](https://www.statlearning.com/) by James, Witten, Hastie, and Tibshirani
+
+#### Deep Learning
+* [Deep Learning](https://www.deeplearningbook.org/) by Goodfellow, Bengio, and Courville
+* [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) by Michael Nielsen
+* [Dive into Deep Learning](https://d2l.ai/) - Interactive book with code examples
+
+#### Probabilistic Machine Learning
+* [Probabilistic Machine Learning: An Introduction](https://probml.github.io/pml-book/book1.html) by Kevin Murphy
+* [Bayesian Reasoning and Machine Learning](http://web4.cs.ucl.ac.uk/staff/D.Barber/pmwiki/pmwiki.php?n=Brml.HomePage) by David Barber
+
+### Online Courses and Tutorials
+
+#### General Machine Learning
+* [Stanford CS229: Machine Learning](https://cs229.stanford.edu/) - Andrew Ng's course with lecture notes and materials
+* [Cornell CS4780: Machine Learning for Intelligent Systems](https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/) - Kilian Weinberger's lectures
+* [MIT 6.867: Machine Learning](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-867-machine-learning-fall-2006/) - MIT OpenCourseWare
+
+#### Deep Learning
+* [Stanford CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/) - Excellent resource for computer vision
+* [Stanford CS224n: Natural Language Processing with Deep Learning](http://web.stanford.edu/class/cs224n/) - Deep dive into NLP
+* [Fast.ai](https://www.fast.ai/) - Practical deep learning courses
+
+### Tutorials, Libraries, and Tools
+
+#### Python Libraries and Tools
+* [scikit-learn](https://scikit-learn.org/stable/tutorial/index.html) - Comprehensive machine learning in Python
+* [TensorFlow Tutorials](https://www.tensorflow.org/tutorials) - Official TensorFlow documentation
+* [PyTorch Tutorials](https://pytorch.org/tutorials/) - Official PyTorch documentation
+* [NumPy](https://numpy.org/doc/stable/user/tutorials_index.html) - Foundation for scientific computing in Python
+* [Pandas](https://pandas.pydata.org/docs/getting_started/index.html) - Data manipulation and analysis
+
+#### Visualization Tools
+* [Matplotlib](https://matplotlib.org/stable/tutorials/index.html) - Comprehensive visualization library
+* [Seaborn](https://seaborn.pydata.org/tutorial.html) - Statistical data visualization
+* [Plotly](https://plotly.com/python/getting-started/) - Interactive visualizations
+
+#### Specialized Topics
+* [Hugging Face](https://huggingface.co/docs/transformers/index) - State-of-the-art NLP models
+* [Hands-on Reinforcement Learning](https://huggingface.co/learn/deep-rl-course/unit0/introduction) - RL course by Hugging Face
+* [Geometric Deep Learning](https://geometricdeeplearning.com/) - Advanced ML on non-Euclidean domains
+
+## Research Paper Collections
+
+### Foundational Papers
+* [Gradient-Based Learning Applied to Document Recognition](http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf) - LeNet by Yann LeCun
+* [ImageNet Classification with Deep Convolutional Neural Networks](https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - AlexNet paper
+* [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer architecture
+
+### Recent Impactful Papers
+* [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165) - GPT-3 paper
+* [High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752) - Stable Diffusion
+* [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/abs/2010.11929) - Vision Transformer (ViT)
+
+### Paper Discussion Groups
+* [Papers with Code](https://paperswithcode.com/) - Papers with implementations
+* [Two Minute Papers](https://www.youtube.com/c/K%C3%A1rolyZsolnai) - Quick explanations of recent papers
+* [ML Explained](https://www.youtube.com/c/MLExplained) - In-depth explanations of ML papers
+
+## Interactive Learning Resources
+
+### Notebooks and Interactive Demos
+* [Distill.pub](https://distill.pub/) - Clear explanations of machine learning concepts
+* [Tensorflow Playground](https://playground.tensorflow.org/) - Neural network visualization
+* [GAN Lab](https://poloclub.github.io/ganlab/) - Interactive GAN experiments
+
+### Challenges and Competitions
+* [Kaggle Competitions](https://www.kaggle.com/competitions) - Data science competitions
+* [DrivenData](https://www.drivendata.org/) - ML competitions for social impact
+* [AIcrowd](https://www.aicrowd.com/) - ML challenges and benchmarks
+
+## Career Development
+
+### Job Search Resources
+* [Machine Learning Jobs](https://www.indeed.com/q-Machine-Learning-jobs.html) - Indeed job listings
+* [AI Jobs](https://ai-jobs.net/) - Specialized AI/ML job board
+* [ML/AI Graduate Programs](https://www.mastersindatascience.org/specialties/machine-learning-degree/) - Guide to graduate programs
+
+### ML in Industry
+* [Papers from Industry](https://github.com/eugeneyan/applied-ml) - Collection of ML applications
+* [Production ML Systems](https://developers.google.com/machine-learning/crash-course/production-ml-systems) - Google's guide to ML in production
+* [AI Ethics Guidelines](https://www.fast.ai/ethics) - Ethical considerations in AI

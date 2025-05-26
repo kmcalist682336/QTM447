@@ -1,0 +1,177 @@
+---
+title: "Lecture 21: Autoencoders and Generation"
+format: html
+---
+
+## Generative Models
+
+### Goals of Generation
+
+- **Density estimation**: Determine the probability $P(\mathbf{x})$ of observing data points
+
+- **Sampling**: Generate novel data from the model distribution
+
+- **Representation**: Learn meaningful feature representations and manipulate specific features
+
+### Autoregressive Generation
+
+- Based on the probability chain rule:
+  $f(x_1,x_2,x_3,...,x_P) = f(x_1)f(x_2 | x_1)f(x_3 | x_1,x_2)...f(x_P | x_{P-1}, x_{P-2},...)$
+
+- Implementation approaches:
+
+  - PixelCNN: Uses CNN-style windowing instead of recurrence
+
+  - ImageGPT: Uses masked self-attention instead of recurrence
+
+- Limitations:
+
+  - Extremely slow for high-dimensional data like images
+
+  - Limited practical resolution (e.g., 64×64 for ImageGPT)
+
+  - Lacks effective feature representation
+
+## Dimensionality Reduction and Autoencoders
+
+### Principal Component Analysis (PCA)
+
+- Finds a low-dimensional representation that minimizes reconstruction error:
+  $\frac{1}{N} \sum \limits_{i = 1}^N \| \mathbf{x}_i - d(e(\mathbf{x}_i))\|^2_2$
+
+- Functions:
+
+  - $e(\mathbf{x}_i) = \mathbf{z}_i$ is the encoder mapping input to latent space
+
+  - $d(\mathbf{z}_i)$ is the decoder mapping latent variables back to original feature space
+
+- Formulation with weight matrix $\mathbf{W}$:
+  $\frac{1}{N} \sum \limits_{i = 1}^N \| \mathbf{x}_i - \mathbf{W} \mathbf{W}^T \mathbf{x}_i\|^2_2$
+
+- Constraints:
+
+  - Columns of $\mathbf{W}$ must be orthogonal
+
+  - Columns of $\mathbf{W}$ must be normalized
+
+- Implementation using eigendecomposition:
+
+  - $\mathbf{X}^T \mathbf{X} = \mathbf{Q} \mathbf{D} \mathbf{Q}^{-1}$
+
+  - $\mathbf{W} = \mathbf{Q}_{1:K}$ (first $K$ eigenvectors)
+
+### Deterministic Autoencoders
+
+- Generalization of PCA using neural networks
+
+- Architecture:
+
+  - Encoder network maps inputs to lower-dimensional latent space
+
+  - Bottleneck forces the model to learn efficient representations
+
+  - Decoder network reconstructs original input from latent representation
+
+- Advantages over PCA:
+
+  - Can capture non-linear relationships
+
+  - CNN backbones help induce structure in recovered images
+
+  - Performance strictly dominates PCA for image data
+
+- Applications:
+
+  - Dimensionality reduction
+
+  - Feature extraction for downstream tasks
+
+  - Examination of feature maps to understand data variation
+
+- Limitations as generative models:
+
+  - No probabilistic formulation (no $P(\mathbf{X})$)
+
+  - Cannot properly sample from gaps between training examples
+
+  - No density estimation capability
+
+## Generative Probabilistic Models
+
+### Factor Analysis
+
+- Probabilistic version of PCA with a defined prior distribution
+
+- Gaussian factor analysis:
+
+  - Prior: $f(\mathbf{z}) = \mathcal{N}_K(\mathbf{z} | \mathbf{0}, \mathcal{I}_K)$
+
+  - Likelihood: $f(\mathbf{x} | \mathbf{z}, \boldsymbol{\Theta}) = \mathcal{N}_P(\mathbf{x} | \mathbf{W} \mathbf{z} + \boldsymbol{\alpha}, \boldsymbol{\Psi})$
+
+### Properties of Generative Models
+
+- Must provide a probability density $P(\mathbf{x}|\boldsymbol{\Theta})$ for any viable input $\mathbf{x}$
+
+- Comparison with discriminative models:
+
+  - Discriminative models (e.g., logistic regression): $P(y=1|\mathbf{x},\hat{\boldsymbol{\beta}}) = \sigma(\mathbf{x}^T \hat{\boldsymbol{\beta}})$
+
+  - Generative models (e.g., QDA): $\mathbf{x}|y=c \sim \mathcal{N}_P(\mathbf{x}|\boldsymbol{\mu}_c, \boldsymbol{\Sigma}_c)$
+
+- Trade-off: Generative power comes at the cost of making assumptions about data structure
+
+## Bayesian Methods
+
+### Bayesian Framework
+
+- Update prior beliefs based on observed data using Bayes' theorem:
+  $f(\boldsymbol{\theta} | \mathcal{D}) = \frac{f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta})}{f(\mathcal{D})}$
+
+- Components:
+
+  - Likelihood: $f(\mathcal{D} | \boldsymbol{\theta})$ - probability of observing data given parameters
+
+  - Prior: $f(\boldsymbol{\theta})$ - beliefs about parameters before observing data
+
+  - Marginal likelihood: $f(\mathcal{D}) = \int f(\mathcal{D} | \boldsymbol{\theta})f(\boldsymbol{\theta}) d\theta$ 
+
+  - Posterior: $f(\boldsymbol{\theta} | \mathcal{D})$ - updated beliefs after observing data
+
+### Normal Distribution with Known Variance
+
+- Likelihood: $f(\mathbf{y} | \mu, \sigma^2) = \prod_{i=1}^N \mathcal{N}(y_i | \mu, \sigma^2)$
+
+- Prior: $f(\mu) \sim \mathcal{N}(\mu | \mu_0, \sigma^2_0)$
+
+- Posterior: $f(\mu | \mathbf{y}) \sim \mathcal{N}(\mu | \hat{\mu}, \hat{\sigma}^2)$
+
+  - $\hat{\sigma}^2 = \left(\frac{N}{\sigma^2} + \frac{1}{\sigma^2_0}\right)^{-1}$
+
+  - $\hat{\mu} = \hat{\sigma}^2\left(\frac{1}{\sigma^2}\sum y_i + \frac{1}{\sigma^2_0}\mu_0\right)$
+
+- Properties:
+
+  - With diffuse prior ($\sigma^2_0 \to \infty$), posterior mean converges to sample mean
+
+  - As $N \to \infty$, prior influence diminishes and posterior approaches MLE
+
+### Bayesian Linear Regression
+
+- Likelihood: $f(\mathbf{y} | \mathbf{X}, \boldsymbol{\beta}, \sigma^2) \sim \mathcal{N}_N(\mathbf{y} | \mathbf{X}\boldsymbol{\beta}, \sigma^2\mathcal{I}_N)$
+
+- Prior: $f(\boldsymbol{\beta}) \sim \mathcal{N}_P(\boldsymbol{\beta} | \boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)$
+
+- Posterior: $f(\boldsymbol{\beta} | \mathbf{X}, \mathbf{y}, \sigma^2) \sim \mathcal{N}_P(\boldsymbol{\beta} | \hat{\boldsymbol{\mu}}, \hat{\boldsymbol{\Sigma}})$
+
+  - $\hat{\boldsymbol{\Sigma}} = \left(\frac{1}{\sigma^2}\mathbf{X}^T\mathbf{X} + \boldsymbol{\Sigma}_0^{-1}\right)^{-1}$
+
+  - $\hat{\boldsymbol{\mu}} = \hat{\boldsymbol{\Sigma}}\left(\frac{1}{\sigma^2}\mathbf{X}^T\mathbf{y} + \boldsymbol{\Sigma}^{-1}_0\boldsymbol{\mu}_0\right)$
+
+- Connections to regularization:
+
+  - With $\boldsymbol{\mu}_0 = \mathbf{0}$ and $\boldsymbol{\Sigma}_0 = \tau^2\mathcal{I}_P$:
+    $\hat{\boldsymbol{\mu}} = (\mathbf{X}^T\mathbf{X} + \lambda\mathcal{I}_P)^{-1}\mathbf{X}^T\mathbf{y}$
+
+  - This is equivalent to ridge regression with $\lambda = \frac{\sigma^2}{\tau^2}$
+
+  - L2 regularization (weight decay) can be interpreted as a Bayesian prior favoring simpler models

@@ -1,0 +1,54 @@
+---
+title: "Lecture 15: Semantic Segmentation"
+format:
+  html:
+    css: ../styles.css
+---
+
+::: {.lecture-nav style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);"}
+<div>
+[← Previous: Lecture 14](lecture14.qmd)
+</div>
+<div>
+[Next: Lecture 16 →](lecture16.qmd)
+</div>
+:::
+
+::: {.content}
+::: {.material-types style="margin-bottom: 2rem;"}
+<div class="material-type">
+### Lecture Slides
+<a href="htmls/Lecture15.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+<img src="images/interface/slides.svg" alt="Lecture Slides" style="width: 100%; opacity: 1;">
+</a>
+</div>
+
+<div class="material-type" style="opacity: 0.5; pointer-events: none;">
+### Slide Code
+<img src="images/interface/code.svg" alt="Slide Code" style="width: 100%;">
+</div>
+
+<div class="material-type">
+### Lecture Code
+<a href="ipynbs_html/Lecture15Code.html" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+<img src="images/interface/notebook.svg" alt="Lecture Code" style="width: 100%; opacity: 1;">
+</a>
+</div>
+:::
+
+```{python}
+#| echo: false
+#| output: asis
+import re
+with open("summaries/Lecture15Summary.qmd", "r") as f:
+    content = f.read()
+if content.startswith("---"):
+    parts = content.split("---", 2)
+    if len(parts) >= 3:
+        content = parts[2]
+print(content)
+```
+
+:::
+
+

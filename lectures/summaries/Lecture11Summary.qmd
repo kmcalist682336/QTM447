@@ -1,0 +1,163 @@
+---
+title: "Lecture 11: Vanishing Gradients and Generalization"
+format: html
+---
+
+## Backpropagation Review
+
+Backpropagation is the primary algorithm for training deep neural networks through a two-step process:
+
+1. **Forward Pass**: Compute intermediate values through the network based on current parameter values
+
+2. **Backward Pass**: Compute gradients of the loss with respect to parameters by propagating derivatives backward
+
+For a neural network with multiple layers, the computational graph allows systematic derivative calculation using the chain rule:
+
+$$\text{Downstream Gradient} = \text{Local Gradient} \times \text{Upstream Gradient}$$
+
+At each layer, gradients follow predictable patterns, with the output layer gradients for mean squared error:
+
+$$\frac{\partial \mathcal{L}_i}{\partial z} = -2(y_i - z_i)$$
+
+$$\frac{\partial \mathcal{L}_i}{\partial \boldsymbol{\beta}} = -2(y_i - z_i) \otimes \mathbf{h}_2$$
+
+$$\frac{\partial \mathcal{L}_i}{\partial \mathbf{h}_2} = -2(y_i - z_i) \otimes \boldsymbol{\beta}^T$$
+
+The gradient at any layer depends on all upstream derivatives, creating chains of multiplication across layers:
+
+$$\mathbf{u} = \frac{\partial \mathcal{L}}{\partial z} \otimes \boldsymbol{\beta}^T \odot \varphi'(\mathbf{q}_D) \otimes \mathbf{W}_D^T \odot \varphi'(\mathbf{q}_{D-1}) \otimes \mathbf{W}_{D-1}^T \odot \cdots$$
+
+## Vanishing Gradients
+
+Vanishing gradients occur when the product chain of derivatives approaches zero as it propagates backward through the network. This creates two significant problems:
+
+1. Parameters in early layers receive minimal updates
+
+2. The network cannot learn long-range dependencies
+
+### Sigmoid Activation Problems
+
+The sigmoid activation function is a primary culprit in vanishing gradients:
+
+$$\varphi(q) = \sigma(q) = \frac{1}{1 + \exp[-q]}$$
+
+Its derivative:
+
+$$\varphi'(q) = \sigma(q)(1 - \sigma(q))$$
+
+This derivative approaches zero when inputs are either very large (>3) or very small (<-3), causing gradients to effectively vanish during backpropagation.
+
+### Activation Function Solutions
+
+Several activation functions address the vanishing gradient problem:
+
+1. **ReLU (Rectified Linear Unit)**:
+   $$\varphi(q) = \max(0, q)$$
+   
+   - Non-saturating for positive values
+
+   - Induces sparsity in hidden representations
+
+   - Simple and computationally efficient
+
+   - But can suffer from "dead ReLUs" when units persistently output zero
+
+2. **Leaky ReLU**:
+   $$\varphi(q) = \max(\alpha q, q), \text{ where } 0 < \alpha < 1$$
+   
+   - Prevents complete deactivation of neurons
+
+   - Small slope for negative values keeps gradient flowing
+
+   - Typically α = 0.01 or 0.1
+
+3. **ELU (Exponential Linear Unit)**:
+   $$\varphi(q) = \begin{cases}
+   q & \text{if } q > 0 \\
+   \alpha(e^q - 1) & \text{if } q \leq 0
+   \end{cases}
+   $$
+   
+   - Smooth transition at q=0
+
+   - Negative saturation reduces noise influence
+
+   - Can help with faster convergence
+
+### Batch Normalization
+
+Batch normalization provides an architectural solution to gradient problems by normalizing activations:
+
+$$\tilde{\mathbf{q}}_k = \gamma \odot \hat{\mathbf{q}}_k + \delta$$
+
+$$\hat{\mathbf{q}}_k = \frac{\mathbf{q}_k - \mu_k}{\sqrt{\sigma^2_k + \epsilon}}$$
+
+Where μ₍ and σ₍² are the batch mean and variance. This technique:
+
+- Standardizes activations at each layer
+
+- Prevents weights from becoming too large or too small
+
+- Allows training with higher learning rates
+
+- Acts as a form of regularization
+
+- Reduces internal covariate shift
+
+## Generalization in Neural Networks
+
+Neural networks can achieve near-zero training error but often struggle with overfitting due to their expressive capacity. Several techniques address this challenge:
+
+### Early Stopping
+
+- Monitor validation loss during training
+
+- Stop when validation loss begins to increase
+
+- Prevents learning noise in the training data
+
+- Can be viewed as controlling the effective number of parameters
+
+### Weight Decay (L2 Regularization)
+
+Adds a penalty term to the loss function:
+
+$$\frac{1}{N} \sum_{i=1}^N \mathcal{L}(\boldsymbol{\theta} | \mathbf{x}_i, y_i) + \lambda \sum_{d=1}^D \|\mathbf{W}_d\|^2_F$$
+
+Where the Frobenius norm is:
+
+$$\|\mathbf{W}_d\|^2_F = \sum_{i=1}^{K_{d-1}} \sum_{j=1}^{K_d} w_{ij}^2$$
+
+This regularization:
+
+- Penalizes large weights
+
+- Slows learning to find better generalizable solutions
+
+- Helps close the gap between training and generalization error
+
+- Effectively controls the number of hidden units without retraining
+
+### Dropout
+
+During training, randomly set weights to zero with probability p:
+
+$$\theta_{dij} = \mathbf{W}_{dij} \epsilon_{di}$$
+
+Where ε_di = 0 with probability p and ε_di = 1 with probability (1-p).
+
+At inference time, weights are scaled by (1-p).
+
+Dropout:
+
+- Forces the network to learn robust feature dependencies
+
+- Functions like an ensemble of multiple network configurations
+
+- Prevents co-adaptation of hidden units
+
+- Provides implicit regularization similar to ridge regression
+
+- Typically p = 0.5, but 0.2-0.25 often works well in practice
+
+These techniques together—proper activation functions, batch normalization, early stopping, weight decay, and dropout—form a powerful toolkit for training deep neural networks that generalize well to unseen data.

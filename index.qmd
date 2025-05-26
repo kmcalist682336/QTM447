@@ -1,0 +1,279 @@
+---
+format:
+  html:
+    css: styles.css
+    include-in-header:
+      text: |
+        <style>
+          .hero-section {
+            background: linear-gradient(135deg, #3a7bd5 0%, #5a67d8 50%, #6b46c1 100%);
+            color: white;
+            padding: 3.5rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .hero-section::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpolygon points='0,10 10,0 20,10 10,20'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+          }
+          
+          .hero-content {
+            position: relative;
+            z-index: 1;
+          }
+          
+          .hero-section h1 {
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          }
+          
+          .hero-section p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          
+          /* Simple hero styling only */
+          
+          .info-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+          }
+          
+          .info-card:hover {
+            transform: translateY(-5px);
+          }
+          
+          .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+          }
+          
+          .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+          }
+          
+          .quick-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+          }
+          
+          .quick-link {
+            background-color: var(--link-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          
+          .quick-link:hover {
+            background-color: var(--heading-color);
+            text-decoration: none;
+            color: white;
+          }
+          
+          .course-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+          }
+          
+          .info-item {
+            background-color: var(--background-color);
+            border-left: 4px solid var(--link-color);
+            padding: 0.75rem 1rem;
+            flex: 1 0 200px;
+          }
+        </style>
+---
+
+::: {.hero-section}
+<div class="hero-content">
+# QTM 447 - Statistical Machine Learning II
+
+A deep dive into advanced machine learning methods and applications
+</div>
+:::
+
+<div class="content-section">
+
+<div class="quick-links">
+[<i class="fas fa-book"></i> Lectures](lectures/index.qmd){.quick-link}
+[<i class="fas fa-tasks"></i> Syllabus](syllabus.qmd){.quick-link}
+[<i class="fas fa-list"></i> Glossary](lectures/glossary.qmd){.quick-link}
+[<i class="fas fa-graduation-cap"></i> Resources](lectures/resources.qmd){.quick-link}
+</div>
+
+## About This Course
+
+Welcome to QTM 447! This course extends the basic statistical learning topics covered in QTM 347, diving deep into modern machine learning methods and their applications.
+
+::: {.course-info}
+<div class="info-item">
+**Instructor**: Kevin McAlister  
+**Email**: kevin.mcalister@emory.edu
+</div>
+
+<div class="info-item">
+**Class Time**: T/Th 2:30 - 3:45 PM EST  
+**Location**: Atwood 215
+</div>
+
+<div class="info-item">
+**Office Hours**:  
+Mondays 4:00 - 5:30 PM (PAIS 579)  
+Wednesdays 5:30 - 6:30 PM (PAIS 579)
+</div>
+:::
+
+## Course Overview
+
+<div class="info-grid">
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-brain"></i></div>
+<h3>Review and Advanced Theory</h3>
+<ul>
+  <li>Predictive modeling principles</li>
+  <li>Statistical learning theory</li>
+  <li>Optimization methods (gradient descent, ADAM)</li>
+</ul>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-network-wired"></i></div>
+<h3>Neural Networks and Deep Learning</h3>
+<ul>
+  <li>Perceptrons and universal approximators</li>
+  <li>Deep vs. Shallow learning</li>
+  <li>CNNs, RNNs, and Transformers</li>
+</ul>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+<h3>Generation Theory</h3>
+<ul>
+  <li>Density estimation</li>
+  <li>Bayesian approaches</li>
+  <li>Sampling methods</li>
+</ul>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-robot"></i></div>
+<h3>Generative Methods</h3>
+<ul>
+  <li>Variational Autoencoders</li>
+  <li>Autoregressive Models (GPT)</li>
+  <li>Generative Adversarial Networks</li>
+</ul>
+</div>
+</div>
+
+## Prerequisites
+
+<div class="info-grid">
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+<h3>Required Coursework</h3>
+<p>Students should have completed coursework equivalent to:</p>
+<ul>
+  <li>An introduction to research design</li>
+  <li>An introduction to probability theory and statistics</li>
+  <li>An introduction to applied statistics and linear regression</li>
+  <li>An introduction to statistical machine learning</li>
+  <li>At least one college level programming class</li>
+</ul>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-square-root-alt"></i></div>
+<h3>Mathematical Foundation</h3>
+<p>Students should have a strong foundation in:</p>
+<ul>
+  <li><strong>Calculus</strong>
+    <ul>
+      <li>Multivariable calculus</li>
+      <li>Basic matrix calculus</li>
+    </ul>
+  </li>
+  <li><strong>Linear Algebra</strong></li>
+</ul>
+</div>
+</div>
+
+## Getting Started
+
+<div class="info-grid">
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-file-alt"></i></div>
+<h3>1. Review the Syllabus</h3>
+<p>Check the <a href="syllabus.qmd">syllabus</a> for detailed course policies, grading criteria, and important deadlines.</p>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+<h3>2. Access Course Materials</h3>
+<p>Visit the <a href="lectures/index.qmd">lectures page</a> to find slides, code notebooks, and supplementary resources.</p>
+</div>
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-laptop-code"></i></div>
+<h3>3. Set Up Your Environment</h3>
+<p>Install Python and necessary packages for machine learning projects and assignments.</p>
+</div>
+</div>
+
+<div class="info-card" style="background-color: var(--blockquote-bg); border-left: 4px solid var(--blockquote-border);">
+<div class="card-icon"><i class="fas fa-code"></i></div>
+<h3>Programming Note</h3>
+<p>This course uses Python and various machine learning frameworks. While coding expertise isn't required, you should be comfortable with basic programming concepts. We'll be using tools like TensorFlow, PyTorch, and Google Colab for computationally intensive tasks.</p>
+</div>
+
+## Questions?
+
+<div class="info-card">
+<div class="card-icon"><i class="fas fa-question-circle"></i></div>
+<p>If you have any questions, please don't hesitate to reach out via email or during office hours. For the most efficient communication, please check Canvas and the syllabus before asking questions.</p>
+
+<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+  <a href="mailto:kevin.mcalister@emory.edu" class="quick-link">
+    <i class="fas fa-envelope"></i> Email
+  </a>
+  <a href="syllabus.qmd" class="quick-link">
+    <i class="fas fa-info-circle"></i> Course Policies
+  </a>
+</div>
+</div>
+</div> 

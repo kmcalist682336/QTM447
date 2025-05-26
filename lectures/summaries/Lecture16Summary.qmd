@@ -1,0 +1,188 @@
+---
+title: "Lecture 16: Recurrent Neural Networks and Sequence Modeling"
+format: html
+---
+
+## Sequence Modeling Paradigms
+
+Sequence modeling represents a fundamental shift from previous neural network architectures by introducing temporal dependencies. While feedforward networks map individual inputs to individual outputs, sequence models handle data where order and context matter.
+
+### Types of Sequence-to-Sequence Relationships
+
+Sequence models can accommodate various input-output relationships:
+
+1. **One-to-Many**: A single input generates a sequence of outputs
+
+   - Example: Image captioning (one image → sequence of words)
+
+2. **Many-to-One**: A sequence of inputs produces a single output
+
+   - Example: Sentiment analysis (sequence of words → sentiment class)
+
+   - Example: Video classification (sequence of frames → video category)
+
+3. **Many-to-Many (Unaligned)**: Sequence of inputs yields a different-length sequence of outputs
+
+   - Example: Machine translation (English sentence → French sentence)
+
+   - Example: Time series forecasting (historical data → future predictions)
+
+4. **Many-to-Many (Aligned)**: Each input element corresponds to an output element
+
+   - Example: Part-of-speech tagging (each word → grammatical tag)
+
+   - Example: Per-frame video annotation (each frame → frame label)
+
+## Recurrent Neural Networks (RNNs)
+
+Recurrent Neural Networks extend feedforward architectures by introducing connections between hidden states across time steps.
+
+### Core Concept: Hidden State Recurrence
+
+The defining feature of RNNs is the recurrence relation:
+
+$$h_t = f_w(h_{t-1}, x_t)$$
+
+Where:
+
+- $h_{t-1}$ is the previous hidden state vector
+
+- $x_t$ is the current input vector
+
+- $f_w$ is a parameterized function
+
+- $h_t$ is the new hidden state vector
+
+### Vanilla RNN Architecture
+
+The standard RNN update function is:
+
+$$\mathbf{h}_t = \tanh(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
+
+Where:
+
+- $\mathbf{W}_{hh}$ is the hidden-to-hidden weight matrix (dimension $m \times m$)
+
+- $\mathbf{W}_{xh}$ is the input-to-hidden weight matrix (dimension $m \times P$)
+
+- $\mathbf{b}_h$ is a bias vector
+
+- $\tanh$ provides non-linearity while maintaining gradient flow
+
+The output at each time step is computed as:
+
+$$\mathbf{y}_t = h(\mathbf{W}_{hy}\mathbf{h}_t + \mathbf{b}_y)$$
+
+Where:
+
+- $\mathbf{W}_{hy}$ is the hidden-to-output weight matrix
+
+- $h()$ is an appropriate activation function (e.g., softmax for classification)
+
+### Parameter Sharing
+
+A critical insight of RNNs is that the same weight matrices ($\mathbf{W}_{hh}$, $\mathbf{W}_{xh}$, $\mathbf{W}_{hy}$) are used across all time steps, making the model:
+
+- Computationally efficient
+
+- Able to handle variable-length sequences
+
+- Capable of learning patterns independent of their position in the sequence
+
+### Language Modeling Example
+
+A character-level language model demonstrates the RNN's ability to predict the next element in a sequence:
+
+- Input: "h", "e", "l", "l"
+
+- Target output: "e", "l", "l", "o"
+
+At inference time, the model can generate text by recursively feeding its own predictions back as inputs.
+
+## The Vanishing Gradient Problem
+
+Despite their elegant design, vanilla RNNs suffer from a critical limitation when modeling long-range dependencies.
+
+### Backpropagation Through Time
+
+Training RNNs requires computing gradients through the entire sequence using backpropagation through time. For the weight matrix $\mathbf{W}_{hh}$, this gives:
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}_{hh}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}_T} \frac{\partial \mathbf{h}_{1}}{\partial \mathbf{W}_{hh}} \prod_{t=2}^T \frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}$$
+
+For the tanh activation, each partial derivative includes:
+
+$$\frac{\partial \mathbf{h}_{t}}{\partial \mathbf{h}_{t-1}} = \tanh'(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t)\mathbf{W}_{hh}$$
+
+### Mathematical Analysis of Gradient Flow
+
+Two factors affect the gradient magnitude across time steps:
+
+1. The derivative of tanh is always between 0 and 1
+
+2. Repeated multiplication by $\mathbf{W}_{hh}$ has compounding effects:
+
+   - If the largest singular value of $\mathbf{W}_{hh}$ is > 1: exploding gradients
+
+   - If the largest singular value of $\mathbf{W}_{hh}$ is < 1: vanishing gradients
+
+This means that for long sequences, earlier inputs have diminishing influence on later outputs, making it difficult to learn long-range dependencies.
+
+## Long Short-Term Memory (LSTM)
+
+LSTM networks address the vanishing gradient problem by introducing a more complex hidden state architecture with controlled information flow.
+
+### Cell State and Gating Mechanism
+
+LSTMs maintain two types of hidden state vectors:
+
+1. **Cell state** ($\mathbf{C}_t$): A memory vector that can maintain information across many time steps
+
+2. **Hidden state** ($\mathbf{h}_t$): The output vector used for predictions
+
+Information flow between states is regulated by three gating mechanisms:
+
+1. **Forget Gate** ($\mathbf{f}_t$): Controls what information from the previous cell state to discard
+   $$\mathbf{f}_t = \sigma(\mathbf{W}_{f}[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f)$$
+
+2. **Input Gate** ($\mathbf{i}_t$): Determines what new information will be stored in the cell state
+   $$\mathbf{i}_t = \sigma(\mathbf{W}_{i}[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_i)$$
+   $$\tilde{\mathbf{C}}_t = \tanh(\mathbf{W}_{C}[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_C)$$
+
+3. **Output Gate** ($\mathbf{o}_t$): Determines what parts of the cell state to output
+   $$\mathbf{o}_t = \sigma(\mathbf{W}_{o}[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_o)$$
+
+### Cell State Update
+
+The cell state update follows a linear path with controlled modifications:
+
+$$\mathbf{C}_t = \mathbf{f}_t \odot \mathbf{C}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{C}}_t$$
+
+Where $\odot$ represents element-wise multiplication.
+
+### Hidden State Calculation
+
+The hidden state is derived from the cell state:
+
+$$\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{C}_t)$$
+
+### Gradient Flow in LSTMs
+
+The key innovation of LSTMs is that gradients can flow through the cell state with minimal attenuation:
+
+$$\frac{\partial \mathbf{C}_t}{\partial \mathbf{C}_{t-1}} = \mathbf{f}_t$$
+
+Since the forget gate values are typically close to 1 for relevant information, the gradient doesn't vanish exponentially across time steps, allowing LSTMs to learn long-range dependencies effectively.
+
+## Practical Implications
+
+LSTMs have become the standard building block for sequence modeling tasks due to their:
+
+- Ability to learn long-range dependencies
+
+- Robustness to vanishing gradients
+
+- Flexibility in controlling information flow
+
+While LSTMs trade some expressiveness for stability in training, the architecture has proven remarkably effective for a wide range of sequence tasks including language modeling, machine translation, and time series forecasting.
+
+The next evolution in sequence modeling—transformer architectures with multi-headed self-attention—builds on these foundations while addressing additional limitations of recurrent models.

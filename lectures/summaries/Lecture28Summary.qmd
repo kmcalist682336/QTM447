@@ -1,0 +1,236 @@
+---
+title: "Lecture 28: Ethics in AI and Course Conclusion"
+format: html
+---
+
+## Ethics in Modern AI
+
+### Current Challenges
+
+- Increasing accessibility of AI systems (e.g., ChatGPT) to general public
+
+- Growing capability to create realistic-looking fake information
+
+- Potential for harmful applications:
+
+  - Misinformation and synthetic media (deepfakes)
+
+  - Personalized cyberbullying
+
+  - Identity theft and catfishing
+
+  - Privacy violations
+
+- Need for ethical frameworks to guide AI development and deployment
+
+### Ethical Frameworks
+
+#### Utilitarianism
+
+- **Core principle**: Maximize happiness, minimize harm for the greatest number
+
+- **Application to AI**: Evaluate based on broad societal outcomes
+
+- **Strengths**:
+
+  - Practical and outcome-focused
+
+  - Considers widespread impacts
+
+  - Clear criterion (maximize welfare)
+
+- **Weaknesses**:
+
+  - Requires quantification of harm/benefit
+
+  - May sacrifice minority interests
+
+  - Can justify harmful means for "positive" ends
+
+#### Deontology
+
+- **Core principle**: Follow universal ethical rules and duties, regardless of outcomes
+
+- **Application to AI**: Focus on respecting rights and following ethical constraints
+
+- **Strengths**:
+
+  - Provides clear ethical boundaries
+
+  - Protects individual rights
+
+  - Promotes consistency
+
+- **Weaknesses**:
+
+  - May ignore beneficial outcomes
+
+  - Difficult to resolve conflicting duties
+
+  - Can be inflexible in complex situations
+
+#### Virtue Ethics
+
+- **Core principle**: Develop moral character and virtues; act as a morally virtuous person would
+
+- **Application to AI**: Design systems that embody positive moral values
+
+- **Strengths**:
+
+  - Integrates moral reasoning beyond rules
+
+  - Acknowledges complexity of ethical decisions
+
+  - Focuses on intention and character
+
+- **Weaknesses**:
+
+  - Less concrete guidance
+
+  - More questions than answers
+
+  - Subjective interpretations
+
+## Ethical Pillars for AI Development
+
+### Fairness
+
+- AI should promote equity and treat individuals/groups without discrimination
+
+- Challenges:
+
+  - AI systems amplify existing societal biases if unchecked
+
+  - Biased outcomes erode trust in AI systems
+
+- Potential solutions:
+
+  - Datasheets for datasets (transparency)
+
+  - Active bias detection and mitigation strategies
+
+  - Diverse training data and development teams
+
+### Truthfulness
+
+- AI should produce content that accurately represents reality
+
+- Systems should transparently disclose artificial origins
+
+- Challenges:
+
+  - Increasing capability creates more convincing falsehoods
+
+  - Tension between complexity/capability and potential for misuse
+
+  - Difficulty differentiating AI-generated from human content
+
+### Consent
+
+- AI should respect individual autonomy through explicit permission
+
+- Challenges:
+
+  - Determining appropriate consent mechanisms
+
+  - Navigating existing content (e.g., social media)
+
+  - Intellectual property concerns (e.g., training on copyrighted material)
+
+- Examples:
+
+  - GitHub Copilot trained on public repositories containing proprietary code
+
+  - AI art generators replicating copyrighted artistic styles
+
+### Open Questions
+
+- No definitive answers to many ethical dilemmas in AI
+
+- Responsibility falls to technically informed experts who understand the tools
+
+- Ongoing dialogue required as technology advances
+
+## Course Review and Reflection
+
+### Topics Covered
+
+#### Machine Learning Theory
+
+- Complexity theory and VC dimensionality
+
+- Bias-variance tradeoffs
+
+- Bayesian statistics
+
+- Regularization techniques
+
+- Universal approximation theory
+
+- Convex optimization and stochastic minimization
+
+#### Neural Network Fundamentals
+
+- Multilayer perceptrons
+
+- Deep network architectures
+
+- Activation functions
+
+- Generalization methods
+
+#### Computer Vision Models
+
+- Convolutional neural networks
+
+- Residual networks and batch normalization
+
+- Modern CNN architectures
+
+- Object detection with bounding boxes
+
+- Semantic segmentation and U-Nets
+
+#### Sequence Models
+
+- Recurrent neural networks
+
+- Long short-term memory networks
+
+- Sequence-to-sequence models
+
+- Attention mechanisms
+
+- Self-attention and transformers
+
+- BERT and GPT architectures
+
+#### Generative Models
+
+- Autoregressive models
+
+- Variational autoencoders
+
+- Generative adversarial networks
+
+- Diffusion models
+
+### Course Reflections
+
+- Ambitious pace covering cutting-edge topics
+
+- Focus on neural network theory alongside applications
+
+- Emphasis on understanding components of complex models
+
+- Insight that advanced models (transformers, stable diffusion) are combinations of simpler building blocks
+
+### Future Directions
+
+- Continued refinement of course materials and approach
+
+- Adjustment to homework structure for better learning outcomes
+
+- Transition from PyTorch Lightning to base PyTorch
+
+- Ongoing development based on student feedback

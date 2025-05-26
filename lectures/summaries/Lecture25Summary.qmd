@@ -1,0 +1,177 @@
+---
+title: "Lecture 25: Generative Adversarial Networks"
+format: html
+---
+
+## GANs Overview
+
+### Motivation and Philosophy
+
+- Goal: Learn $P(\mathbf{x})$ without explicitly modeling the probability distribution
+
+- Gives up on explicit density estimation but maintains ability to generate high-quality samples
+
+- Addresses limitations of previous approaches:
+
+  - **Autoregressive models**: Slow training and generation, no explicit latent code
+
+  - **VAEs**: Lower bound optimization, often produces blurry images due to averaging
+
+### Core Approach
+
+- Introduce latent variable $\mathbf{z}$ with simple prior $P(\mathbf{z})$
+
+- Generator network: $\hat{\mathbf{x}} = g(\mathbf{z})$ maps from latent space to data space
+
+- Learn transformation from easy-to-sample distribution to complex data distribution
+
+## Theoretical Foundation
+
+### Density Ratio Perspective
+
+- Compare two distributions: true data distribution $P(\mathbf{x})$ and model distribution $Q(\mathbf{x})$
+
+- Distributions are identical when: $\frac{P(\mathbf{x})}{Q(\mathbf{x})} = 1$ for all $\mathbf{x}$
+
+- Binary classification setup:
+
+  - $y_i = 1$ for samples from $P(\mathbf{x})$ (real data)
+
+  - $y_i = 0$ for samples from $Q(\mathbf{x})$ (fake data)
+
+### Density Ratio via Classification
+
+- Density ratio expressed as: $\frac{P(\mathbf{x})}{Q(\mathbf{x})} = \frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}$
+
+- Using Bayes' rule: $\frac{P(\mathbf{x})}{Q(\mathbf{x})} = \frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})} \frac{p(y=0)}{p(y=1)}$
+
+- For equal sampling: $\frac{P(\mathbf{x})}{Q(\mathbf{x})} = \frac{p(y=1|\mathbf{x})}{1-p(y=1|\mathbf{x})}$
+
+### Optimal Discriminator
+
+- Binary classification objective: $\boldsymbol{\Phi} = \underset{\phi}{\text{argmax}} E[y \log D_{\phi}(\mathbf{x}) + (1-y) \log(1-D_{\phi}(\mathbf{x}))]$
+
+- Optimal discriminator: $D_{\Phi}(\mathbf{x}) = \frac{P(\mathbf{x})}{P(\mathbf{x}) + Q(\mathbf{x})}$
+
+- Maximum value function: $V(P,Q) = \underset{\phi}{\text{max}} E[y \log D_{\phi}(\mathbf{x}) + (1-y) \log(1-D_{\phi}(\mathbf{x}))]$
+
+### Jensen-Shannon Divergence
+
+- Optimal classifier performance relates to Jensen-Shannon divergence:
+  $V(P,Q) = \frac{1}{2} D_{KL}\left(P(\mathbf{x}) || \frac{1}{2}(Q(\mathbf{x}) + P(\mathbf{x}))\right) + \frac{1}{2} D_{KL}\left(Q(\mathbf{x}) || \frac{1}{2}(Q(\mathbf{x}) + P(\mathbf{x}))\right) - \log 2$
+
+- Jensen-Shannon divergence is symmetric (unlike KL divergence)
+
+- Measures distance between distributions via common "middle point"
+
+## GAN Architecture and Training
+
+### Minimax Game Formulation
+
+- **Generator objective**: Minimize Jensen-Shannon divergence between $P(\mathbf{x})$ and $Q(\mathbf{x})$
+
+- **Discriminator objective**: Maximize classification accuracy between real and fake samples
+
+- Combined objective: $\underset{\theta}{\text{min}} \underset{\phi}{\text{max}} \frac{1}{2} E_{P(\mathbf{x})}[\log D_{\phi}(\mathbf{x})] + E_{Q(\mathbf{z})}[\log(1 - D_{\phi}(g_{\theta}(\mathbf{z})))]$
+
+### Training Strategy
+
+1. **Discriminator update**: Minimize detection loss (maximize ability to distinguish real from fake)
+
+   - Compute discriminator loss on real and fake images
+
+   - Update to minimize classification error
+
+2. **Generator update**: Fool discriminator
+
+   - Generate fake instances
+
+   - Compute discriminator loss treating all instances as real
+
+   - Update to minimize this loss
+
+### Training Challenges
+
+- **Mode collapse**: Generator converges to single mode even with multimodal true distribution
+
+- **Mode hopping**: Generator jumps between modes without convergence
+
+- **Optimization difficulties**: No traditional loss function to optimize toward
+
+- **Nash equilibrium**: Theoretical convergence in zero-sum game setting
+
+## Practical Considerations
+
+### Training Improvements
+
+- **Learning rate strategies**: Careful tuning to prevent mode collapse and hopping
+
+- **Gradient penalties**: Clip gradients or add penalties to prevent large moves
+
+- **Iterative training**: Train discriminator multiple times before generator update
+
+- **SGD over ADAM**: Sometimes momentum-based methods struggle without clear loss target
+
+### Wasserstein GAN Improvements
+
+- **Linear discriminator outputs**: Predict "realness" scores $D(\mathbf{x}) \in \mathbb{R}$ instead of probabilities
+
+- **Modified losses**:
+
+  - Discriminator: $D(\mathbf{x}) - D(g(\mathbf{z}))$ (maximize realness difference)
+
+  - Generator: $D(g(\mathbf{z}))$ (maximize realness of fakes)
+
+## Extensions and Applications
+
+### Conditional GANs
+
+- **Goal**: Control generation with additional information (class labels)
+
+- **Architecture modifications**:
+
+  - Generator: $g(\mathbf{z}, \mathbf{c})$ where $\mathbf{c}$ is conditioning information
+
+  - Discriminator: $D(\mathbf{x}, \mathbf{c})$ considers both image and condition
+
+### Conditional Batch Normalization
+
+- **Standard batch normalization**: $h_{ij}^* = \gamma_j g_{ij} + \beta_j$
+
+- **Conditional version**: $h_{ij}^* = \gamma^{(y)}_j g_{ij} + \beta^{(y)}_j$
+
+- Learn separate normalization parameters for each class
+
+- Forces both networks to perform well across all classes
+
+- Approximates $P(\mathbf{x}|y)$ instead of $P(\mathbf{x})$
+
+### StyleGAN
+
+- **Approach**: Split latent space into initial space and style space
+
+- **Feature control**: Learn explicit mappings from features to style vectors
+
+- **Applications**: Particularly effective for generating realistic human faces
+
+## Advantages and Limitations
+
+### Advantages
+
+- **High-quality generation**: Can produce very realistic samples
+
+- **Fast sampling**: No iterative generation process required
+
+- **Assumption-free**: Minimal distributional assumptions
+
+- **Mathematically sound**: Grounded in game theory and divergence minimization
+
+### Limitations
+
+- **No density estimation**: Cannot compute $P(\mathbf{x})$ directly
+
+- **No encoding capability**: Difficult to map from data space back to latent space
+
+- **Training instability**: Sensitive to hyperparameters and training procedures
+
+- **Limited control**: Basic GANs provide limited control over generated content

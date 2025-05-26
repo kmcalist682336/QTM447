@@ -1,0 +1,147 @@
+---
+title: "Lecture 7 Summary: Nonlinearities and Expressive Learning Methods"
+author: "Kevin McAlister"
+date: today
+date-format: long
+format:
+  html:
+    theme: sky
+    html-math-method: katex
+    smaller: true
+    self-contained: true
+editor: visual
+---
+
+This summary explores the concept of universal approximators and various techniques for modeling complex, nonlinear relationships in machine learning, highlighting their theoretical capabilities, practical limitations, and computational efficiency.
+
+## 1. The Need for Expressive Models
+
+In the machine learning framework, the goal is to learn a function that maps inputs to outputs:
+
+$$y = f(\mathbf{x}) + \epsilon$$
+
+While we aim to minimize generalization error, this depends on three components:
+
+- **Bias**: How far the proposed function deviates from the truth on average
+
+- **Irreducible Error**: Variation unexplainable by available features
+
+- **Complexity**: Model capacity that can lead to overfitting
+
+As training data grows, complexity concerns diminish, but bias persists. For complex problems with nonlinear decision boundaries, standard linear models cannot capture the true functional form, resulting in persistent bias regardless of data size.
+
+## 2. Universal Approximators
+
+Universal approximators are learning methods that can theoretically approximate any Borel measurable function from one finite-dimensional space to another with arbitrary precision. In practical terms, these methods can learn any reasonable continuous function given sufficient resources.
+
+**2.1. Theoretical vs. Practical Capability**
+
+While universal approximators can theoretically represent any function, two factors limit practical success:
+
+- **Optimization challenges**: Non-convex loss landscapes with local minima
+
+- **Overfitting**: The training algorithm may learn noise rather than the true function
+
+When evaluating methods as universal approximators, a key indicator is their theoretical ability to achieve zero training error for any dataset—though this capability alone doesn't guarantee good generalization.
+
+## 3. K-Nearest Neighbors (KNN)
+
+KNN can represent arbitrarily complex functions as training data grows, but suffers severely from the curse of dimensionality.
+
+**3.1. Characteristics and Limitations**
+
+- With 1-NN, the method partitions the feature space into Voronoi cells
+
+- To effectively cover a space with $P$ dimensions, approximately $10^P$ training points are needed
+
+- This exponential growth in parameter requirements creates generalization challenges
+
+- The generalization error grows according to: $E_\mathcal{T}[\mathcal{L}(y - \hat{y})] = \frac{1}{N} \sum_{i=1}^N \mathcal{L}(y_i - \hat{y}_i) + \mathcal{O} \left(\frac{P}{N} \right)$
+
+- As dimensionality increases, an exponentially larger training set is needed to maintain generalization performance
+
+## 4. Polynomial Expansions and Feature Transformations
+
+Adding polynomial terms to linear models creates more expressive models capable of capturing nonlinear relationships.
+
+**4.1. Explicit Polynomial Features**
+
+- A full polynomial expansion of degree $d$ with $P$ features results in $\binom{P+d}{d} \approx \frac{P^d}{d!}$ terms
+
+- This approach suffers from:
+
+  - Exponential parameter growth with increasing degree or dimensionality
+
+  - Degraded generalization with generalization gap scaling as $\mathcal{O} \left( \frac{P^d}{Nd!} \right)$
+
+  - Computational complexity for training scaling as $\mathcal{O} \left(\frac{NP^{2d}}{d!} \right)$
+
+**4.2. Kernel Methods**
+
+Kernel methods implicitly map data to higher-dimensional spaces without explicitly computing the transformation:
+
+- The Radial Basis Function (RBF) kernel: $K(\mathbf{x}_i, \mathbf{x}_j) = \exp(-\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2)$
+
+- The RBF kernel is a universal approximator where the $\gamma$ parameter controls flexibility
+
+- While powerful for complex relationships, RBF kernels face challenges:
+
+  - Potential for poor generalization without proper regularization
+
+  - Computational scaling issues as training size grows ($\mathcal{O}(N^3)$ for matrix inversion)
+
+  - Memory requirements for storing the $N \times N$ kernel matrix
+
+## 5. Local Approximation Methods
+
+These methods divide the feature space into regions and fit local polynomial models within each region.
+
+**5.1. Regression Splines**
+
+- Split the feature space into $K$ regions with division points $\boldsymbol{\xi}$
+
+- Fit local polynomials within each region
+
+- Ensure continuity at region boundaries
+
+- Effective for low-dimensional problems ($P < 5$), but suffer from the curse of dimensionality as feature dimensions increase
+
+**5.2. Tree-Based Methods**
+
+Decision trees partition the feature space through recursive binary splitting:
+
+- Single decision trees can theoretically approximate any function when grown to full depth
+
+- However, they suffer from poor generalization due to overfitting
+
+- Training complexity for a single tree to full depth is $\mathcal{O}(P N \log N)$
+
+**5.3. Random Forests**
+
+Random Forests address the generalization issues of single trees:
+
+- Limit feature consideration at each split (random feature subset of size $P'$)
+
+- Grow multiple trees to full depth
+
+- Average predictions through bagging
+
+- Computational complexity scales as $\mathcal{O}(B P' N \log N)$ where $B$ is the number of trees
+
+- Effectively combat overfitting while maintaining universal approximation properties
+
+- Particularly effective for tabular data but less optimal for complex data types like images, speech, and text
+
+## 6. Approaching Neural Networks
+
+The limitations of these methods point toward neural networks as another powerful universal approximator. Neural networks address the curse of dimensionality through:
+
+- Engineering low-dimensional representations of high-dimensional spaces
+
+- Hierarchical feature extraction
+
+- Parameter sharing to reduce effective parameter count
+
+- Flexible architectures adaptable to various data types
+
+These characteristics make neural networks particularly effective for complex data types where other universal approximators struggle with either generalization or computational scaling.

@@ -1,0 +1,114 @@
+.theme-toggle-container {
+  margin-left: 10px;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle.dark:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Add responsive style for the search bar */
+.search-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#search-input {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+/* Add styles for lecture navigation buttons */
+.lecture-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.lecture-nav a {
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.lecture-nav a:hover {
+  background-color: var(--link-color);
+  text-decoration: none;
+}
+
+/* Dark mode specific styles for code blocks */
+[data-theme="dark"] pre {
+  background-color: #1e1e1e !important;
+  border: 1px solid #444 !important;
+}
+
+[data-theme="dark"] code {
+  background-color: #2d2d2d !important;
+  color: #e6e6e6 !important;
+}
+
+/* Math display in dark mode */
+[data-theme="dark"] .math.display {
+  color: #e6e6e6 !important;
+}
+
+/* Make sure tables look good in dark mode */
+[data-theme="dark"] table {
+  border-color: var(--table-border-color) !important;
+}
+
+[data-theme="dark"] th {
+  background-color: var(--table-header-bg) !important;
+}
+
+[data-theme="dark"] tr:hover {
+  background-color: var(--table-row-hover) !important;
+}
+
+/* Make sure text and link colors are correct in dark mode */
+[data-theme="dark"] body {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+[data-theme="dark"] a {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6 {
+  color: var(--heading-color);
+}

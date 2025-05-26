@@ -1,0 +1,255 @@
+/* Custom CSS styles with pleasant color scheme */
+:root {
+    --background-color: #f5f7fa;
+    --text-color: #2d3748;
+    --heading-color: #2c5282;
+    --link-color: #3182ce;
+    --code-bg: #edf2f7;
+    --border-color: #e2e8f0;
+    --navbar-bg: #edf2f7;
+    --nav-link-color: #4a5568;
+    --nav-link-hover: #2b6cb0;
+    --blockquote-bg: #ebf4ff;
+    --blockquote-border: #90cdf4;
+    --table-header-bg: #e2e8f0;
+    --table-border: #cbd5e0;
+    --table-row-hover: #edf2f7;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Override Quarto's default max-width for main content */
+main#quarto-document-content {
+    max-width: none; /* Allow content to take up more available width */
+}
+
+/* Style for code blocks */
+pre {
+    border-radius: 4px;
+    background-color: var(--code-bg);
+    border: 1px solid var(--border-color);
+}
+
+code {
+    background-color: var(--code-bg);
+    color: #805ad5; /* Nice purple for code */
+}
+
+/* Style for mathematical equations */
+.math {
+    font-size: 1.1em;
+}
+
+/* Custom alert boxes */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+
+.alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+
+/* Improve readability of text */
+body {
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Style for assignment due dates */
+.due-date {
+    color: #dc3545;
+    font-weight: bold;
+} 
+
+/* Lecture Grid Styles */
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 20px;
+    border-bottom: none;
+}
+
+.lecture-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-decoration: none !important;
+}
+
+.lecture-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: #3498db;
+    text-decoration: none !important;
+}
+
+.lecture-number {
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.lecture-title {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1em;
+    line-height: 1.4;
+    flex-grow: 1;
+}
+
+.lecture-image {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    padding: 10px;
+    transition: transform 0.2s ease;
+}
+
+.lecture-box:hover .lecture-image {
+    transform: scale(1.02);
+}
+
+.section-title {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    padding-bottom: 12px;
+    font-size: 1.8em;
+    position: relative;
+    border-bottom: none;
+}
+
+.section-title::after {
+    display: none;
+}
+
+.image-placeholder {
+    background-color: #f8f9fa;
+    height: 250px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #95a5a6;
+    font-style: italic;
+    border: 2px dashed #e0e0e0;
+    margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .lecture-box {
+        padding: 20px;
+    }
+    
+    .lecture-image {
+        height: 200px;
+    }
+}
+
+/* Intro Section Styles */
+.intro-section {
+    max-width: 800px;
+    margin: 40px auto 60px;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.intro-section h2 {
+    color: #2c3e50;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.intro-section > p {
+    color: #34495e;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.material-types {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.material-type {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.material-type h3 {
+    color: #2c3e50;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+.material-type p {
+    color: #666;
+    font-size: 0.95em;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .material-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .intro-section {
+        margin: 20px 15px 40px;
+    }
+} 

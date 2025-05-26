@@ -1,0 +1,130 @@
+---
+title: "Lecture 10: Backpropagation and Gradient Problems"
+format: html
+---
+
+## Backpropagation
+
+Backpropagation is an algorithmic approach to compute gradients efficiently in deep neural networks. The algorithm consists of two key steps:
+
+1. **Forward Pass**: Starting from input, compute all intermediate values up to the loss function
+
+2. **Backward Pass**: Propagate gradients from the loss function back to all parameters
+
+For a deep neural network, the loss can be expressed as:
+
+$$\mathcal{L}(\boldsymbol{\theta} | \mathbf{X}, \mathbf{y}) = \frac{1}{N} \sum_{i=1}^N \mathcal{L}(\theta_i | \mathbf{x}_i, y_i)$$
+
+Where the output $\theta_i$ is defined as:
+
+$$\theta_i = g(\boldsymbol{\beta}^T \varphi(\mathbf{W}_D^T \varphi(\mathbf{W}_{D-1}^T \varphi(\mathbf{W}_{D-2}^T ... \varphi(\mathbf{W}_1^T \mathbf{x}_i)))))$$
+
+### Computational Graphs
+
+Backpropagation operates on computational graphs, where:
+
+- Each operation in the network is represented as a node in a directed acyclic graph
+
+- The graph consists of primitive operations (multiplication, addition) and activation functions
+
+- Parameters to be learned are represented as special nodes
+
+During the backward pass, gradients are computed using the chain rule:
+
+$$\text{Downstream Gradient} = \text{Local Gradient} \times \text{Upstream Gradient}$$
+
+Or mathematically:
+
+$$\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial \mathcal{L}}{\partial q} \frac{\partial q}{\partial x}$$
+
+In a simple logistic regression, the gradient for the coefficients can be derived as:
+
+$$\frac{\partial \mathcal{L}_i}{\partial \mathbf{W}} = (\sigma(z_i) - y_i)\mathbf{x}_i$$
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}} = \frac{1}{N} \sum_{i=1}^N (\sigma(z_i) - y_i)\mathbf{x}_i$$
+
+### Neural Network Gradients
+
+For multi-layer neural networks, gradients become more complex. In a two-layer network with ReLU activations:
+
+$$\mathcal{L}(\mathbf{z} | \mathbf{X}, \mathbf{y}) = -\frac{1}{N} \sum_{i=1}^N y_i \log \sigma(z_i) + (1 - y_i)(1 - \log\sigma(z_i))$$
+
+$$z_i = \boldsymbol{\beta}^T \mathbf{h}_{i2} + a$$
+
+$$\mathbf{h}_{i2} = \varphi(\mathbf{q}_{i2})$$
+
+$$\mathbf{q}_{i2} = \mathbf{W}_2^T\mathbf{h}_{i1} + \mathbf{b}_2$$
+
+$$\mathbf{h}_{i1} = \varphi(\mathbf{q}_{i1})$$
+
+$$\mathbf{q}_{i1} = \mathbf{W}_1^T\mathbf{x}_i + \mathbf{b}_1$$
+
+The gradient flows backward through the network, with each parameter receiving gradients that are products of all upstream derivatives:
+
+$$\frac{\partial \mathcal{L}_i}{\partial \mathbf{W}_1} = \mathbf{u}^T \times \mathbf{x}_i^T$$
+
+Where $\mathbf{u}$ represents the accumulated upstream gradient:
+
+$$\mathbf{u} = [\sigma(z_i) - y_i] \otimes \boldsymbol{\beta}^T \odot I(\mathbf{q}_{i2} > 0) \otimes \mathbf{W}_{2} \odot I(\mathbf{q}_{i1} > 0)$$
+
+## Gradient Problems
+
+As neural networks become deeper, two major gradient-related problems can arise:
+
+### Exploding Gradients
+
+Gradient explosion occurs when the chain of multiplication in backpropagation causes gradients to become extremely large:
+
+$$(1 + \epsilon)^D \rightarrow \infty$$
+
+Where $D$ is the depth of the network and $\epsilon$ is a small positive value. This causes:
+
+- Unstable training with large, erratic parameter updates
+
+- Inability to converge to a solution
+
+- Potential numerical overflow issues
+
+Approaches to address exploding gradients include:
+
+1. **Gradient Clipping**: Limiting the magnitude of gradients
+   
+   $$\mathbf{g}'(\theta_{t-1}) = \text{min}\left(1, \frac{c}{||\mathbf{g}(\theta_{t-1})||}\right)\mathbf{g}(\theta_{t-1})$$
+   
+   Where $c$ is a positive threshold value (often around 3).
+
+2. **Feature Normalization**: Ensuring input features are standardized or scaled to [0,1]
+
+3. **Weight Initialization**: Using appropriate initialization methods to control gradient scale
+
+### Vanishing Gradients
+
+Vanishing gradients occur when the chain of multiplication causes gradients to become extremely small:
+
+$$(1 - \epsilon)^D \rightarrow 0$$
+
+This leads to:
+
+- Parameters in early layers receiving minimal updates
+
+- Difficulty in learning long-range dependencies
+
+- Training stagnation
+
+Specific instances include "dead ReLUs," where ReLU units output zero for all inputs, causing gradients to be zero.
+
+### Proper Initialization
+
+Weight initialization plays a crucial role in preventing gradient problems:
+
+- Random initialization from a normal distribution can lead to variance explosion as network depth increases
+
+- The variance of hidden units scales with the number of incoming connections ($N_{in}$)
+
+- The variance of gradients scales with the number of outgoing connections ($N_{out}$)
+
+**Glorot Initialization** addresses this by sampling weights from a distribution with:
+
+$$\sigma^2_{W_k} = \frac{2}{N_{in} + N_{out}}$$
+
+This keeps the variance of activations and gradients stable across layers, enabling more effective training of deep networks.

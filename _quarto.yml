@@ -1,0 +1,51 @@
+project:
+  type: website
+  render:
+    - "**/*.qmd"          # Render all QMD files in project (including nested folders)
+    - "!lectures/qmds/**" # Exclude all files in lectures/qmds/ recursively
+  resources:
+    - "lectures/slideipynb_html/"
+    - "lectures/ipynbs_html/"
+  output-dir: docs
+
+website:
+  title: "QTM 447 - Statistical Machine Learning II"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: syllabus.qmd
+        text: Syllabus
+      - href: lectures/index.qmd
+        text: Lectures
+      - href: lectures/glossary.qmd
+        text: Glossary
+      - href: lectures/resources.qmd
+        text: Resources
+    right:
+      - icon: search
+        href: lectures/search.qmd
+  search:
+    location: navbar
+    type: overlay
+
+format:
+  html:
+    theme: sandstone
+    toc: true
+    page-layout: full
+    css: 
+      - styles.css
+      - additional-styles.css
+    include-in-header:
+      text: |
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    code-tools: 
+      source: true
+      toggle: true
+      caption: none
+    code-fold: show
+    code-summary: "Show code"
+    code-overflow: wrap
+    code-copy: hover
+    highlight-style: github

@@ -1,0 +1,191 @@
+---
+title: "Lecture 27: Interpretable Machine Learning"
+format: html
+---
+
+## Motivation for Interpretability
+
+### The Importance of Interpretability
+
+- **Model performance** $\neq$ **success**: Classifiers can perform well for incorrect reasons
+
+- **Safety**: Detect and prevent critical failures (e.g., autonomous driving misclassifications)
+
+- **Fairness**: Reveal and mitigate biases across different groups
+
+- **Privacy/Security**: Ensure protection of sensitive information 
+
+- **Legal requirements**: Compliance with regulations like GDPR's "right to explanation"
+
+### The Interpretability Challenge
+
+- Neural networks are complicated "black-box" algorithms: $\hat{y} \propto \mathbf{W} \varphi(\mathbf{W} \varphi (...))$
+
+- Definition (Biran and Cotton, 2017): "Interpretability is the degree to which a human can understand the cause of a decision"
+
+- Alternative definition (Kim et al., 2016): "... a user can correctly and efficiently predict the method's results"
+
+## Glass-Box Models
+
+### Inherently Interpretable Models
+
+- **Linear models**: $\hat{y} = g(\mathbf{X} \hat{\boldsymbol{\beta}})$ - Changes in inputs directly relate to changes in predictions
+
+- **Simple decision trees**: Transparent decision paths
+
+- **Ridge/LASSO**: Regularized linear models with variable selection
+
+- **Generalized Additive Models**: Flexible but transparent functional forms
+
+### Transparency-Performance Trade-off
+
+- As transparency increases, bias typically increases
+
+- Interpretable models require functional specification, which means making assumptions
+
+- Modern machine learning needs universal approximators to model complex dependencies
+
+- Universal approximators (RFs, NNs, SVMs) tend to be local in nature and difficult to interpret globally
+
+## Post-Hoc Interpretability Methods
+
+### LIME (Local Interpretable Model-agnostic Explanations)
+
+- Goal: Understand how changes in feature values affect predictions for individual instances
+
+- Process:
+
+  1. Create perturbed samples around target instance $\mathbf{x}$
+
+  2. Get predictions for perturbed samples from black box
+
+  3. Compute proximity weights using kernel function
+
+  4. Fit weighted LASSO to create local linear approximation:
+     $\hat{\boldsymbol{\beta}} = \underset{\{\beta_0, \boldsymbol{\beta}\}}{\text{argmin}} \sum_{i=1}^N w_i(\hat{y}_i - \beta_0 - \mathbf{x}_i' \boldsymbol{\beta})^2 + \lambda \sum_{j=1}^P |\beta_j|$
+
+- Strengths: Short, understandable explanations; easy implementation
+
+- Weaknesses: Sensitive to neighborhood choice; unrealistic data points; limited to single-point analysis
+
+### Permutation Importance
+
+- Measures **feature importance** as impact on model performance
+
+- Procedure:
+
+  1. Fit model and compute baseline performance on validation set
+
+  2. For each feature, randomly permute its values and measure performance drop
+
+  3. Rank features by performance decrease
+
+- Advantage: Global measure of feature importance without refitting model
+
+- Application: Standard method for random forests, gradient boosting, tabular neural nets
+
+## Image and Text Interpretability
+
+### Saliency Maps for Images
+
+- **Vanilla Gradient Method**:
+
+  1. Perform forward pass to get class score
+
+  2. Compute gradient of score with respect to input pixels: $\frac{\partial s_c}{\partial \mathbf{x}}$
+
+  3. Visualize gradient as heatmap
+
+  - Local linear approximation: $s_c(\mathbf{x}) \approx \mathbf{w}^T \mathbf{x} + b$ where $\mathbf{w} = \frac{\partial s_c}{\partial \mathbf{x}}|_{\mathbf{x}_0}$
+  
+- **SmoothGrad**: Average gradients over multiple noise-added versions of image to reduce sensitivity
+
+- **Gradient-weighted Class Activation Mapping (Grad-CAM)**:
+
+  1. Compute gradient of score w.r.t. final convolutional layer activations
+
+  2. Compute weights $\alpha_d$ by global average pooling gradients for each filter
+
+  3. Create coarse heatmap: $\mathbf{x}_{ij} = \text{ReLU}\left(\sum_{d=1}^D \alpha_d x_{i,j,d}\right)$
+
+  4. Upscale to original image size
+  
+- **Guided Grad-CAM**: Combine vanilla gradients with Grad-CAM for finer detail
+
+### Attention Visualization for Text
+
+- Goal: Understand how words relate to each other and contribute to classification
+
+- Challenge: Multiple attention heads and layers in transformer models
+
+- **Attention matrices**: Visualization of attention weights between tokens
+
+- **Aggregation methods**:
+
+  - Layer-wise averaging across attention heads
+
+  - Model-wide averaging across layers
+
+  - **Roll-out**: Account for residual connections by adding identity matrix to attention matrices
+
+    - Augmented layer-wise attention: $\tilde{\mathbf{A}}^\ell = \mathbf{A}^{\ell} + \mathcal{I}$
+
+    - Rolled-out attention: $\mathbf{R} = \hat{\mathbf{A}}^{(1)} \times \hat{\mathbf{A}}^{(2)} \times ... \times \hat{\mathbf{A}}^{(L)}$
+
+- Limitation: Aggregation loses specificity and causal importance
+
+## Intrinsic Interpretability
+
+### Limitations of Post-Hoc Methods
+
+- Cannot expect models to learn interpretable structures without designing for interpretability
+
+- Post-hoc explanation may not reflect actual decision process
+
+- Analogy: Training a puppy is more effective with immediate reinforcement than delayed feedback
+
+### Mixture of Experts (MoE)
+
+- Approach: Divide hidden units into expert blocks, each specializing in specific input patterns
+
+- Implementation:
+
+  1. Break feedforward layer into K equally sized expert blocks
+
+  2. Pass input through routing function that selects k < K experts
+
+  3. Process input only through selected experts
+
+- Benefits:
+
+  - Each expert specializes in meaningful aspects of inputs
+
+  - Ensemble learning advantage: reduced model variance
+
+  - Efficiency: Significant decrease in training time for large models
+
+  - Applications: Found in Switch Transformers, LLaMA, DeepSeek models
+
+### Other Glass-Box Approaches
+
+- **Concept Bottleneck Models**: Predict human-interpretable concepts as intermediary step
+
+- **KNN Retrieval Models**: Retrieve similar training examples to justify predictions
+
+## Future Directions
+
+### Research Priorities
+
+- Designing models with built-in interpretability without sacrificing performance
+
+- Integration of interpretability considerations into model training
+
+- Improving efficiency and scalability of interpretable architectures
+
+### Industry Impact
+
+- Growing demand for interpretable AI in high-stakes applications
+
+- Companies developing specialized architectures with transparency built in
+
+- Compliance with emerging regulatory requirements driving innovation
