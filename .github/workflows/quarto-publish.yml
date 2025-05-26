@@ -32,17 +32,12 @@ jobs:
         uses: quarto-dev/quarto-actions/render@v2
         with:
           to: html
+          # No need to specify output-dir here, it's handled by _quarto.yml
           
-      - name: Create .nojekyll files
+      - name: Create .nojekyll file in root
         run: |
-          touch docs/.nojekyll
           touch .nojekyll
-          echo "GitHubPages" > docs/.nojekyll
           echo "GitHubPages" > .nojekyll
-          
-      - name: Copy docs content to root
-        run: |
-          cp -r docs/* .
           
       - name: Publish to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4

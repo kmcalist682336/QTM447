@@ -6,7 +6,7 @@ project:
   resources:
     - "lectures/slideipynb_html/"
     - "lectures/ipynbs_html/"
-  output-dir: docs
+  output-dir: .
 
 website:
   title: "QTM 447 - Statistical Machine Learning II"
