@@ -56,11 +56,8 @@ ENV/
 *.ipynb
 
 # Exclude large generated directories
-lectures/ipynbs_html/
-lectures/slideipynb_html/
 lectures/ipynbs/
 lectures/slideipynb/
-lectures/htmls/
 lectures/pdfs/
 
 # Exclude specific large files

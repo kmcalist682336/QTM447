@@ -6,6 +6,7 @@ project:
   resources:
     - "lectures/slideipynb_html/"
     - "lectures/ipynbs_html/"
+    - "lectures/htmls/" # Add lectures/htmls to resources
   output-dir: .
 
 website:
